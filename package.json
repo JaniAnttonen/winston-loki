@@ -1,0 +1,16 @@
+{
+  "name": "winston-loki",
+  "version": "0.0.1",
+  "description": "A Winston transport for Grafana Loki",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nordic Venture Family Code Distillery",
+  "license": "MIT",
+  "dependencies": {
+    "got": "^9.5.0",
+    "protobufjs": "^6.8.8",
+    "winston-transport": "^4.3.0"
+  }
+}
