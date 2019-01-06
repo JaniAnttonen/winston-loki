@@ -2,7 +2,9 @@
 A Grafana Loki transport for the nodejs logging library Winston.
 ## Usage
 ```javascript
+const { createLogger, format, transports } = require("winston");
 const LokiTransport = require("winston-loki");
+
 const options = {
   format: format.combine(
     format.label({ label: name }),
