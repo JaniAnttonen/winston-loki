@@ -11,7 +11,6 @@ const options = {
   ),
   transports: [
     new LokiTransport({
-      level: level,
       host: "http://localhost:3100"
     })
   ],
