@@ -10,7 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "got": "^9.5.0",
-    "protobufjs": "^6.8.8",
     "winston-transport": "^4.3.0"
   }
 }
