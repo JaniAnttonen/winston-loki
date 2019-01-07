@@ -1,5 +1,8 @@
 # winston-loki
 A Grafana Loki transport for the nodejs logging library Winston.
+
+*NOTE: Use with caution, very alpha very logging wow*
+
 ## Usage
 ```javascript
 const { createLogger, format, transports } = require("winston");
