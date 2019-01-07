@@ -1,6 +1,8 @@
-const got = require('got')
-const protobuf = require('protobufjs')
-const path = require('path')
+const got = require("got");
+const snappy = require("snappy");
+const protobuf = require("protobufjs");
+const path = require("path");
+const moment = require("moment");
 
 module.exports = class Batcher {
   constructor (options) {
@@ -49,17 +51,23 @@ module.exports = class Batcher {
             }
             const PushRequest = root.lookupType('logproto.PushRequest')
 
-            let streamsBuffer = { streams: [] }
-            let streamBuffer = { labels: '', entries: [] }
-            let entryBuffer = {}
+            let streamsBuffer = { streams: [] };
+            let streamBuffer = { labels: "", entries: [] };
+            let entryBuffer = {};
+            let dt = 0;
 
             this.batch.streams.forEach(stream => {
               streamBuffer.labels = stream.labels
 
               stream.entries.forEach(entry => {
-                entryBuffer.timestamp = entry.ts
-                entryBuffer.line = entry.line
-                streamBuffer.entries.push(entryBuffer)
+                dt = moment(entry.ts).valueOf();
+                entryBuffer.timestamp = {
+                  seconds: Math.floor(dt / 1000),
+                  nanos: (dt % 1000) * 1000
+                };
+                console.log(entry, dt, entryBuffer.timestamp);
+                entryBuffer.line = entry.line;
+                streamBuffer.entries.push(entryBuffer);
 
                 entryBuffer = {}
               })
@@ -68,9 +76,16 @@ module.exports = class Batcher {
               streamBuffer = { labels: '', entries: [] }
             })
 
-            const pushRequest = PushRequest.create(streamsBuffer)
-            buffer = PushRequest.encode(pushRequest).finish()
-          })
+            const notValid = PushRequest.verify(streamsBuffer);
+            if (!notValid) {
+              console.log("Valid Protobuf message!");
+              const pushRequest = PushRequest.create(streamsBuffer);
+              buffer = PushRequest.encode(pushRequest).finish();
+            } else {
+              console.log("Snappy couldn't compress the message");
+              reject();
+            }
+          });
         } else {
           buffer = JSON.stringify(this.batch)
         }
@@ -82,9 +97,9 @@ module.exports = class Batcher {
           }
         } else {
           requestOptions = {
-            data: buffer,
-            headers: { 'Content-Type': 'application/x-protobuf' }
-          }
+            body: buffer,
+            headers: { "Content-Type": "application/x-protobuf" }
+          };
         }
 
         got
@@ -94,9 +109,9 @@ module.exports = class Batcher {
             return resolve()
           })
           .catch(err => {
-            console.log(err.body)
-            return reject(err)
-          })
+            console.log(err);
+            return reject(err);
+          });
       }
     })
   }
