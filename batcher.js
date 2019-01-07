@@ -1,5 +1,4 @@
 const got = require("got");
-const protobuf = require("protobufjs");
 
 module.exports = class Batcher {
   constructor(options) {
