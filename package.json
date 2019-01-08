@@ -11,5 +11,6 @@
   "dependencies": {
     "got": "^9.5.0",
     "winston-transport": "^4.3.0"
-  }
+  },
+  "devDependencies": {}
 }
