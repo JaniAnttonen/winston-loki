@@ -1,61 +1,62 @@
-const got = require("got");
+/* eslint-env node */
+const got = require('got')
 
 module.exports = class Batcher {
-  constructor(options) {
-    this.options = options;
+  constructor (options) {
+    this.options = options
     this.interval = this.options.interval
       ? Number(this.options.interval) * 1000
-      : 5000;
-    this.circuitBreakerInterval = 60000;
+      : 5000
+    this.circuitBreakerInterval = 60000
     this.batch = {
       streams: []
-    };
+    }
   }
-  wait(duration) {
+  wait (duration) {
     return new Promise(resolve => {
-      setTimeout(resolve, duration);
-    });
+      setTimeout(resolve, duration)
+    })
   }
-  pushLogEntry(logEntry) {
-    this.batch.streams.push(logEntry);
+  pushLogEntry (logEntry) {
+    this.batch.streams.push(logEntry)
   }
-  clearBatch() {
-    this.batch.streams = [];
+  clearBatch () {
+    this.batch.streams = []
   }
-  sendBatchToLoki() {
+  sendBatchToLoki () {
     return new Promise((resolve, reject) => {
       if (this.batch.streams.length === 0) {
-        resolve();
+        resolve()
       } else {
         got
-          .post(this.options.host + "/api/prom/push", {
+          .post(this.options.host + '/api/prom/push', {
             body: JSON.stringify(this.batch),
             headers: {
-              "content-type": "application/json"
+              'content-type': 'application/json'
             }
           })
           .then(res => {
-            this.clearBatch();
-            return resolve();
+            this.clearBatch()
+            return resolve()
           })
           .catch(err => {
-            console.log(err.body);
-            return reject(err);
-          });
+            console.log(err.body)
+            return reject(err)
+          })
       }
-    });
+    })
   }
-  async run() {
+  async run () {
     while (true) {
       try {
-        await this.sendBatchToLoki();
+        await this.sendBatchToLoki()
         if (this.interval === this.circuitBreakerInterval) {
-          this.interval = Number(options.interval) * 1000;
+          this.interval = Number(this.options.interval) * 1000
         }
       } catch (e) {
-        this.interval = this.circuitBreakerInterval;
+        this.interval = this.circuitBreakerInterval
       }
-      await this.wait(this.interval);
+      await this.wait(this.interval)
     }
   }
-};
+}

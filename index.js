@@ -1,37 +1,37 @@
-const Transport = require("winston-transport");
-const Batcher = require("./src/batcher");
+const Transport = require('winston-transport')
+const Batcher = require('./src/batcher')
 
 module.exports = class LokiTransport extends Transport {
-  constructor(options) {
-    super(options);
+  constructor (options) {
+    super(options)
     this.batcher = new Batcher({
       host: options.host,
       interval: options.interval
-    });
-    this.batcher.run();
+    })
+    this.batcher.run()
   }
 
-  log(info, callback) {
+  log (info, callback) {
     setImmediate(() => {
-      this.emit("logged", info);
-    });
+      this.emit('logged', info)
+    })
 
-    const { label, timestamp, level, message, ...rest } = info;
+    const { label, timestamp, level, message, ...rest } = info
     const logEntry = {
       labels: `{job="${label}", level="${level}"}`,
       entries: [
         {
           ts: timestamp,
-          line: `${message} ${(rest &&
+          line: `${message} ${(rest &&
             Object.keys(rest) &&
             JSON.stringify(rest)) ||
-            ""}`
+            ''}`
         }
       ]
-    };
+    }
 
-    this.batcher.pushLogEntry(logEntry);
+    this.batcher.pushLogEntry(logEntry)
 
-    callback();
+    callback()
   }
-};
+}
