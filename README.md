@@ -1,4 +1,8 @@
 # winston-loki
+[![npm version](https://badge.fury.io/js/winston-loki.svg)](https://badge.fury.io/js/winston-loki)
+[![Build Status](https://travis-ci.com/JaniAnttonen/winston-loki.svg?branch=master)](https://travis-ci.com/JaniAnttonen/winston-loki)
+[![Coverage Status](https://coveralls.io/repos/github/JaniAnttonen/winston-loki/badge.svg?branch=master)](https://coveralls.io/github/JaniAnttonen/winston-loki?branch=master)
+
 A Grafana Loki transport for the nodejs logging library Winston.
 
 *NOTE: Use with caution, very alpha very logging wow*
@@ -16,7 +20,9 @@ It should contain everything from the protocol to the port.
 
 >`interval`
 
-The interval at which the transport sends batched logs to Loki.
+*optional*
+
+The interval at which the transport sends batched logs to Loki. **In seconds.**
 
 ### Example
 ```js
@@ -47,4 +53,4 @@ And you should have a working, requirable winston-loki package under your projec
 Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
 
 
-TODO: Add protobuf as default mode, tests, *got* dependency
+TODO: Add protobuf as default mode, tests, remove *got* dependency
