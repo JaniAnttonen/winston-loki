@@ -1,5 +1,5 @@
 const Transport = require("winston-transport");
-const Batcher = require("./batcher");
+const Batcher = require("./src/batcher");
 
 module.exports = class LokiTransport extends Transport {
   constructor(options) {

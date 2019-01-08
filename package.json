@@ -4,7 +4,7 @@
   "description": "A Winston transport for Grafana Loki",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/jest"
   },
   "author": "Jani Anttonen",
   "license": "MIT",
@@ -12,5 +12,8 @@
     "got": "^9.5.0",
     "winston-transport": "^4.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "jest": "^23.6.0"
+  }
 }
