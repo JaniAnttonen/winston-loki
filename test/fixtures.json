@@ -1,0 +1,28 @@
+{
+  "options": { "host": "http://localhost", "interval": 0.1 },
+  "logs": [
+    {
+      "label": "test",
+      "timestamp": 1546977515828,
+      "message": "testings",
+      "level": "info"
+    },
+    {
+      "label": "test",
+      "timestamp": 1546977515848,
+      "message": "you broke everything",
+      "level": "error"
+    },
+    {
+      "label": "test",
+      "timestamp": 1546977515858,
+      "message": "you broke everything but not quite",
+      "level": "error"
+    }
+  ],
+  "logs_mapped": [
+    "{ \"labels\": \"{job=\\\"test\\\", level=\\\"info\\\"}\", \"entries\": [ { \"ts\": 1546977515828, \"line\": \"testings {}\" } ] }",
+    "{ \"labels\": \"{job=\\\"test\\\", level=\\\"error\\\"}\", \"entries\": [ { \"ts\": 1546977515848, \"line\": \"you broke everything {}\" } ] }",
+    "{ \"labels\": \"{job=\\\"test\\\", level=\\\"error\\\"}\", \"entries\": [ { \"ts\": 1546977515858, \"line\": \"you broke everything but not quite{}\" } ] }"
+  ]
+}
