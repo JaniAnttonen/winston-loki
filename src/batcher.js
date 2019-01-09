@@ -36,11 +36,10 @@ module.exports = class Batcher {
           })
           .then(res => {
             this.clearBatch()
-            return resolve()
+            resolve()
           })
           .catch(err => {
-            console.log(err.body)
-            return reject(err)
+            reject(err)
           })
       }
     })
