@@ -8,6 +8,12 @@
     "lint": "./node_modules/.bin/standard",
     "lint:fix": "./node_modules/.bin/standard --fix"
   },
+  "standard": {
+    "env": {
+      "node": true,
+      "jest": true
+    }
+  },
   "author": "Jani Anttonen",
   "license": "MIT",
   "dependencies": {

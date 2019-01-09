@@ -1,4 +1,3 @@
-/* eslint-env jest */
 const { createLogger } = require('winston')
 const LokiTransport = require('winston-loki')
 const fixtures = require('./fixtures.json')

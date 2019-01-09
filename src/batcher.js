@@ -1,4 +1,3 @@
-/* eslint-env node */
 const got = require('got')
 
 module.exports = class Batcher {
