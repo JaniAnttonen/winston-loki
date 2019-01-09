@@ -54,5 +54,11 @@ And you should have a working, requirable winston-loki package under your projec
 
 Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
 
+### Run tests
+```sh
+npm test
+```
 
-TODO: Add protobuf as default mode, tests, remove *got* dependency
+Write new ones under `/test`
+
+TODO: Add protobuf as default mode, remove *got* dependency
