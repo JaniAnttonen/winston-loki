@@ -10,6 +10,7 @@ module.exports = class Batcher {
     this.batch = {
       streams: []
     }
+    this.got = got
   }
   wait (duration) {
     return new Promise(resolve => {
@@ -27,7 +28,7 @@ module.exports = class Batcher {
       if (this.batch.streams.length === 0) {
         resolve()
       } else {
-        got
+        this.got
           .post(this.options.host + '/api/prom/push', {
             body: JSON.stringify(this.batch),
             headers: {

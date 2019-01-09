@@ -1,5 +1,5 @@
 {
-  "options": { "host": "http://localhost:8080", "interval": 0.2 },
+  "options": { "host": "http://localhost", "interval": 0.1 },
   "logs": [
     {
       "label": "test",
