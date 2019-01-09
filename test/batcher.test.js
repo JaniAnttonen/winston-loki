@@ -1,4 +1,5 @@
 const Batcher = require('../src/batcher')
+const got = require('got')
 const fixtures = require('./fixtures.json')
 const sinon = require('sinon')
 
@@ -7,7 +8,7 @@ let batcher
 describe('Batcher tests', function () {
   beforeAll(function () {
     batcher = new Batcher(fixtures.options)
-    this.post = sinon.stub(batcher.got, 'post')
+    this.post = sinon.stub(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
