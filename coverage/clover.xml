@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1547038294201" clover="3.2.0">
+  <project timestamp="1547038294201" name="All files">
+    <metrics statements="36" coveredstatements="31" conditionals="10" coveredconditionals="7" methods="13" coveredmethods="10" elements="59" coveredelements="48" complexity="0" loc="36" ncloc="36" packages="2" files="2" classes="2">
+      <package name="winston-loki">
+        <metrics statements="12" coveredstatements="11" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="2"/>
+        <file name="index.js" path="/home/jani/dev/devops/winston-loki/index.js">
+          <metrics statements="12" coveredstatements="11" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="2"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="6" count="4" type="stmt"/>
+          <line num="7" count="4" type="stmt"/>
+          <line num="11" count="4" type="stmt"/>
+          <line num="15" count="3" type="stmt"/>
+          <line num="16" count="0" type="stmt"/>
+          <line num="19" count="3" type="stmt"/>
+          <line num="20" count="3" type="stmt"/>
+          <line num="33" count="3" type="stmt"/>
+          <line num="35" count="3" type="stmt"/>
+        </file>
+      </package>
+      <package name="winston-loki.src">
+        <metrics statements="24" coveredstatements="20" conditionals="6" coveredconditionals="4" methods="10" coveredmethods="8"/>
+        <file name="batcher.js" path="/home/jani/dev/devops/winston-loki/src/batcher.js">
+          <metrics statements="24" coveredstatements="20" conditionals="6" coveredconditionals="4" methods="10" coveredmethods="8"/>
+          <line num="1" count="2" type="stmt"/>
+          <line num="3" count="2" type="stmt"/>
+          <line num="5" count="5" type="stmt"/>
+          <line num="6" count="5" type="cond" truecount="1" falsecount="1"/>
+          <line num="9" count="5" type="stmt"/>
+          <line num="10" count="5" type="stmt"/>
+          <line num="15" count="7" type="stmt"/>
+          <line num="16" count="7" type="stmt"/>
+          <line num="20" count="10" type="stmt"/>
+          <line num="23" count="5" type="stmt"/>
+          <line num="26" count="6" type="stmt"/>
+          <line num="27" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="28" count="5" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
+          <line num="38" count="0" type="stmt"/>
+          <line num="39" count="0" type="stmt"/>
+          <line num="42" count="0" type="stmt"/>
+          <line num="48" count="5" type="stmt"/>
+          <line num="49" count="6" type="stmt"/>
+          <line num="50" count="6" type="stmt"/>
+          <line num="51" count="5" type="cond" truecount="1" falsecount="1"/>
+          <line num="52" count="0" type="stmt"/>
+          <line num="55" count="1" type="stmt"/>
+          <line num="57" count="6" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>

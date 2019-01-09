@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/standard && ./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/standard",
-    "lint:fix": "./node_modules/.bin/standard --fix"
+    "lint:fix": "./node_modules/.bin/standard --fix",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "standard": {
     "env": {
@@ -16,6 +17,10 @@
   },
   "author": "Jani Anttonen",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JaniAnttonen/winston-loki.git"
+  },
   "dependencies": {
     "got": "^9.5.0",
     "winston-transport": "^4.3.0"
