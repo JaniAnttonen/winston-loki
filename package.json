@@ -1,6 +1,6 @@
 {
   "name": "winston-loki",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "A Winston transport for Grafana Loki",
   "main": "index.js",
   "scripts": {
