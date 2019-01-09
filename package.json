@@ -7,13 +7,16 @@
     "test": "./node_modules/.bin/standard && ./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/standard",
     "lint:fix": "./node_modules/.bin/standard --fix",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+    "coveralls": "jest --coverage && cat ./test/coverage/lcov.info | coveralls"
   },
   "standard": {
     "env": {
       "node": true,
       "jest": true
     }
+  },
+  "jest": {
+    "coverageDirectory": "./test/coverage"
   },
   "author": "Jani Anttonen",
   "license": "MIT",
