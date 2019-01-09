@@ -13,7 +13,10 @@
     "env": {
       "node": true,
       "jest": true
-    }
+    },
+    "ignore": [
+      "test/coverage"
+    ]
   },
   "jest": {
     "coverageDirectory": "./test/coverage"
