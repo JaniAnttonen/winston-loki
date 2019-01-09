@@ -24,10 +24,18 @@ describe('Batcher tests', function () {
   })
   it('Should change frequency on failed POST request to host', async function () {
     const batcher = new Batcher(fixtures.options)
+    const circuitBreakerInterval = fixtures.options.interval * 1000 * 1.5
+    const waitFor = fixtures.options.interval * 1000 * 2
+
+    batcher.circuitBreakerInterval = circuitBreakerInterval
     batcher.run()
     batcher.pushLogEntry(fixtures.logs_mapped[0])
+
     expect(batcher.batch.streams.length).toBe(1)
-    await batcher.wait(fixtures.options.interval * 1000 * 20)
-    expect(batcher.batch.streams.length).toBe(0)
+
+    await batcher.wait(waitFor)
+
+    expect(batcher.batch.streams.length).toBe(1)
+    expect(batcher.interval).toBe(circuitBreakerInterval)
   })
 })
