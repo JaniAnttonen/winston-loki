@@ -9,26 +9,42 @@ describe('Integration tests', function () {
     }
     const logger = createLogger(options)
 
-    expect(logger.constructor.name).toEqual('DerivedLogger')
-    expect(logger._readableState.pipesCount).toEqual(1)
+    expect(logger.constructor.name).toBe('DerivedLogger')
+    expect(logger._readableState.pipesCount).toBe(1)
+  })
+  it('LokiTransport should trigger the "logged" event', function () {
+    const lokiTransport = new LokiTransport(fixtures.options)
+    lokiTransport.log(fixtures.logs[0], () => {})
+    lokiTransport.on('logged', info => {
+      const { label, timestamp, level, message } = info
+      expect(label).toBeTruthy()
+      expect(timestamp).toBeTruthy()
+      expect(level).toBeTruthy()
+      expect(message).toBeTruthy()
+    })
   })
   it('LokiTransport should trigger the callback function', function () {
     const lokiTransport = new LokiTransport(fixtures.options)
     let callback = false
+    let eventEmitted = false
     lokiTransport.log(fixtures.logs[0], () => {
       callback = true
     })
-    expect(callback).toEqual(true)
+    lokiTransport.on('logged', info => {
+      eventEmitted = true
+    })
+
+    expect(callback).toBe(true)
   })
   it('LokiTransport should transfer logs to the Batcher', function () {
     const lokiTransport = new LokiTransport(fixtures.options)
     lokiTransport.log(fixtures.logs[0], () => {})
-    expect(lokiTransport.batcher.batch.streams.length).toEqual(1)
+    expect(lokiTransport.batcher.batch.streams.length).toBe(1)
   })
   it('LokiTransport should map logs correctly from Winston to Grafana Loki', function () {
     const lokiTransport = new LokiTransport(fixtures.options)
     lokiTransport.log(fixtures.logs[0], () => {})
-    expect(lokiTransport.batcher.batch.streams.length).toEqual(1)
+    expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(lokiTransport.batcher.batch.streams[0]).toEqual(
       JSON.parse(fixtures.logs_mapped[0])
     )
