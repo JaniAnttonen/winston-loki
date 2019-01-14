@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1547478563463" clover="3.2.0">
-  <project timestamp="1547478563463" name="All files">
+<coverage generated="1547478602193" clover="3.2.0">
+  <project timestamp="1547478602194" name="All files">
     <metrics statements="36" coveredstatements="35" conditionals="10" coveredconditionals="8" methods="13" coveredmethods="12" elements="59" coveredelements="55" complexity="0" loc="36" ncloc="36" packages="2" files="2" classes="2">
       <package name="winston-loki">
         <metrics statements="12" coveredstatements="11" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="2"/>

@@ -26,14 +26,9 @@ describe('Integration tests', function () {
   it('LokiTransport should trigger the callback function', function () {
     const lokiTransport = new LokiTransport(fixtures.options)
     let callback = false
-    let eventEmitted = false
     lokiTransport.log(fixtures.logs[0], () => {
       callback = true
     })
-    lokiTransport.on('logged', info => {
-      eventEmitted = true
-    })
-
     expect(callback).toBe(true)
   })
   it('LokiTransport should transfer logs to the Batcher', function () {
