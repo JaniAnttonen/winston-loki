@@ -7,8 +7,6 @@
 
 A Grafana Loki transport for the nodejs logging library Winston.
 
-*NOTE: Use with caution, very alpha very logging wow*
-
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
 
