@@ -1,6 +1,7 @@
 const { createLogger } = require('winston')
 const LokiTransport = require('winston-loki')
 const fixtures = require('./fixtures.json')
+const sinon = require('sinon')
 
 describe('Integration tests', function () {
   it('Winston should accept LokiTransport', function () {
@@ -12,16 +13,15 @@ describe('Integration tests', function () {
     expect(logger.constructor.name).toBe('DerivedLogger')
     expect(logger._readableState.pipesCount).toBe(1)
   })
-  it('LokiTransport should trigger the "logged" event', function () {
+  it('LokiTransport should trigger the "logged" event', function (done) {
     const lokiTransport = new LokiTransport(fixtures.options)
+    const spy = sinon.spy(eventEmitted)
+    lokiTransport.on('logged', spy)
     lokiTransport.log(fixtures.logs[0], () => {})
-    lokiTransport.on('logged', info => {
-      const { label, timestamp, level, message } = info
-      expect(label).toBeTruthy()
-      expect(timestamp).toBeTruthy()
-      expect(level).toBeTruthy()
-      expect(message).toBeTruthy()
-    })
+    function eventEmitted () {
+      expect(spy.called).toBe(true)
+      done()
+    }
   })
   it('LokiTransport should trigger the callback function', function () {
     const lokiTransport = new LokiTransport(fixtures.options)

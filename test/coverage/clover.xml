@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1547478602193" clover="3.2.0">
-  <project timestamp="1547478602194" name="All files">
-    <metrics statements="36" coveredstatements="35" conditionals="10" coveredconditionals="8" methods="13" coveredmethods="12" elements="59" coveredelements="55" complexity="0" loc="36" ncloc="36" packages="2" files="2" classes="2">
+<coverage generated="1547760839209" clover="3.2.0">
+  <project timestamp="1547760839209" name="All files">
+    <metrics statements="36" coveredstatements="36" conditionals="10" coveredconditionals="8" methods="13" coveredmethods="13" elements="59" coveredelements="57" complexity="0" loc="36" ncloc="36" packages="2" files="2" classes="2">
       <package name="winston-loki">
-        <metrics statements="12" coveredstatements="11" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="2"/>
+        <metrics statements="12" coveredstatements="12" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
         <file name="index.js" path="/home/jani/dev/devops/winston-loki/index.js">
-          <metrics statements="12" coveredstatements="11" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="2"/>
+          <metrics statements="12" coveredstatements="12" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
           <line num="1" count="1" type="stmt"/>
           <line num="2" count="1" type="stmt"/>
           <line num="4" count="1" type="stmt"/>
@@ -13,7 +13,7 @@
           <line num="7" count="5" type="stmt"/>
           <line num="11" count="5" type="stmt"/>
           <line num="15" count="4" type="stmt"/>
-          <line num="16" count="0" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
           <line num="19" count="4" type="stmt"/>
           <line num="20" count="4" type="stmt"/>
           <line num="33" count="4" type="stmt"/>
