@@ -36,7 +36,13 @@ describe('Integration tests', function () {
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
   })
-  it('LokiTransport should map logs correctly from Winston to Grafana Loki', function () {
+  it('LokiTransport should correctly map values before sending to Batcher', function () {
+    const lokiTransport = new LokiTransport(fixtures.options)
+    const spy = sinon.spy(lokiTransport.batcher, 'pushLogEntry')
+    lokiTransport.log(fixtures.logs[0], () => {})
+    expect(spy.calledWith(JSON.parse(fixtures.logs_mapped[0]))).toBe(true)
+  })
+  it('LokiTransport should map logs correctly from Winston to Grafana Loki format', function () {
     const lokiTransport = new LokiTransport(fixtures.options)
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)

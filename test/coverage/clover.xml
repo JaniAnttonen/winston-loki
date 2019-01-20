@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1547761282225" clover="3.2.0">
-  <project timestamp="1547761282225" name="All files">
+<coverage generated="1547994424789" clover="3.2.0">
+  <project timestamp="1547994424789" name="All files">
     <metrics statements="36" coveredstatements="36" conditionals="10" coveredconditionals="8" methods="13" coveredmethods="13" elements="59" coveredelements="57" complexity="0" loc="36" ncloc="36" packages="2" files="2" classes="2">
       <package name="winston-loki">
         <metrics statements="12" coveredstatements="12" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
@@ -9,15 +9,15 @@
           <line num="1" count="1" type="stmt"/>
           <line num="2" count="1" type="stmt"/>
           <line num="4" count="1" type="stmt"/>
-          <line num="6" count="5" type="stmt"/>
-          <line num="7" count="5" type="stmt"/>
-          <line num="11" count="5" type="stmt"/>
-          <line num="15" count="4" type="stmt"/>
+          <line num="6" count="6" type="stmt"/>
+          <line num="7" count="6" type="stmt"/>
+          <line num="11" count="6" type="stmt"/>
+          <line num="15" count="5" type="stmt"/>
           <line num="16" count="1" type="stmt"/>
-          <line num="19" count="4" type="stmt"/>
-          <line num="20" count="4" type="stmt"/>
-          <line num="33" count="4" type="stmt"/>
-          <line num="35" count="4" type="stmt"/>
+          <line num="19" count="5" type="stmt"/>
+          <line num="20" count="5" type="stmt"/>
+          <line num="33" count="5" type="stmt"/>
+          <line num="35" count="5" type="stmt"/>
         </file>
       </package>
       <package name="winston-loki.src">
@@ -26,28 +26,28 @@
           <metrics statements="24" coveredstatements="24" conditionals="6" coveredconditionals="5" methods="10" coveredmethods="10"/>
           <line num="1" count="2" type="stmt"/>
           <line num="3" count="2" type="stmt"/>
-          <line num="5" count="11" type="stmt"/>
-          <line num="6" count="11" type="cond" truecount="1" falsecount="1"/>
-          <line num="9" count="11" type="stmt"/>
-          <line num="10" count="11" type="stmt"/>
-          <line num="15" count="10" type="stmt"/>
-          <line num="16" count="10" type="stmt"/>
-          <line num="20" count="13" type="stmt"/>
+          <line num="5" count="12" type="stmt"/>
+          <line num="6" count="12" type="cond" truecount="1" falsecount="1"/>
+          <line num="9" count="12" type="stmt"/>
+          <line num="10" count="12" type="stmt"/>
+          <line num="15" count="11" type="stmt"/>
+          <line num="16" count="11" type="stmt"/>
+          <line num="20" count="14" type="stmt"/>
           <line num="23" count="9" type="stmt"/>
-          <line num="26" count="10" type="stmt"/>
-          <line num="27" count="10" type="cond" truecount="2" falsecount="0"/>
-          <line num="28" count="6" type="stmt"/>
+          <line num="26" count="11" type="stmt"/>
+          <line num="27" count="11" type="cond" truecount="2" falsecount="0"/>
+          <line num="28" count="7" type="stmt"/>
           <line num="30" count="4" type="stmt"/>
           <line num="38" count="2" type="stmt"/>
           <line num="39" count="2" type="stmt"/>
           <line num="42" count="2" type="stmt"/>
-          <line num="48" count="6" type="stmt"/>
-          <line num="49" count="8" type="stmt"/>
-          <line num="50" count="8" type="stmt"/>
-          <line num="51" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="48" count="7" type="stmt"/>
+          <line num="49" count="9" type="stmt"/>
+          <line num="50" count="9" type="stmt"/>
+          <line num="51" count="8" type="cond" truecount="2" falsecount="0"/>
           <line num="52" count="1" type="stmt"/>
           <line num="55" count="1" type="stmt"/>
-          <line num="57" count="8" type="stmt"/>
+          <line num="57" count="9" type="stmt"/>
         </file>
       </package>
     </metrics>
