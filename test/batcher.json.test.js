@@ -20,7 +20,7 @@ describe('Batcher tests with JSON transport', function () {
     expect(batcher.batch.streams.length).toBe(2)
   })
   it('Should add items with same labels as separate streams', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     expect(batcher.batch.streams.length).toBe(2)
   })
