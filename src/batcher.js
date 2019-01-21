@@ -1,10 +1,12 @@
 const got = require('got')
+const url = require('url')
 const grpc = require('grpc')
 const { Pusher } = require('./proto')
 
 module.exports = class Batcher {
   constructor (options) {
     this.options = options
+    this.url = new url.URL(this.options.host + '/api/prom/push').toString()
     this.interval = this.options.interval
       ? Number(this.options.interval) * 1000
       : 5000
@@ -13,10 +15,7 @@ module.exports = class Batcher {
       streams: []
     }
     if (!this.options.json) {
-      this.pusher = new Pusher(
-        this.options.host + '/api/prom/push',
-        grpc.credentials.createInsecure()
-      )
+      this.pusher = new Pusher(this.url, grpc.credentials.createInsecure())
     }
   }
 
@@ -55,7 +54,7 @@ module.exports = class Batcher {
       } else {
         if (this.options.json) {
           got
-            .post(this.options.host + '/api/prom/push', {
+            .post(this.url, {
               body: JSON.stringify(this.batch),
               headers: {
                 'content-type': 'application/json'
@@ -69,7 +68,14 @@ module.exports = class Batcher {
               reject(err)
             })
         } else {
-          this.pusher.push(this.batch)
+          this.pusher.Push(this.batch, (error, response) => {
+            if (error) {
+              reject(error)
+            } else {
+              this.clearBatch()
+              resolve(response)
+            }
+          })
         }
       }
     })
