@@ -8,8 +8,8 @@ module.exports = class LokiTransport extends Transport {
       host: options.host,
       interval: options.interval,
       json: options.json
-    });
-    this.batcher.run();
+    })
+    this.batcher.run()
   }
 
   log (info, callback) {

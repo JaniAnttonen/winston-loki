@@ -4,6 +4,7 @@
   "description": "A Winston transport for Grafana Loki",
   "main": "index.js",
   "scripts": {
+    "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./src/proto/index.js ./src/proto/logproto.proto && npm run lint:fix",
     "test": "./node_modules/.bin/standard && ./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/standard",
     "lint:fix": "./node_modules/.bin/standard --fix",
@@ -29,9 +30,8 @@
   },
   "dependencies": {
     "got": "^9.5.0",
+    "grpc": "^1.18.0",
     "moment": "^2.23.0",
-    "protobufjs": "^6.8.8",
-    "snappy": "^6.1.1",
     "winston-transport": "^4.3.0"
   },
   "devDependencies": {
@@ -43,6 +43,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^23.6.0",
+    "protobufjs": "^6.8.8",
     "sinon": "^7.2.2",
     "standard": "^12.0.1",
     "winston": "^3.1.0"
