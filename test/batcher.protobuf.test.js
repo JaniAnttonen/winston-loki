@@ -5,9 +5,9 @@ const sinon = require('sinon')
 
 let batcher
 
-describe('Batcher tests', function () {
+describe('Batcher tests with Protobuf + gRPC transport', function () {
   beforeEach(function () {
-    batcher = new Batcher(fixtures.options)
+    batcher = new Batcher(fixtures.options_protobuf)
     this.post = sinon.stub(got, 'post')
   })
   afterEach(function () {
@@ -15,18 +15,18 @@ describe('Batcher tests', function () {
     got.post.restore()
   })
   it('Should add same items as separate streams', function () {
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(2)
   })
   it('Should add items with same labels as separate streams', function () {
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
-    batcher.pushLogEntry(fixtures.logs_mapped[2])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     expect(batcher.batch.streams.length).toBe(2)
   })
   it('Should be able to clear the batch of streams', function () {
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
-    batcher.pushLogEntry(fixtures.logs_mapped[2])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     expect(batcher.batch.streams.length).toBe(2)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
@@ -39,7 +39,7 @@ describe('Batcher tests', function () {
       }
     }
     got.post.resolves(responseObject)
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
     await batcher.sendBatchToLoki()
     expect(batcher.batch.streams.length).toBe(0)
@@ -49,7 +49,7 @@ describe('Batcher tests', function () {
       statusCode: 404
     }
     got.post.rejects(errorObject)
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
     try {
       await batcher.sendBatchToLoki()
@@ -69,7 +69,7 @@ describe('Batcher tests', function () {
 
     batcher.circuitBreakerInterval = circuitBreakerInterval
     batcher.run()
-    batcher.pushLogEntry(fixtures.logs_mapped[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
 
     expect(batcher.batch.streams.length).toBe(1)
     expect(batcher.interval).toBe(fixtures.options.interval * 1000)
