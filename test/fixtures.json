@@ -1,5 +1,10 @@
 {
-  "options": { "host": "http://localhost", "interval": 0.1 },
+  "options_json": { "host": "http://localhost", "interval": 0.1, "json": true },
+  "options_protobuf": {
+    "host": "http://localhost:3100",
+    "interval": 0.1,
+    "json": false
+  },
   "logs": [
     {
       "label": "test",

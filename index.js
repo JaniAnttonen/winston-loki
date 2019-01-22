@@ -6,7 +6,8 @@ module.exports = class LokiTransport extends Transport {
     super(options)
     this.batcher = new Batcher({
       host: options.host,
-      interval: options.interval
+      interval: options.interval,
+      json: options.json
     })
     this.batcher.run()
   }

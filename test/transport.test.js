@@ -6,7 +6,7 @@ const sinon = require('sinon')
 describe('Integration tests', function () {
   it('Winston should accept LokiTransport', function () {
     const options = {
-      transports: [new LokiTransport(fixtures.options)]
+      transports: [new LokiTransport(fixtures.options_json)]
     }
     const logger = createLogger(options)
 
@@ -14,7 +14,7 @@ describe('Integration tests', function () {
     expect(logger._readableState.pipesCount).toBe(1)
   })
   it('LokiTransport should trigger the "logged" event', function (done) {
-    const lokiTransport = new LokiTransport(fixtures.options)
+    const lokiTransport = new LokiTransport(fixtures.options_json)
     const spy = sinon.spy(eventEmitted)
     lokiTransport.on('logged', spy)
     lokiTransport.log(fixtures.logs[0], () => {})
@@ -24,7 +24,7 @@ describe('Integration tests', function () {
     }
   })
   it('LokiTransport should trigger the callback function', function () {
-    const lokiTransport = new LokiTransport(fixtures.options)
+    const lokiTransport = new LokiTransport(fixtures.options_json)
     let callback = false
     lokiTransport.log(fixtures.logs[0], () => {
       callback = true
@@ -32,18 +32,18 @@ describe('Integration tests', function () {
     expect(callback).toBe(true)
   })
   it('LokiTransport should transfer logs to the Batcher', function () {
-    const lokiTransport = new LokiTransport(fixtures.options)
+    const lokiTransport = new LokiTransport(fixtures.options_json)
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
   })
   it('LokiTransport should correctly map values before sending to Batcher', function () {
-    const lokiTransport = new LokiTransport(fixtures.options)
+    const lokiTransport = new LokiTransport(fixtures.options_json)
     const spy = sinon.spy(lokiTransport.batcher, 'pushLogEntry')
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(spy.calledWith(JSON.parse(fixtures.logs_mapped[0]))).toBe(true)
   })
   it('LokiTransport should map logs correctly from Winston to Grafana Loki format', function () {
-    const lokiTransport = new LokiTransport(fixtures.options)
+    const lokiTransport = new LokiTransport(fixtures.options_json)
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(lokiTransport.batcher.batch.streams[0]).toEqual(
