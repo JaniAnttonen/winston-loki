@@ -1,7 +1,6 @@
 const got = require('got')
 const url = require('url')
-const grpc = require('grpc')
-const { Pusher } = require('./proto')
+const loadProto = require('./proto')
 
 module.exports = class Batcher {
   constructor (options) {
@@ -14,8 +13,9 @@ module.exports = class Batcher {
     this.batch = {
       streams: []
     }
+    this.protoDef = null
     if (!this.options.json) {
-      this.pusher = new Pusher(this.url, grpc.credentials.createInsecure())
+      this.protoDef = loadProto()
     }
   }
 
@@ -68,14 +68,25 @@ module.exports = class Batcher {
               reject(err)
             })
         } else {
-          this.pusher.Push(this.batch, (error, response) => {
-            if (error) {
-              reject(error)
-            } else {
+          const PushRequest = this.protoDef.lookupType('logproto.PushRequest')
+          const err = PushRequest.verify(this.batch)
+          if (err) reject(err)
+          const message = PushRequest.create(this.batch)
+          const buffer = PushRequest.encode(message).finish()
+          got
+            .post(this.url, {
+              body: buffer,
+              headers: {
+                'content-type': 'application/x-protobuf'
+              }
+            })
+            .then(res => {
               this.clearBatch()
-              resolve(response)
-            }
-          })
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
         }
       }
     })

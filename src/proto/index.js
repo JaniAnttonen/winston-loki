@@ -1,17 +1,10 @@
 const path = require('path')
-const grpc = require('grpc')
-const loader = require('@grpc/proto-loader')
-
-const PROTO_PATH = path.join(__dirname, './logproto.proto')
-
-const packageDefinition = loader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true
-})
-
-const logproto = grpc.loadPackageDefinition(packageDefinition).logproto
-
-module.exports = logproto
+const protobuf = require('protobufjs')
+const PROTO_PATH = path.join(__dirname, 'logproto.proto')
+console.log(PROTO_PATH)
+const loadProto = () =>
+  protobuf.load(PROTO_PATH, (err, root) => {
+    if (err) throw Error(err)
+    return root
+  })
+module.exports = loadProto

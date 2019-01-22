@@ -28,10 +28,9 @@
     "url": "https://github.com/JaniAnttonen/winston-loki.git"
   },
   "dependencies": {
-    "@grpc/proto-loader": "^0.4.0",
     "got": "^9.5.0",
-    "grpc": "^1.18.0",
     "moment": "^2.23.0",
+    "protobufjs": "^6.8.8",
     "winston-transport": "^4.3.0"
   },
   "devDependencies": {
