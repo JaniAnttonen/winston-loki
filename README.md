@@ -24,6 +24,12 @@ It should contain everything from the protocol to the port.
 
 The interval at which the transport sends batched logs to Loki. **In seconds.**
 
+>`json`
+
+*optional*
+
+Switch to JSON transport instead of Protobuf.
+
 ### Example
 ```js
 const { createLogger, transports } = require("winston");
@@ -52,6 +58,8 @@ And you should have a working, requirable winston-loki package under your projec
 
 Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
 
+Grafana Loki *doesn't have any official releases or version numbers* as of now, so if the API is changed, it's going to be fun, but it's working as of now.
+
 ### Run tests
 ```sh
 npm test
@@ -59,4 +67,4 @@ npm test
 
 Write new ones under `/test`
 
-TODO: Add protobuf as default mode, remove *got* dependency
+TODO: Remove *got* dependency
