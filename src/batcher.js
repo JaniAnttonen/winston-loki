@@ -1,6 +1,8 @@
 const got = require('got')
 const url = require('url')
-const loadProto = require('./proto')
+const { logproto } = require('./proto')
+const snappy = require('snappy')
+const protoHelpers = require('./proto/helpers')
 
 module.exports = class Batcher {
   constructor (options) {
@@ -13,9 +15,10 @@ module.exports = class Batcher {
     this.batch = {
       streams: []
     }
-    this.protoDef = null
-    if (!this.options.json) {
-      this.protoDef = loadProto()
+    if (this.options.json) {
+      this.contentType = 'application/json'
+    } else {
+      this.contentType = 'application/x-protobuf'
     }
   }
 
@@ -30,6 +33,7 @@ module.exports = class Batcher {
       this.batch.streams.push(logEntry)
     } else {
       const { streams } = this.batch
+      logEntry = protoHelpers.createProtoTimestamps(logEntry)
       const match = streams.findIndex(
         stream => stream.labels === logEntry.labels
       )
@@ -52,42 +56,30 @@ module.exports = class Batcher {
       if (this.batch.streams.length === 0) {
         resolve()
       } else {
+        let reqBody
         if (this.options.json) {
-          got
-            .post(this.url, {
-              body: JSON.stringify(this.batch),
-              headers: {
-                'content-type': 'application/json'
-              }
-            })
-            .then(res => {
-              this.clearBatch()
-              resolve()
-            })
-            .catch(err => {
-              reject(err)
-            })
+          reqBody = JSON.stringify(this.batch)
         } else {
-          const PushRequest = this.protoDef.lookupType('logproto.PushRequest')
-          const err = PushRequest.verify(this.batch)
+          const err = logproto.PushRequest.verify(this.batch)
           if (err) reject(err)
-          const message = PushRequest.create(this.batch)
-          const buffer = PushRequest.encode(message).finish()
-          got
-            .post(this.url, {
-              body: buffer,
-              headers: {
-                'content-type': 'application/x-protobuf'
-              }
-            })
-            .then(res => {
-              this.clearBatch()
-              resolve()
-            })
-            .catch(err => {
-              reject(err)
-            })
+          const message = logproto.PushRequest.create(this.batch)
+          const buffer = logproto.PushRequest.encode(message).finish()
+          reqBody = snappy.compressSync(buffer)
         }
+        got
+          .post(this.url, {
+            body: reqBody,
+            headers: {
+              'content-type': this.contentType
+            }
+          })
+          .then(res => {
+            this.clearBatch()
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
       }
     })
   }
