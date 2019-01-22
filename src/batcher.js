@@ -15,10 +15,9 @@ module.exports = class Batcher {
     this.batch = {
       streams: []
     }
+    this.contentType = 'application/x-protobuf'
     if (this.options.json) {
       this.contentType = 'application/json'
-    } else {
-      this.contentType = 'application/x-protobuf'
     }
   }
 

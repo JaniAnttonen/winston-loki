@@ -29,9 +29,4 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
   })
-  it('Should be able to construct and send the protobuf to loki', async function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
-    await batcher.sendBatchToLoki()
-  })
 })
