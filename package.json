@@ -20,7 +20,12 @@
     ]
   },
   "jest": {
-    "coverageDirectory": "./test/coverage"
+    "coverageDirectory": "./test/coverage",
+    "coveragePathIgnorePatterns": [
+      "./node_modules/",
+      "./test/",
+      "./src/proto/index.js"
+    ]
   },
   "author": "Jani Anttonen",
   "license": "MIT",
