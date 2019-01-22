@@ -1,7 +1,19 @@
 {
   "name": "winston-loki",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A Winston transport for Grafana Loki",
+  "keywords": [
+    "winston",
+    "winston-transport",
+    "transport",
+    "loki",
+    "grafana",
+    "logging",
+    "plugin",
+    "SRE",
+    "site reliability engineering",
+    "grafana loki"
+  ],
   "main": "index.js",
   "scripts": {
     "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./src/proto/index.js ./src/proto/logproto.proto && npm run lint:fix",
