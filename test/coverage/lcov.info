@@ -22,12 +22,12 @@ DA:33,7
 DA:35,7
 LF:12
 LH:12
-BRDA:27,0,0,7
-BRDA:27,0,1,0
+BRDA:27,0,0,1
+BRDA:27,0,1,6
 BRDA:27,1,0,7
 BRDA:27,1,1,7
 BRF:4
-BRH:3
+BRH:4
 end_of_record
 TN:
 SF:/home/jani/dev/devops/winston-loki/src/batcher.js
@@ -55,7 +55,7 @@ FNDA:18,(anonymous_6)
 FNDA:16,(anonymous_7)
 FNDA:16,(anonymous_8)
 FNDA:3,(anonymous_9)
-FNDA:3,(anonymous_10)
+FNDA:4,(anonymous_10)
 FNDA:9,(anonymous_11)
 DA:1,3
 DA:2,3
@@ -99,7 +99,7 @@ DA:69,1
 DA:72,7
 DA:80,3
 DA:81,3
-DA:84,3
+DA:84,4
 DA:91,9
 DA:92,11
 DA:93,11

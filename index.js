@@ -24,7 +24,7 @@ module.exports = class LokiTransport extends Transport {
         {
           ts: timestamp,
           line: `${message} ${
-            rest && Object.keys(rest) ? JSON.stringify(rest) : ''
+            rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
           }`
         }
       ]
