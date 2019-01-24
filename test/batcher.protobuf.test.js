@@ -1,7 +1,8 @@
 const Batcher = require('../src/batcher')
 // const got = require('got')
+const { logproto } = require('../src/proto')
 const fixtures = require('./fixtures.json')
-// const sinon = require('sinon')
+const sinon = require('sinon')
 
 let batcher
 
@@ -28,5 +29,26 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     expect(batcher.batch.streams.length).toBe(2)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
+  })
+  it('Should fail if the batch is not constructed correctly', async function () {
+    batcher.pushLogEntry(fixtures.incorrectly_mapped)
+    try {
+      await batcher.sendBatchToLoki()
+    } catch (error) {
+      expect(error).toBeTruthy()
+    }
+  })
+  it("Should fail if snappy can't compress the buffer", async function () {
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    this.finish = sinon.stub(
+      logproto.PushRequest.encode(batcher.batch),
+      'finish'
+    )
+    this.finish.returns(null)
+    try {
+      await batcher.sendBatchToLoki()
+    } catch (error) {
+      expect(error).toBeTruthy()
+    }
   })
 })

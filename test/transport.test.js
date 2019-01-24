@@ -50,4 +50,20 @@ describe('Integration tests', function () {
       JSON.parse(fixtures.logs_mapped[0])
     )
   })
+  it("LokiTransport should append anything else than the message after it in the log's entry", function () {
+    const lokiTransport = new LokiTransport(fixtures.options_json)
+    lokiTransport.log(fixtures.logs[3], () => {})
+    expect(lokiTransport.batcher.batch.streams.length).toBe(1)
+    expect(
+      JSON.stringify(lokiTransport.batcher.batch.streams[0]).replace(/\s/g, '')
+    ).toEqual(fixtures.logs_mapped[3].replace(/\s/g, ''))
+  })
+  it('LokiTransport should not append anything else after the message if there are no extra keys in the log object', function () {
+    const lokiTransport = new LokiTransport(fixtures.options_json)
+    lokiTransport.log(fixtures.logs[2], () => {})
+    expect(lokiTransport.batcher.batch.streams.length).toBe(1)
+    expect(
+      JSON.stringify(lokiTransport.batcher.batch.streams[0]).replace(/\s/g, '')
+    ).toEqual(fixtures.logs_mapped[2].replace(/\s/g, ''))
+  })
 })

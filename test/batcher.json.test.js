@@ -14,6 +14,12 @@ describe('Batcher tests with JSON transport', function () {
     batcher.clearBatch()
     got.post.restore()
   })
+  it('Should construct with default interval if one is not given', function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    delete options.interval
+    batcher = new Batcher(options)
+    expect(batcher.interval).toBe(5000)
+  })
   it('Should add same items as separate streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
@@ -57,6 +63,21 @@ describe('Batcher tests with JSON transport', function () {
       expect(error.statusCode).toBe(404)
     }
     expect(batcher.batch.streams.length).toBe(1)
+  })
+  it('Should fail if the batch is not constructed correctly', async function () {
+    const responseObject = {
+      statusCode: 200,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+    got.post.resolves(responseObject)
+    batcher.pushLogEntry(fixtures.incorrectly_mapped)
+    try {
+      await batcher.sendBatchToLoki()
+    } catch (error) {
+      expect(error).toBeTruthy()
+    }
   })
   it('Run loop should work correctly', async function () {
     const errorObject = {
