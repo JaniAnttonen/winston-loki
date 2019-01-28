@@ -14,5 +14,26 @@ module.exports = {
       })
     }
     return logEntry
+  },
+  sortBatch: batch => {
+    if (
+      batch.streams[0] &&
+      batch.streams[0].entries &&
+      batch.streams[0].entries.find(
+        entry => entry.timestamp && entry.timestamp.seconds
+      )
+    ) {
+      batch.streams = batch.streams.map(stream => {
+        stream.entries = stream.entries.sort(
+          (a, b) => a.timestamp.seconds - b.timestamp.seconds
+        )
+        return stream
+      })
+    } else {
+      batch.streams = batch.streams.sort(
+        (a, b) => a.entries[0].ts - b.entries[0].ts
+      )
+    }
+    return batch
   }
 }

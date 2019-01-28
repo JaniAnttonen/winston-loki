@@ -14,13 +14,13 @@
     },
     {
       "label": "test",
-      "timestamp": 1546977515848,
+      "timestamp": 1546977615848,
       "message": "you broke everything",
       "level": "error"
     },
     {
       "label": "test",
-      "timestamp": 1546977515858,
+      "timestamp": 1546997515858,
       "message": "you broke everything but not quite",
       "level": "error"
     },
@@ -34,8 +34,8 @@
   ],
   "logs_mapped": [
     "{\"labels\":\"{job=\\\"test\\\", level=\\\"info\\\"}\",\"entries\":[{\"ts\":1546977515828,\"line\":\"testings \"}]}",
-    "{\"labels\":\"{job=\\\"test\\\", level=\\\"error\\\"}\",\"entries\":[{\"ts\":1546977515848,\"line\":\"you broke everything \"} ]}",
-    "{\"labels\":\"{job=\\\"test\\\", level=\\\"error\\\"}\",\"entries\":[{\"ts\":1546977515858,\"line\":\"you broke everything but not quite \"}]}",
+    "{\"labels\":\"{job=\\\"test\\\", level=\\\"error\\\"}\",\"entries\":[{\"ts\":1546977615848,\"line\":\"you broke everything \"} ]}",
+    "{\"labels\":\"{job=\\\"test\\\", level=\\\"error\\\"}\",\"entries\":[{\"ts\":1546997515858,\"line\":\"you broke everything but not quite \"}]}",
     "{\"labels\":\"{job=\\\"test\\\", level=\\\"error\\\"}\",\"entries\":[{\"ts\":1546977515858,\"line\":\"you broke everything but not quite {\\\"jeejee\\\":\\\"ebon\\\"}\"}]}"
   ],
   "incorrect_mapping": "{ \"labelings\": \"{jobbings=\\\"test\\\", levelings=\\\"info\\\"}\", \"entries\": [ { \"tisisnotit\": 1546977515828, \"dontdodisline\": \"testings {}\" } ] }"

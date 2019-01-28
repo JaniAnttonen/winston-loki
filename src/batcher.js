@@ -60,9 +60,10 @@ module.exports = class Batcher {
           reqBody = JSON.stringify(this.batch)
         } else {
           try {
-            const err = logproto.PushRequest.verify(this.batch)
+            const batch = protoHelpers.sortBatch(this.batch)
+            const err = logproto.PushRequest.verify(batch)
             if (err) reject(err)
-            const message = logproto.PushRequest.create(this.batch)
+            const message = logproto.PushRequest.create(batch)
             const buffer = logproto.PushRequest.encode(message).finish()
             reqBody = snappy.compressSync(buffer)
           } catch (err) {

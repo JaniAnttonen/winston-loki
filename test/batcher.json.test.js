@@ -3,6 +3,8 @@ const got = require('got')
 const fixtures = require('./fixtures.json')
 const sinon = require('sinon')
 
+const { sortBatch } = require('../src/proto/helpers')
+
 let batcher
 
 describe('Batcher tests with JSON transport', function () {
@@ -29,6 +31,17 @@ describe('Batcher tests with JSON transport', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     expect(batcher.batch.streams.length).toBe(2)
+  })
+  it('Should sort the batch correctly', function () {
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    expect(batcher.batch.streams[0].entries[0].ts).toEqual(
+      fixtures.logs[2].timestamp
+    )
+    batcher.batch = sortBatch(batcher.batch)
+    expect(batcher.batch.streams[0].entries[0].ts).toEqual(
+      fixtures.logs[1].timestamp
+    )
   })
   it('Should be able to clear the batch of streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
