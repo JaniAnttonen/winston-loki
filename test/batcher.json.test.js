@@ -8,9 +8,9 @@ const { sortBatch } = require('../src/proto/helpers')
 let batcher
 
 describe('Batcher tests with JSON transport', function () {
-  beforeEach(function () {
+  beforeEach(async function () {
     batcher = new Batcher(fixtures.options_json)
-    this.post = sinon.stub(got, 'post')
+    this.post = await sinon.stub(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
@@ -21,6 +21,22 @@ describe('Batcher tests with JSON transport', function () {
     delete options.interval
     batcher = new Batcher(options)
     expect(batcher.interval).toBe(5000)
+  })
+  it('Should call sendBatchToLoki instantly when batching is disabled', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.batching = false
+    batcher = new Batcher(options)
+
+    const stub = await sinon.stub(batcher, 'sendBatchToLoki')
+    await stub.returns(() => call())
+    const spy = sinon.spy(call)
+
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+
+    function call () {
+      expect(spy.called).toBe(true)
+    }
+    await stub.restore()
   })
   it('Should add same items as separate streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))

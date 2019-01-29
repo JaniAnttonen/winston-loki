@@ -3,6 +3,8 @@ const LokiTransport = require('winston-loki')
 const fixtures = require('./fixtures.json')
 const sinon = require('sinon')
 
+const Batcher = require('../src/batcher')
+
 describe('Integration tests', function () {
   it('Winston should accept LokiTransport', function () {
     const options = {
@@ -12,6 +14,50 @@ describe('Integration tests', function () {
 
     expect(logger.constructor.name).toBe('DerivedLogger')
     expect(logger._readableState.pipesCount).toBe(1)
+  })
+  it('LokiTransport should not run the Batcher continuously when batching is off', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.batching = false
+    let called = false
+
+    function call () {
+      called = true
+    }
+
+    const stub = await sinon.stub(Batcher.prototype, 'run')
+    await stub.returns(() => call())
+
+    const optionsWinston = {
+      transports: [new LokiTransport(options)]
+    }
+    const logger = createLogger(optionsWinston)
+
+    expect(logger.constructor.name).toBe('DerivedLogger')
+    expect(logger._readableState.pipesCount).toBe(1)
+
+    expect(called).toBe(false)
+    await stub.restore()
+  })
+  it('LokiTransport should run the Batcher continuously when batching is off', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.batching = false
+
+    const stub = await sinon.stub(Batcher.prototype, 'run')
+    await stub.returns(() => call())
+    const spy = sinon.spy(call)
+
+    const optionsWinston = {
+      transports: [new LokiTransport(options)]
+    }
+    const logger = createLogger(optionsWinston)
+
+    expect(logger.constructor.name).toBe('DerivedLogger')
+    expect(logger._readableState.pipesCount).toBe(1)
+
+    function call () {
+      expect(spy.called).toBe(true)
+    }
+    await stub.restore()
   })
   it('LokiTransport should trigger the "logged" event', function (done) {
     const lokiTransport = new LokiTransport(fixtures.options_json)

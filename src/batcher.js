@@ -44,6 +44,12 @@ module.exports = class Batcher {
         streams.push(logEntry)
       }
     }
+    if (
+      this.options.batching !== undefined &&
+      this.options.batching === false
+    ) {
+      this.sendBatchToLoki()
+    }
   }
 
   clearBatch () {

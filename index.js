@@ -7,9 +7,10 @@ module.exports = class LokiTransport extends Transport {
     this.batcher = new Batcher({
       host: options.host,
       interval: options.interval,
-      json: options.json
+      json: options.json,
+      batching: options.batching
     })
-    this.batcher.run()
+    options.batching && this.batcher.run()
   }
 
   log (info, callback) {

@@ -62,7 +62,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   })
   it("Should fail if snappy can't compress the buffer", async function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
-    this.finish = sinon.stub(
+    this.finish = await sinon.stub(
       logproto.PushRequest.encode(batcher.batch),
       'finish'
     )
