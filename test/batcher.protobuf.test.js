@@ -83,7 +83,15 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
       seconds: Math.floor(dt / 1000),
       nanos: (dt % 1000) * 1000
     }
+
     expect(batcher.batch.streams[0].entries[0].timestamp).toEqual(timestamp)
+
+    dt = moment(fixtures.logs[2].timestamp).valueOf()
+    timestamp = {
+      seconds: Math.floor(dt / 1000),
+      nanos: (dt % 1000) * 1000 + 1
+    }
+    expect(batcher.batch.streams[0].entries[1].timestamp).toEqual(timestamp)
   })
   it('Should be able to clear the batch of streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
