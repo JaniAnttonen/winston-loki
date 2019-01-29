@@ -36,22 +36,22 @@ module.exports = class Batcher {
         logEntry = protoHelpers.createProtoTimestamps(logEntry)
       }
       this.sendBatchToLoki(logEntry)
-      return
-    }
-    if (this.options.json) {
-      this.batch.streams.push(logEntry)
     } else {
-      const { streams } = this.batch
-      logEntry = protoHelpers.createProtoTimestamps(logEntry)
-      const match = streams.findIndex(
-        stream => stream.labels === logEntry.labels
-      )
-      if (match > -1) {
-        logEntry.entries.forEach(entry => {
-          streams[match].entries.push(entry)
-        })
+      if (this.options.json) {
+        this.batch.streams.push(logEntry)
       } else {
-        streams.push(logEntry)
+        const { streams } = this.batch
+        logEntry = protoHelpers.createProtoTimestamps(logEntry)
+        const match = streams.findIndex(
+          stream => stream.labels === logEntry.labels
+        )
+        if (match > -1) {
+          logEntry.entries.forEach(entry => {
+            streams[match].entries.push(entry)
+          })
+        } else {
+          streams.push(logEntry)
+        }
       }
     }
   }
@@ -101,6 +101,7 @@ module.exports = class Batcher {
             resolve()
           })
           .catch(err => {
+            this.options.clearOnError && this.clearBatch()
             reject(err)
           })
       }

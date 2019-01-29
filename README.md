@@ -11,24 +11,15 @@ A Grafana Loki transport for the nodejs logging library Winston.
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
 
 ### Options
-LokiTransport() takes a Javascript object as an input. These are the options that are available:
+LokiTransport() takes a Javascript object as an input. These are the options that are available, __required in bold__:
 
->`host`
-
-The URL of the Grafana Loki server.
-It should contain everything from the protocol to the port.
-
->`interval`
-
-*optional*
-
-The interval at which the transport sends batched logs to Loki. **In seconds.**
-
->`json`
-
-*optional*
-
-Switch to JSON transport instead of Protobuf.
+| **Parameter**    | **Description**                                           | **Example**                      |
+| ---------------- | --------------------------------------------------------- | -------------------------------- |
+| __`host`__       | URL for Grafana Loki                                      | http://localhost:3100            |
+| `interval`       | The interval at which batched logs are sent in seconds    | 30                               |
+| `json`           | Use JSON instead of Protobuf for transport                | true                             |
+| `batching`       | If batching is not used, the logs are sent as they come   | true                             |
+| `clearOnError`   | Discard any logs that result in an error during transport | true                             |
 
 ### Example
 ```js

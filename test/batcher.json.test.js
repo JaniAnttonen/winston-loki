@@ -93,6 +93,26 @@ describe('Batcher tests with JSON transport', function () {
     }
     expect(batcher.batch.streams.length).toBe(1)
   })
+  it('Should reject promise and clear batch on unsuccessful send if clearOnError is enabled', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.clearOnError = true
+    batcher = new Batcher(options)
+
+    const errorObject = {
+      statusCode: 404
+    }
+    got.post.rejects(errorObject)
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    expect(batcher.batch.streams.length).toBe(1)
+
+    try {
+      await batcher.sendBatchToLoki()
+    } catch (error) {
+      expect(error.statusCode).toBe(404)
+    }
+
+    expect(batcher.batch.streams.length).toBe(0)
+  })
   it('Should fail if the batch is not constructed correctly', async function () {
     const responseObject = {
       statusCode: 200,
