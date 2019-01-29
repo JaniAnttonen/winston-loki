@@ -37,7 +37,10 @@ module.exports = {
           if (maxValue === 0 || maxValue < currValue) {
             maxValue = currValue
           } else {
-            entry.timestamp.nanos++
+            entry.timestamp = {
+              seconds: Math.floor(maxValue / 1000),
+              nanos: (maxValue % 1000) * 1000 + 1
+            }
             maxValue = Number(
               String(entry.timestamp.seconds).concat(
                 String(entry.timestamp.nanos / 1000)
@@ -56,7 +59,7 @@ module.exports = {
         if (maxValue === 0 || maxValue < stream.entries[0].ts) {
           maxValue = stream.entries[0].ts
         } else {
-          stream.entries[0].ts++
+          stream.entries[0].ts = maxValue + 1
           maxValue = stream.entries[0].ts
         }
         return stream
