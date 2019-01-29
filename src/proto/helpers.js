@@ -1,4 +1,5 @@
 const moment = require('moment')
+
 module.exports = {
   createProtoTimestamps: logEntry => {
     if (logEntry && logEntry.entries && logEntry.entries.length > 0) {
@@ -16,7 +17,8 @@ module.exports = {
     return logEntry
   },
   sortBatch: batch => {
-    let maxValue = 0
+    let max
+
     if (
       batch.streams[0] &&
       batch.streams[0].entries &&
@@ -24,43 +26,55 @@ module.exports = {
         entry => entry.timestamp && entry.timestamp.seconds
       )
     ) {
+      max = {
+        seconds: 0,
+        nanos: 0
+      }
+
       batch.streams = batch.streams.map(stream => {
+        // Sort the entries first by seconds and then by nanoseconds
         stream.entries = stream.entries.sort(
-          (a, b) => a.timestamp.seconds - b.timestamp.seconds
+          (a, b) =>
+            a.timestamp.seconds - b.timestamp.seconds ||
+            a.timestamp.nanos - b.timestamp.nanos
         )
+
+        // Then ensure that there's no duplicate entries by nanosecond
         stream.entries = stream.entries.map(entry => {
-          const currValue = Number(
-            String(entry.timestamp.seconds).concat(
-              String(entry.timestamp.nanos / 1000)
-            )
-          )
-          if (maxValue === 0 || maxValue < currValue) {
-            maxValue = currValue
-          } else {
-            entry.timestamp = {
-              seconds: Math.floor(maxValue / 1000),
-              nanos: (maxValue % 1000) * 1000 + 1
+          const { seconds, nanos } = entry.timestamp
+
+          if (max.seconds === seconds && max.nanos === nanos) {
+            if (nanos === 999999) {
+              entry.timestamp.nanos = 0
+              entry.timestamp.seconds++
+            } else {
+              entry.timestamp.nanos++
             }
-            maxValue = Number(
-              String(entry.timestamp.seconds).concat(
-                String(entry.timestamp.nanos / 1000)
-              )
-            )
+          } else if (max.seconds === seconds && max.nanos > nanos) {
+            entry.timestamp = JSON.parse(JSON.stringify(max))
+            entry.timestamp.nanos++
           }
+
+          max = JSON.parse(JSON.stringify(entry.timestamp))
+
           return entry
         })
+
         return stream
       })
     } else {
+      max = 0
+
       batch.streams = batch.streams.sort(
         (a, b) => a.entries[0].ts - b.entries[0].ts
       )
+
       batch.streams = batch.streams.map(stream => {
-        if (maxValue === 0 || maxValue < stream.entries[0].ts) {
-          maxValue = stream.entries[0].ts
+        if (max === 0 || max < stream.entries[0].ts) {
+          max = stream.entries[0].ts
         } else {
-          stream.entries[0].ts = maxValue + 1
-          maxValue = stream.entries[0].ts
+          stream.entries[0].ts = max + 1
+          max = stream.entries[0].ts
         }
         return stream
       })
