@@ -28,6 +28,16 @@ module.exports = class Batcher {
   }
 
   pushLogEntry (logEntry) {
+    if (
+      this.options.batching !== undefined &&
+      this.options.batching === false
+    ) {
+      if (!this.options.json) {
+        logEntry = protoHelpers.createProtoTimestamps(logEntry)
+      }
+      this.sendBatchToLoki(logEntry)
+      return
+    }
     if (this.options.json) {
       this.batch.streams.push(logEntry)
     } else {
@@ -44,29 +54,32 @@ module.exports = class Batcher {
         streams.push(logEntry)
       }
     }
-    if (
-      this.options.batching !== undefined &&
-      this.options.batching === false
-    ) {
-      this.sendBatchToLoki()
-    }
   }
 
   clearBatch () {
     this.batch.streams = []
   }
 
-  sendBatchToLoki () {
+  sendBatchToLoki (logEntry) {
     return new Promise((resolve, reject) => {
-      if (this.batch.streams.length === 0) {
+      if (this.batch.streams.length === 0 && !logEntry) {
         resolve()
       } else {
         let reqBody
         if (this.options.json) {
-          reqBody = JSON.stringify(this.batch)
+          if (logEntry) {
+            reqBody = JSON.stringify({ streams: [logEntry] })
+          } else {
+            reqBody = JSON.stringify(this.batch)
+          }
         } else {
           try {
-            const batch = protoHelpers.sortBatch(this.batch)
+            let batch
+            if (logEntry) {
+              batch = { streams: [logEntry] }
+            } else {
+              batch = protoHelpers.sortBatch(this.batch)
+            }
             const err = logproto.PushRequest.verify(batch)
             if (err) reject(err)
             const message = logproto.PushRequest.create(batch)
@@ -84,7 +97,7 @@ module.exports = class Batcher {
             }
           })
           .then(res => {
-            this.clearBatch()
+            !logEntry && this.clearBatch()
             resolve()
           })
           .catch(err => {
