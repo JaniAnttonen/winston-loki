@@ -8,7 +8,7 @@ module.exports = class LokiTransport extends Transport {
       host: options.host,
       interval: options.interval,
       json: options.json,
-      batching: options.batching,
+      batching: options.batching !== undefined ? options.batching : true,
       clearOnError: options.clearOnError,
       replaceTimestamp: options.replaceTimestamp
     })
