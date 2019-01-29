@@ -19,6 +19,7 @@ module.exports = class Batcher {
     if (this.options.json) {
       this.contentType = 'application/json'
     }
+    this.options.batching && this.run()
   }
 
   wait (duration) {
@@ -28,6 +29,10 @@ module.exports = class Batcher {
   }
 
   pushLogEntry (logEntry) {
+    if (this.options.replaceTimestamp) {
+      logEntry.entries[0].ts = Date.now()
+    }
+
     if (
       this.options.batching !== undefined &&
       this.options.batching === false
@@ -41,10 +46,13 @@ module.exports = class Batcher {
         this.batch.streams.push(logEntry)
       } else {
         const { streams } = this.batch
+
         logEntry = protoHelpers.createProtoTimestamps(logEntry)
+
         const match = streams.findIndex(
           stream => stream.labels === logEntry.labels
         )
+
         if (match > -1) {
           logEntry.entries.forEach(entry => {
             streams[match].entries.push(entry)

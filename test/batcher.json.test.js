@@ -22,6 +22,17 @@ describe('Batcher tests with JSON transport', function () {
     batcher = new Batcher(options)
     expect(batcher.interval).toBe(5000)
   })
+  it('Should not run the loop when batching is disabled', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.batching = false
+
+    await sinon.stub(Batcher.prototype, 'run')
+
+    batcher = new Batcher(options)
+
+    expect(batcher.run.called).toBe(false)
+    await Batcher.prototype.run.restore()
+  })
   it('Should call sendBatchToLoki instantly when batching is disabled', async function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_json))
     options.batching = false
@@ -48,6 +59,23 @@ describe('Batcher tests with JSON transport', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     expect(batcher.batch.streams.length).toBe(2)
   })
+  it('Should replace timestamps with Date.now() if replaceTimestamp is enabled', function () {
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+
+    expect(batcher.batch.streams[0].entries[0].ts).toBe(
+      fixtures.logs[1].timestamp
+    )
+
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.replaceTimestamp = true
+    batcher = new Batcher(options)
+
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+
+    expect(batcher.batch.streams[0].entries[0].ts).not.toBe(
+      fixtures.logs[1].timestamp
+    )
+  })
   it('Should sort the batch correctly', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
@@ -65,6 +93,23 @@ describe('Batcher tests with JSON transport', function () {
     expect(batcher.batch.streams.length).toBe(2)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
+  })
+  it('Should wrap single logEntry in {streams: []} if batching is disabled', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.batching = false
+    batcher = new Batcher(options)
+    const responseObject = {
+      statusCode: 200,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+    got.post.resolves(responseObject)
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+
+    expect(got.post.lastCall.lastArg.body).toBe(
+      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[1])] })
+    )
   })
   it('Should clear batch and resolve on successful send', async function () {
     const responseObject = {

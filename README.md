@@ -13,13 +13,14 @@ This Winston transport is used similarly to other Winston transports. Require wi
 ### Options
 LokiTransport() takes a Javascript object as an input. These are the options that are available, __required in bold__:
 
-| **Parameter**    | **Description**                                           | **Example**                      |
-| ---------------- | --------------------------------------------------------- | -------------------------------- |
-| __`host`__       | URL for Grafana Loki                                      | http://localhost:3100            |
-| `interval`       | The interval at which batched logs are sent in seconds    | 30                               |
-| `json`           | Use JSON instead of Protobuf for transport                | true                             |
-| `batching`       | If batching is not used, the logs are sent as they come   | true                             |
-| `clearOnError`   | Discard any logs that result in an error during transport | true                             |
+| **Parameter**      | **Description**                                           | **Example**                      |
+| ------------------ | --------------------------------------------------------- | -------------------------------- |
+| __`host`__         | URL for Grafana Loki                                      | http://localhost:3100            |
+| `interval`         | The interval at which batched logs are sent in seconds    | 30                               |
+| `json`             | Use JSON instead of Protobuf for transport                | true                             |
+| `batching`         | If batching is not used, the logs are sent as they come   | true                             |
+| `clearOnError`     | Discard any logs that result in an error during transport | true                             |
+| `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                             |
 
 ### Example
 ```js

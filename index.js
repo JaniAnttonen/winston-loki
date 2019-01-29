@@ -9,9 +9,9 @@ module.exports = class LokiTransport extends Transport {
       interval: options.interval,
       json: options.json,
       batching: options.batching,
-      clearOnError: options.clearOnError
+      clearOnError: options.clearOnError,
+      replaceTimestamp: options.replaceTimestamp
     })
-    options.batching && this.batcher.run()
   }
 
   log (info, callback) {
