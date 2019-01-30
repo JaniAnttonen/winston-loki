@@ -69,6 +69,9 @@ module.exports = class Batcher {
   }
 
   sendBatchToLoki (logEntry) {
+    const replace =
+      this.interval === this.circuitBreakerInterval &&
+      this.options.replaceOnError
     return new Promise((resolve, reject) => {
       if (this.batch.streams.length === 0 && !logEntry) {
         resolve()
@@ -86,7 +89,7 @@ module.exports = class Batcher {
             if (logEntry) {
               batch = { streams: [logEntry] }
             } else {
-              batch = protoHelpers.sortBatch(this.batch)
+              batch = protoHelpers.sortBatch(this.batch, replace)
             }
             const err = logproto.PushRequest.verify(batch)
             if (err) reject(err)

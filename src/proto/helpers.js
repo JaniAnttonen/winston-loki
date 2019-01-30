@@ -16,7 +16,7 @@ module.exports = {
     }
     return logEntry
   },
-  sortBatch: batch => {
+  sortBatch: (batch, replace) => {
     let max
 
     if (
@@ -32,6 +32,16 @@ module.exports = {
       }
 
       batch.streams = batch.streams.map(stream => {
+        if (replace) {
+          stream.entries = stream.entries.map(entry => {
+            const dt = moment(Date.now()).valueOf()
+            entry.timestamp = {
+              seconds: Math.floor(dt / 1000),
+              nanos: (dt % 1000) * 1000
+            }
+            return entry
+          })
+        }
         // Sort the entries first by seconds and then by nanoseconds
         stream.entries = stream.entries.sort(
           (a, b) =>
