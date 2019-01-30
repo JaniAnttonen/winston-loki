@@ -20,6 +20,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `json`             | Use JSON instead of Protobuf for transport                | true                   | false         |
 | `batching`         | If batching is not used, the logs are sent as they come   | true                   | true          |
 | `clearOnError`     | Discard any logs that result in an error during transport | true                   | false         |
+| `replaceOnError`   | Replace timestamps and retry on error                     | true                   | false         |
 | `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false         |
 
 ### Example

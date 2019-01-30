@@ -25,7 +25,7 @@ module.exports = class LokiTransport extends Transport {
       labels: `{job="${label}", level="${level}"}`,
       entries: [
         {
-          ts: timestamp,
+          ts: timestamp || Date.now(),
           line: `${message} ${
             rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
           }`
