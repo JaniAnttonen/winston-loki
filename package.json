@@ -49,8 +49,10 @@
     "got": "^9.5.0",
     "moment": "^2.24.0",
     "protobufjs": "^6.8.8",
-    "snappy": "^6.1.1",
     "winston-transport": "^4.3.0"
+  },
+  "optionalDependencies": {
+    "snappy": "^6.1.1"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
