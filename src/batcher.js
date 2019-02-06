@@ -12,17 +12,11 @@ let snappy
 class Batcher {
   /**
    * Creates an instance of Batcher.
+   * Starts the batching loop if enabled.
    * @param {*} options
    * @memberof Batcher
    */
   constructor (options) {
-    // If snappy binaries have not been built, fallback to JSON transport
-    try {
-      snappy = require('snappy')
-    } catch (error) {
-      options.json = true
-    }
-
     // Load given options to the object
     this.options = options
 
@@ -44,6 +38,13 @@ class Batcher {
     this.contentType = 'application/x-protobuf'
     if (this.options.json) {
       this.contentType = 'application/json'
+    }
+
+    // If snappy binaries have not been built, fallback to JSON transport
+    try {
+      snappy = require('snappy')
+    } catch (error) {
+      this.options.json = true
     }
 
     // If batching is enabled, run the loop
@@ -113,7 +114,7 @@ class Batcher {
   }
 
   /**
-   * Sends a batch to Grafana Loki push API.
+   * Sends a batch to Grafana Loki push endpoint.
    * If a single logEntry is given, creates a batch first around it.
    *
    * @param {*} logEntry

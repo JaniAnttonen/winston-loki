@@ -75,17 +75,29 @@ module.exports = {
     } else {
       max = 0
 
-      batch.streams = batch.streams.sort(
-        (a, b) => a.entries[0].ts - b.entries[0].ts
-      )
-
       batch.streams = batch.streams.map(stream => {
-        if (max === 0 || max < stream.entries[0].ts) {
-          max = stream.entries[0].ts
-        } else {
-          stream.entries[0].ts = max + 1
-          max = stream.entries[0].ts
+        if (replace) {
+          stream.entries = stream.entries.map(entry => {
+            entry.ts = Date.now()
+            return entry
+          })
         }
+
+        // Sort the entries
+        stream.entries = stream.entries.sort((a, b) => a.ts - b.ts)
+
+        // Then ensure that there's no duplicate entries by nanosecond
+        stream.entries = stream.entries.map(entry => {
+          if (max === entry.ts) {
+            entry.ts++
+          } else if (max > entry.ts) {
+            entry.ts = max
+            entry.ts++
+          }
+          max = entry.ts
+          return entry
+        })
+
         return stream
       })
     }

@@ -1,9 +1,7 @@
 const Batcher = require('../src/batcher')
-const snappy = require('snappy')
 const got = require('got')
 const { logproto } = require('../src/proto')
 const fixtures = require('./fixtures.json')
-const sinon = require('sinon')
 const moment = require('moment')
 
 const { sortBatch, createProtoTimestamps } = require('../src/proto/helpers')
@@ -12,12 +10,21 @@ let batcher
 
 describe('Batcher tests with Protobuf + gRPC transport', function () {
   beforeEach(async function () {
+    jest.resetModules()
     batcher = new Batcher(fixtures.options_protobuf)
-    this.post = await sinon.stub(got, 'post')
+    this.post = await jest.stub(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
     got.post.restore()
+  })
+  it('Should construct without snappy binaries to a JSON transport', function () {
+    batcher = new Batcher(fixtures.options_protobuf)
+    expect(batcher.options.json).toBe(false)
+    jest.mock('snappy', () => Error())
+    batcher = new Batcher(fixtures.options_protobuf)
+    expect(batcher.options.json).toBe(true)
+    jest.unmock('snappy')
   })
   it('Should add same items in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
@@ -37,7 +44,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     const logEntryConverted = createProtoTimestamps(
       JSON.parse(fixtures.logs_mapped[1])
     )
-    const stub = await sinon.stub(batcher, 'sendBatchToLoki')
+    const stub = await jest.stub(batcher, 'sendBatchToLoki')
 
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
     expect(stub.calledWith(logEntryConverted)).toBe(true)
@@ -45,6 +52,8 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   })
   it('Should wrap single logEntry in {streams: []} if batching is disabled', async function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_protobuf))
+    const snappy = require('snappy')
+
     options.batching = false
     batcher = new Batcher(options)
     const responseObject = {
@@ -110,7 +119,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   })
   it("Should fail if snappy can't compress the buffer", async function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
-    this.finish = await sinon.stub(
+    this.finish = await jest.stub(
       logproto.PushRequest.encode(batcher.batch),
       'finish'
     )

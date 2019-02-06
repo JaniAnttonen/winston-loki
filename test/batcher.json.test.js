@@ -1,7 +1,6 @@
 const Batcher = require('../src/batcher')
 const got = require('got')
 const fixtures = require('./fixtures.json')
-const sinon = require('sinon')
 
 const { sortBatch } = require('../src/proto/helpers')
 
@@ -10,7 +9,7 @@ let batcher
 describe('Batcher tests with JSON transport', function () {
   beforeEach(async function () {
     batcher = new Batcher(fixtures.options_json)
-    this.post = await sinon.stub(got, 'post')
+    this.post = await jest.stub(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
@@ -26,7 +25,7 @@ describe('Batcher tests with JSON transport', function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_json))
     options.batching = false
 
-    await sinon.stub(Batcher.prototype, 'run')
+    await jest.stub(Batcher.prototype, 'run')
 
     batcher = new Batcher(options)
 
@@ -38,9 +37,9 @@ describe('Batcher tests with JSON transport', function () {
     options.batching = false
     batcher = new Batcher(options)
 
-    const stub = await sinon.stub(batcher, 'sendBatchToLoki')
+    const stub = await jest.stub(batcher, 'sendBatchToLoki')
     await stub.returns(() => call())
-    const spy = sinon.spy(call)
+    const spy = jest.spyOn(call)
 
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
 
@@ -49,13 +48,18 @@ describe('Batcher tests with JSON transport', function () {
     }
     await stub.restore()
   })
-  it('Should add same items as separate streams', function () {
+  it('Should add same items in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
-    expect(batcher.batch.streams.length).toBe(2)
+    expect(batcher.batch.streams.length).toBe(1)
   })
-  it('Should add items with same labels as separate streams', function () {
+  it('Should add items with same labels in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    expect(batcher.batch.streams.length).toBe(1)
+  })
+  it('Should add items with different labels in separate streams', function () {
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     expect(batcher.batch.streams.length).toBe(2)
   })

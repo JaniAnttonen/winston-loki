@@ -1,7 +1,6 @@
 const { createLogger } = require('winston')
 const LokiTransport = require('winston-loki')
 const fixtures = require('./fixtures.json')
-const sinon = require('sinon')
 
 describe('Integration tests', function () {
   it('Winston should accept LokiTransport', function () {
@@ -15,7 +14,7 @@ describe('Integration tests', function () {
   })
   it('LokiTransport should trigger the "logged" event', function (done) {
     const lokiTransport = new LokiTransport(fixtures.options_json)
-    const spy = sinon.spy(eventEmitted)
+    const spy = jest.spyOn(eventEmitted)
     lokiTransport.on('logged', spy)
     lokiTransport.log(fixtures.logs[0], () => {})
     function eventEmitted () {
@@ -38,7 +37,7 @@ describe('Integration tests', function () {
   })
   it('LokiTransport should correctly map values before sending to Batcher', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
-    const spy = sinon.spy(lokiTransport.batcher, 'pushLogEntry')
+    const spy = jest.spyOn(lokiTransport.batcher, 'pushLogEntry')
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(spy.calledWith(JSON.parse(fixtures.logs_mapped[0]))).toBe(true)
   })
