@@ -2,7 +2,7 @@ const got = require('got')
 const url = require('url')
 const { logproto } = require('./proto')
 const protoHelpers = require('./proto/helpers')
-let snappy
+let snappy = false
 
 /**
  * A batching transport layer for Grafana Loki
@@ -10,6 +10,9 @@ let snappy
  * @class Batcher
  */
 class Batcher {
+  loadSnappy () {
+    return require('snappy')
+  }
   /**
    * Creates an instance of Batcher.
    * Starts the batching loop if enabled.
@@ -34,17 +37,20 @@ class Batcher {
       streams: []
     }
 
+    // If snappy binaries have not been built, fallback to JSON transport
+    try {
+      snappy = this.loadSnappy()
+    } catch (error) {
+      this.options.json = true
+    }
+    if (!snappy) {
+      this.options.json = true
+    }
+
     // Define the content type headers for the POST request based on the data type
     this.contentType = 'application/x-protobuf'
     if (this.options.json) {
       this.contentType = 'application/json'
-    }
-
-    // If snappy binaries have not been built, fallback to JSON transport
-    try {
-      snappy = require('snappy')
-    } catch (error) {
-      this.options.json = true
     }
 
     // If batching is enabled, run the loop

@@ -9,11 +9,11 @@ let batcher
 describe('Batcher tests with JSON transport', function () {
   beforeEach(async function () {
     batcher = new Batcher(fixtures.options_json)
-    this.post = await jest.stub(got, 'post')
+    this.post = await jest.spyOn(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
-    got.post.restore()
+    got.post.mockRestore()
   })
   it('Should construct with default interval if one is not given', function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_json))
@@ -25,28 +25,37 @@ describe('Batcher tests with JSON transport', function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_json))
     options.batching = false
 
-    await jest.stub(Batcher.prototype, 'run')
-
+    await jest.spyOn(Batcher.prototype, 'run')
     batcher = new Batcher(options)
 
-    expect(batcher.run.called).toBe(false)
-    await Batcher.prototype.run.restore()
+    expect(batcher.run).toHaveBeenCalledTimes(0)
+    await Batcher.prototype.run.mockRestore()
+  })
+  it('Should run the loop when batching is enabled', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.batching = true
+
+    await jest.spyOn(Batcher.prototype, 'run')
+    batcher = new Batcher(options)
+
+    expect(batcher.run).toHaveBeenCalledTimes(1)
+    await Batcher.prototype.run.mockRestore()
   })
   it('Should call sendBatchToLoki instantly when batching is disabled', async function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_json))
     options.batching = false
     batcher = new Batcher(options)
 
-    const stub = await jest.stub(batcher, 'sendBatchToLoki')
-    await stub.returns(() => call())
-    const spy = jest.spyOn(call)
+    const stub = await jest.spyOn(batcher, 'sendBatchToLoki')
+    await stub.mockReturnValue(() => call())
+    const spy = jest.fn(call)
 
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
 
     function call () {
-      expect(spy.called).toBe(true)
+      expect(spy).toHaveBeenCalledTimes(1)
     }
-    await stub.restore()
+    await stub.mockRestore()
   })
   it('Should add same items in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
@@ -108,10 +117,10 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.resolves(responseObject)
+    got.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
 
-    expect(got.post.lastCall.lastArg.body).toBe(
+    expect(got.post.calls[got.post.calls.length - 1].body).toBe(
       JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[1])] })
     )
   })
@@ -122,7 +131,7 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.resolves(responseObject)
+    got.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
     await batcher.sendBatchToLoki()
@@ -132,7 +141,7 @@ describe('Batcher tests with JSON transport', function () {
     const errorObject = {
       statusCode: 404
     }
-    got.post.rejects(errorObject)
+    got.post.mockRejectedValue(errorObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
     try {
@@ -150,7 +159,7 @@ describe('Batcher tests with JSON transport', function () {
     const errorObject = {
       statusCode: 404
     }
-    got.post.rejects(errorObject)
+    got.post.mockRejectedValue(errorObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
 
@@ -169,7 +178,7 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.resolves(responseObject)
+    got.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(fixtures.incorrectly_mapped)
     try {
       await batcher.sendBatchToLoki()
@@ -181,7 +190,7 @@ describe('Batcher tests with JSON transport', function () {
     const errorObject = {
       statusCode: 404
     }
-    got.post.rejects(errorObject)
+    got.post.mockRejectedValue(errorObject)
 
     const circuitBreakerInterval = fixtures.options_json.interval * 1000 * 1.01
     const waitFor = fixtures.options_json.interval * 1000 * 1.05
@@ -204,7 +213,7 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.resolves(responseObject)
+    got.post.mockResolvedValue(responseObject)
 
     await batcher.wait(waitFor)
 

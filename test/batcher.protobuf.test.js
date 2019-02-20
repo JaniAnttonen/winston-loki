@@ -12,19 +12,20 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   beforeEach(async function () {
     jest.resetModules()
     batcher = new Batcher(fixtures.options_protobuf)
-    this.post = await jest.stub(got, 'post')
+    got.post = await jest.spyOn(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
-    got.post.restore()
+    got.post.mockRestore()
   })
   it('Should construct without snappy binaries to a JSON transport', function () {
     batcher = new Batcher(fixtures.options_protobuf)
     expect(batcher.options.json).toBe(false)
-    jest.mock('snappy', () => Error())
+    jest
+      .spyOn(Batcher.prototype, 'loadSnappy')
+      .mockImplementationOnce(() => false)
     batcher = new Batcher(fixtures.options_protobuf)
     expect(batcher.options.json).toBe(true)
-    jest.unmock('snappy')
   })
   it('Should add same items in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
@@ -44,11 +45,11 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     const logEntryConverted = createProtoTimestamps(
       JSON.parse(fixtures.logs_mapped[1])
     )
-    const stub = await jest.stub(batcher, 'sendBatchToLoki')
+    const stub = await jest.spyOn(batcher, 'sendBatchToLoki')
 
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-    expect(stub.calledWith(logEntryConverted)).toBe(true)
-    stub.restore()
+    expect(stub).toHaveBeenCalledWith(logEntryConverted)
+    stub.mockRestore()
   })
   it('Should wrap single logEntry in {streams: []} if batching is disabled', async function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_protobuf))
@@ -62,7 +63,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.resolves(responseObject)
+    got.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
 
     const logEntryConverted = createProtoTimestamps(
@@ -72,8 +73,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
       streams: [logEntryConverted]
     }).finish()
     const data = snappy.compressSync(buffer)
-
-    expect(got.post.lastCall.lastArg.body).toEqual(data)
+    expect(got.post.calls[got.post.calls.length - 1].body).toEqual(data)
   })
   it('Should sort the batch correctly', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
@@ -119,11 +119,11 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   })
   it("Should fail if snappy can't compress the buffer", async function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
-    this.finish = await jest.stub(
+    this.finish = await jest.spyOn(
       logproto.PushRequest.encode(batcher.batch),
       'finish'
     )
-    this.finish.returns(null)
+    this.finish.mockReturnValue(null)
     try {
       await batcher.sendBatchToLoki()
     } catch (error) {

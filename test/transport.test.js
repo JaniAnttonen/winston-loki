@@ -14,11 +14,11 @@ describe('Integration tests', function () {
   })
   it('LokiTransport should trigger the "logged" event', function (done) {
     const lokiTransport = new LokiTransport(fixtures.options_json)
-    const spy = jest.spyOn(eventEmitted)
+    const spy = jest.fn(eventEmitted)
     lokiTransport.on('logged', spy)
     lokiTransport.log(fixtures.logs[0], () => {})
     function eventEmitted () {
-      expect(spy.called).toBe(true)
+      expect(spy).toHaveBeenCalled()
       done()
     }
   })
@@ -39,7 +39,7 @@ describe('Integration tests', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
     const spy = jest.spyOn(lokiTransport.batcher, 'pushLogEntry')
     lokiTransport.log(fixtures.logs[0], () => {})
-    expect(spy.calledWith(JSON.parse(fixtures.logs_mapped[0]))).toBe(true)
+    expect(spy).toHaveBeenCalledWith(JSON.parse(fixtures.logs_mapped[0]))
   })
   it('LokiTransport should map logs correctly from Winston to Grafana Loki format', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
