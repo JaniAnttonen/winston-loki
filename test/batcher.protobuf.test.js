@@ -18,15 +18,6 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     batcher.clearBatch()
     got.post.mockRestore()
   })
-  it('Should construct without snappy binaries to a JSON transport', function () {
-    batcher = new Batcher(fixtures.options_protobuf)
-    expect(batcher.options.json).toBe(false)
-    jest
-      .spyOn(Batcher.prototype, 'loadSnappy')
-      .mockImplementationOnce(() => false)
-    batcher = new Batcher(fixtures.options_protobuf)
-    expect(batcher.options.json).toBe(true)
-  })
   it('Should add same items in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
@@ -109,7 +100,6 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   it('Should wrap single logEntry in {streams: []} if batching is disabled', async function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_protobuf))
     options.batching = false
-    options.json = false
     batcher = new Batcher(options)
     const responseObject = {
       statusCode: 200,
@@ -132,5 +122,12 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     expect(got.post.mock.calls[got.post.mock.calls.length - 1].body).toEqual(
       data
     )
+  })
+  it('Should construct without snappy binaries to a JSON transport', function () {
+    batcher = new Batcher(fixtures.options_protobuf)
+    expect(batcher.options.json).toBe(false)
+    jest.spyOn(Batcher.prototype, 'loadSnappy').mockImplementation(() => false)
+    batcher = new Batcher(fixtures.options_protobuf)
+    expect(batcher.options.json).toBe(true)
   })
 })

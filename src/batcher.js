@@ -89,10 +89,7 @@ class Batcher {
     }
 
     // If batching is not enabled, push the log immediately to Loki API
-    if (
-      this.options.batching !== undefined &&
-      this.options.batching === false
-    ) {
+    if (this.options.batching !== undefined && !this.options.batching) {
       this.sendBatchToLoki(logEntry)
     } else {
       const { streams } = this.batch
@@ -143,7 +140,7 @@ class Batcher {
 
         // If the data format is JSON, there's no need to construct a buffer
         if (this.options.json) {
-          if (logEntry) {
+          if (logEntry !== undefined) {
             // If a single logEntry is given, wrap it according to the batch format
             reqBody = JSON.stringify({ streams: [logEntry] })
           } else {
@@ -155,7 +152,7 @@ class Batcher {
         } else {
           try {
             let batch
-            if (logEntry) {
+            if (logEntry !== undefined) {
               // If a single logEntry is given, wrap it according to the batch format
               batch = { streams: [logEntry] }
             } else {
@@ -192,7 +189,7 @@ class Batcher {
           })
           .then(res => {
             // No need to clear the batch if batching is disabled
-            !logEntry && this.clearBatch()
+            logEntry === undefined && this.clearBatch()
             resolve()
           })
           .catch(err => {
