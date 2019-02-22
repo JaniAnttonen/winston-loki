@@ -51,30 +51,6 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     expect(stub).toHaveBeenCalledWith(logEntryConverted)
     stub.mockRestore()
   })
-  it('Should wrap single logEntry in {streams: []} if batching is disabled', async function () {
-    const options = JSON.parse(JSON.stringify(fixtures.options_protobuf))
-    const snappy = require('snappy')
-
-    options.batching = false
-    batcher = new Batcher(options)
-    const responseObject = {
-      statusCode: 200,
-      headers: {
-        'content-type': 'application/json'
-      }
-    }
-    got.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-
-    const logEntryConverted = createProtoTimestamps(
-      JSON.parse(fixtures.logs_mapped[1])
-    )
-    const buffer = logproto.PushRequest.encode({
-      streams: [logEntryConverted]
-    }).finish()
-    const data = snappy.compressSync(buffer)
-    expect(got.post.calls[got.post.calls.length - 1].body).toEqual(data)
-  })
   it('Should sort the batch correctly', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
@@ -129,5 +105,32 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     } catch (error) {
       expect(error).toBeTruthy()
     }
+  })
+  it('Should wrap single logEntry in {streams: []} if batching is disabled', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_protobuf))
+    options.batching = false
+    options.json = false
+    batcher = new Batcher(options)
+    const responseObject = {
+      statusCode: 200,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+    got.post.mockResolvedValue(responseObject)
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+
+    const logEntryConverted = createProtoTimestamps(
+      JSON.parse(fixtures.logs_mapped[1])
+    )
+    const buffer = logproto.PushRequest.encode({
+      streams: [logEntryConverted]
+    }).finish()
+
+    const snappy = require('snappy')
+    const data = snappy.compressSync(buffer)
+    expect(got.post.mock.calls[got.post.mock.calls.length - 1].body).toEqual(
+      data
+    )
   })
 })

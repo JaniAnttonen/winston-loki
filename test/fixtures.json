@@ -1,7 +1,7 @@
 {
   "options_json": { "host": "http://localhost", "interval": 0.1, "json": true },
   "options_protobuf": {
-    "host": "http://localhost:3100",
+    "host": "http://localhost",
     "interval": 0.1,
     "json": false
   },

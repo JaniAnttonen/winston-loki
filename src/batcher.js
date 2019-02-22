@@ -38,13 +38,15 @@ class Batcher {
     }
 
     // If snappy binaries have not been built, fallback to JSON transport
-    try {
-      snappy = this.loadSnappy()
-    } catch (error) {
-      this.options.json = true
-    }
-    if (!snappy) {
-      this.options.json = true
+    if (!this.options.json) {
+      try {
+        snappy = this.loadSnappy()
+      } catch (error) {
+        this.options.json = true
+      }
+      if (!snappy) {
+        this.options.json = true
+      }
     }
 
     // Define the content type headers for the POST request based on the data type
