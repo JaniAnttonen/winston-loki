@@ -9,7 +9,7 @@ let batcher
 describe('Batcher tests with JSON transport', function () {
   beforeEach(async function () {
     batcher = new Batcher(fixtures.options_json)
-    this.post = await jest.spyOn(got, 'post')
+    got.post = await jest.spyOn(got, 'post')
   })
   afterEach(function () {
     batcher.clearBatch()
