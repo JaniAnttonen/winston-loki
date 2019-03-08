@@ -12,7 +12,9 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   beforeEach(async function () {
     jest.resetModules()
     batcher = new Batcher(fixtures.options_protobuf)
-    got.post = await jest.spyOn(got, 'post')
+    got.post = await jest
+      .spyOn(got, 'post')
+      .mockImplementation(() => Promise.resolve())
   })
   afterEach(function () {
     batcher.clearBatch()

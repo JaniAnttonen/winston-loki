@@ -8,8 +8,11 @@ let batcher
 
 describe('Batcher tests with JSON transport', function () {
   beforeEach(async function () {
+    jest.resetModules()
     batcher = new Batcher(fixtures.options_json)
-    got.post = await jest.spyOn(got, 'post')
+    got.post = await jest
+      .spyOn(got, 'post')
+      .mockImplementation(() => Promise.resolve())
   })
   afterEach(function () {
     batcher.clearBatch()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1552032647688" clover="3.2.0">
-  <project timestamp="1552032647688" name="All files">
+<coverage generated="1552033132457" clover="3.2.0">
+  <project timestamp="1552033132457" name="All files">
     <metrics statements="129" coveredstatements="115" conditionals="80" coveredconditionals="71" methods="28" coveredmethods="26" elements="237" coveredelements="212" complexity="0" loc="129" ncloc="129" packages="3" files="3" classes="3"/>
     <package name="winston-loki">
       <metrics statements="11" coveredstatements="11" conditionals="8" coveredconditionals="6" methods="3" coveredmethods="3"/>
@@ -60,7 +60,7 @@
         <line num="105" count="6" type="stmt"/>
         <line num="106" count="6" type="stmt"/>
         <line num="110" count="28" type="stmt"/>
-        <line num="119" count="30" type="stmt"/>
+        <line num="119" count="32" type="stmt"/>
         <line num="132" count="23" type="cond" truecount="2" falsecount="0"/>
         <line num="135" count="23" type="stmt"/>
         <line num="137" count="23" type="cond" truecount="4" falsecount="0"/>
@@ -81,10 +81,10 @@
         <line num="177" count="3" type="stmt"/>
         <line num="179" count="1" type="stmt"/>
         <line num="184" count="10" type="stmt"/>
-        <line num="193" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="194" count="4" type="stmt"/>
-        <line num="198" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="199" count="4" type="stmt"/>
+        <line num="193" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="194" count="7" type="stmt"/>
+        <line num="198" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="199" count="3" type="stmt"/>
         <line num="212" count="10" type="stmt"/>
         <line num="213" count="14" type="stmt"/>
         <line num="214" count="14" type="stmt"/>
