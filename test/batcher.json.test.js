@@ -120,7 +120,7 @@ describe('Batcher tests with JSON transport', function () {
     got.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
 
-    expect(got.post.mock.calls[got.post.mock.calls.length - 1].body).toBe(
+    expect(got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body).toBe(
       JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[1])] })
     )
   })

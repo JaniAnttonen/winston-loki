@@ -108,7 +108,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
       }
     }
     got.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    await batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
 
     const logEntryConverted = createProtoTimestamps(
       JSON.parse(fixtures.logs_mapped[1])
@@ -119,9 +119,9 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
 
     const snappy = require('snappy')
     const data = snappy.compressSync(buffer)
-    expect(got.post.mock.calls[got.post.mock.calls.length - 1].body).toEqual(
-      data
-    )
+    expect(
+      got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body
+    ).toEqual(data)
   })
   it('Should construct without snappy binaries to a JSON transport', function () {
     batcher = new Batcher(fixtures.options_protobuf)

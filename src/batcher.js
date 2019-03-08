@@ -77,7 +77,7 @@ class Batcher {
    *
    * @param {*} logEntry
    */
-  pushLogEntry (logEntry) {
+  async pushLogEntry (logEntry) {
     // If user has decided to replace the given timestamps with a generated one, generate it
     if (this.options.replaceTimestamp) {
       logEntry.entries[0].ts = Date.now()
@@ -90,7 +90,8 @@ class Batcher {
 
     // If batching is not enabled, push the log immediately to Loki API
     if (this.options.batching !== undefined && !this.options.batching) {
-      this.sendBatchToLoki(logEntry)
+      console.log('Sending batch straight to loki')
+      await this.sendBatchToLoki(logEntry)
     } else {
       const { streams } = this.batch
 
