@@ -1,5 +1,7 @@
 const got = require('got')
 const url = require('url')
+const exitHook = require('async-exit-hook')
+
 const { logproto } = require('./proto')
 const protoHelpers = require('./proto/helpers')
 let snappy = false
@@ -57,6 +59,12 @@ class Batcher {
 
     // If batching is enabled, run the loop
     this.options.batching && this.run()
+
+    exitHook(callback => {
+      this.sendBatchToLoki()
+        .then(() => callback())
+        .catch(() => callback())
+    })
   }
 
   /**
