@@ -47,6 +47,7 @@
     "url": "https://github.com/JaniAnttonen/winston-loki.git"
   },
   "dependencies": {
+    "async-exit-hook": "^2.0.1",
     "got": "^9.5.0",
     "moment": "^2.24.0",
     "protobufjs": "^6.8.8",
