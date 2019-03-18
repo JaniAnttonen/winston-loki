@@ -61,7 +61,6 @@ class Batcher {
     this.options.batching && this.run()
 
     exitHook(callback => {
-      console.log('Ebon?')
       this.sendBatchToLoki()
         .then(() => callback())
         .catch(() => callback())
