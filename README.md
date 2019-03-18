@@ -7,6 +7,8 @@
 
 A Grafana Loki transport for the nodejs logging library Winston.
 
+__NOTE: Latest version only guaranteed to work with the latest version of Grafana Loki. Make sure to update Loki if you have updated this package__
+
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
 
@@ -20,7 +22,6 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `json`             | Use JSON instead of Protobuf for transport                | true                   | false         |
 | `batching`         | If batching is not used, the logs are sent as they come   | true                   | true          |
 | `clearOnError`     | Discard any logs that result in an error during transport | true                   | false         |
-| `replaceOnError`   | Replace timestamps and retry on error                     | true                   | false         |
 | `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false         |
 
 ### Example

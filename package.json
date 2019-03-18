@@ -1,6 +1,6 @@
 {
   "name": "winston-loki",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "A Winston transport for Grafana Loki",
   "keywords": [
     "winston",
@@ -47,7 +47,7 @@
     "url": "https://github.com/JaniAnttonen/winston-loki.git"
   },
   "dependencies": {
-    "async-exit-hook": "^2.0.1",
+    "async-exit-hook": "2.0.1",
     "got": "^9.5.0",
     "moment": "^2.24.0",
     "protobufjs": "^6.8.8",

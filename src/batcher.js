@@ -86,8 +86,10 @@ class Batcher {
    * @param {*} logEntry
    */
   async pushLogEntry (logEntry) {
+    const noTimestamp =
+      logEntry && logEntry.entries && logEntry.entries[0].ts === undefined
     // If user has decided to replace the given timestamps with a generated one, generate it
-    if (this.options.replaceTimestamp) {
+    if (this.options.replaceTimestamp || noTimestamp) {
       logEntry.entries[0].ts = Date.now()
     }
 
@@ -98,7 +100,6 @@ class Batcher {
 
     // If batching is not enabled, push the log immediately to Loki API
     if (this.options.batching !== undefined && !this.options.batching) {
-      console.log('Sending batch straight to loki')
       await this.sendBatchToLoki(logEntry)
     } else {
       const { streams } = this.batch
@@ -135,11 +136,6 @@ class Batcher {
    * @returns {Promise}
    */
   sendBatchToLoki (logEntry) {
-    // Flag of replacing timestamps on error
-    const replace =
-      this.interval === this.circuitBreakerInterval &&
-      this.options.replaceOnError
-
     return new Promise((resolve, reject) => {
       // If the batch is empty, do nothing
       if (this.batch.streams.length === 0 && !logEntry) {
@@ -153,8 +149,6 @@ class Batcher {
             // If a single logEntry is given, wrap it according to the batch format
             reqBody = JSON.stringify({ streams: [logEntry] })
           } else {
-            // Sort the batch and ensure that there are no duplicate timestamps
-            reqBody = protoHelpers.sortBatch(this.batch, replace)
             // Stringify the JSON ready for transport
             reqBody = JSON.stringify(reqBody)
           }
@@ -165,8 +159,7 @@ class Batcher {
               // If a single logEntry is given, wrap it according to the batch format
               batch = { streams: [logEntry] }
             } else {
-              // Sort the batch and ensure that there are no duplicate timestamps
-              batch = protoHelpers.sortBatch(this.batch, replace)
+              batch = this.batch
             }
 
             // Check if the batch can be encoded in Protobuf and is correct format

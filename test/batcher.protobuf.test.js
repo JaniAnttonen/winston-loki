@@ -2,9 +2,8 @@ const Batcher = require('../src/batcher')
 const got = require('got')
 const { logproto } = require('../src/proto')
 const fixtures = require('./fixtures.json')
-const moment = require('moment')
 
-const { sortBatch, createProtoTimestamps } = require('../src/proto/helpers')
+const { createProtoTimestamps } = require('../src/proto/helpers')
 
 let batcher
 
@@ -43,33 +42,6 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
     expect(stub).toHaveBeenCalledWith(logEntryConverted)
     stub.mockRestore()
-  })
-  it('Should sort the batch correctly', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-    let dt = moment(fixtures.logs[2].timestamp).valueOf()
-    let timestamp = {
-      seconds: Math.floor(dt / 1000),
-      nanos: (dt % 1000) * 1000
-    }
-
-    expect(batcher.batch.streams[0].entries[0].timestamp).toEqual(timestamp)
-    batcher.batch = sortBatch(batcher.batch)
-
-    dt = moment(fixtures.logs[1].timestamp).valueOf()
-    timestamp = {
-      seconds: Math.floor(dt / 1000),
-      nanos: (dt % 1000) * 1000
-    }
-
-    expect(batcher.batch.streams[0].entries[0].timestamp).toEqual(timestamp)
-
-    dt = moment(fixtures.logs[2].timestamp).valueOf()
-    timestamp = {
-      seconds: Math.floor(dt / 1000),
-      nanos: (dt % 1000) * 1000 + 1
-    }
-    expect(batcher.batch.streams[0].entries[1].timestamp).toEqual(timestamp)
   })
   it('Should be able to clear the batch of streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
