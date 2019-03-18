@@ -61,6 +61,7 @@ class Batcher {
     this.options.batching && this.run()
 
     exitHook(callback => {
+      console.log('Ebon?')
       this.sendBatchToLoki()
         .then(() => callback())
         .catch(() => callback())
@@ -87,7 +88,7 @@ class Batcher {
    */
   async pushLogEntry (logEntry) {
     // If user has decided to replace the given timestamps with a generated one, generate it
-    if (this.options.replaceTimestamp) {
+    if (this.options.replaceTimestamp || logEntry.entries[0].ts === undefined) {
       logEntry.entries[0].ts = Date.now()
     }
 
