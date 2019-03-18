@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1552897963449" clover="3.2.0">
-  <project timestamp="1552897963449" name="All files">
-    <metrics statements="90" coveredstatements="86" conditionals="51" coveredconditionals="49" methods="21" coveredmethods="18" elements="162" coveredelements="153" complexity="0" loc="90" ncloc="90" packages="3" files="3" classes="3"/>
+<coverage generated="1552904918801" clover="3.2.0">
+  <project timestamp="1552904918801" name="All files">
+    <metrics statements="92" coveredstatements="87" conditionals="56" coveredconditionals="54" methods="21" coveredmethods="18" elements="169" coveredelements="159" complexity="0" loc="92" ncloc="92" packages="3" files="3" classes="3"/>
     <package name="winston-loki">
       <metrics statements="11" coveredstatements="11" conditionals="8" coveredconditionals="6" methods="3" coveredmethods="3"/>
       <file name="index.js" path="/home/jani/dev/devops/winston-loki/index.js">
@@ -20,9 +20,9 @@
       </file>
     </package>
     <package name="winston-loki.src">
-      <metrics statements="72" coveredstatements="68" conditionals="38" coveredconditionals="38" methods="16" coveredmethods="13"/>
+      <metrics statements="74" coveredstatements="69" conditionals="43" coveredconditionals="43" methods="16" coveredmethods="13"/>
       <file name="batcher.js" path="/home/jani/dev/devops/winston-loki/src/batcher.js">
-        <metrics statements="72" coveredstatements="68" conditionals="38" coveredconditionals="38" methods="16" coveredmethods="13"/>
+        <metrics statements="74" coveredstatements="69" conditionals="43" coveredconditionals="43" methods="16" coveredmethods="13"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -49,52 +49,54 @@
         <line num="64" count="0" type="stmt"/>
         <line num="65" count="0" type="stmt"/>
         <line num="66" count="0" type="stmt"/>
-        <line num="77" count="16" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
         <line num="78" count="16" type="stmt"/>
-        <line num="90" count="34" type="cond" truecount="2" falsecount="0"/>
-        <line num="91" count="1" type="stmt"/>
-        <line num="95" count="34" type="cond" truecount="2" falsecount="0"/>
-        <line num="96" count="10" type="stmt"/>
-        <line num="100" count="34" type="cond" truecount="4" falsecount="0"/>
-        <line num="101" count="4" type="stmt"/>
-        <line num="103" count="30" type="stmt"/>
+        <line num="79" count="16" type="stmt"/>
+        <line num="91" count="34" type="cond" truecount="3" falsecount="0"/>
+        <line num="93" count="34" type="cond" truecount="4" falsecount="0"/>
+        <line num="94" count="1" type="stmt"/>
+        <line num="98" count="34" type="cond" truecount="2" falsecount="0"/>
+        <line num="99" count="10" type="stmt"/>
+        <line num="103" count="34" type="cond" truecount="4" falsecount="0"/>
+        <line num="104" count="4" type="stmt"/>
         <line num="106" count="30" type="stmt"/>
-        <line num="107" count="7" type="stmt"/>
-        <line num="110" count="30" type="cond" truecount="2" falsecount="0"/>
-        <line num="112" count="4" type="stmt"/>
-        <line num="113" count="4" type="stmt"/>
-        <line num="117" count="26" type="stmt"/>
-        <line num="126" count="31" type="stmt"/>
-        <line num="137" count="23" type="stmt"/>
-        <line num="139" count="23" type="cond" truecount="4" falsecount="0"/>
-        <line num="140" count="12" type="stmt"/>
-        <line num="145" count="11" type="cond" truecount="2" falsecount="0"/>
-        <line num="146" count="7" type="cond" truecount="2" falsecount="0"/>
-        <line num="148" count="1" type="stmt"/>
-        <line num="151" count="6" type="stmt"/>
-        <line num="154" count="4" type="stmt"/>
-        <line num="156" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="158" count="2" type="stmt"/>
-        <line num="160" count="2" type="stmt"/>
-        <line num="164" count="4" type="stmt"/>
-        <line num="167" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="170" count="4" type="stmt"/>
+        <line num="109" count="30" type="stmt"/>
+        <line num="110" count="7" type="stmt"/>
+        <line num="113" count="30" type="cond" truecount="2" falsecount="0"/>
+        <line num="115" count="4" type="stmt"/>
+        <line num="116" count="4" type="stmt"/>
+        <line num="120" count="26" type="stmt"/>
+        <line num="129" count="31" type="stmt"/>
+        <line num="140" count="23" type="stmt"/>
+        <line num="142" count="23" type="cond" truecount="4" falsecount="0"/>
+        <line num="143" count="12" type="stmt"/>
+        <line num="148" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="149" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="151" count="1" type="stmt"/>
+        <line num="154" count="6" type="stmt"/>
+        <line num="157" count="4" type="stmt"/>
+        <line num="159" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="161" count="2" type="stmt"/>
+        <line num="163" count="2" type="stmt"/>
+        <line num="167" count="4" type="stmt"/>
+        <line num="170" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="173" count="4" type="stmt"/>
-        <line num="176" count="3" type="stmt"/>
-        <line num="178" count="1" type="stmt"/>
-        <line num="183" count="11" type="stmt"/>
-        <line num="192" count="8" type="cond" truecount="2" falsecount="0"/>
-        <line num="193" count="8" type="stmt"/>
-        <line num="197" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="198" count="3" type="stmt"/>
-        <line num="211" count="10" type="stmt"/>
-        <line num="212" count="14" type="stmt"/>
-        <line num="213" count="14" type="stmt"/>
-        <line num="214" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="215" count="1" type="stmt"/>
+        <line num="176" count="4" type="stmt"/>
+        <line num="179" count="3" type="stmt"/>
+        <line num="181" count="1" type="stmt"/>
+        <line num="186" count="11" type="stmt"/>
+        <line num="195" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="196" count="8" type="stmt"/>
+        <line num="200" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="201" count="3" type="stmt"/>
+        <line num="214" count="10" type="stmt"/>
+        <line num="215" count="14" type="stmt"/>
+        <line num="216" count="14" type="stmt"/>
+        <line num="217" count="13" type="cond" truecount="2" falsecount="0"/>
         <line num="218" count="1" type="stmt"/>
-        <line num="220" count="14" type="stmt"/>
-        <line num="225" count="3" type="stmt"/>
+        <line num="221" count="1" type="stmt"/>
+        <line num="223" count="14" type="stmt"/>
+        <line num="228" count="3" type="stmt"/>
       </file>
     </package>
     <package name="winston-loki.src.proto">

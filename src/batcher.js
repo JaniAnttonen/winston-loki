@@ -87,8 +87,10 @@ class Batcher {
    * @param {*} logEntry
    */
   async pushLogEntry (logEntry) {
+    const noTimestamp =
+      logEntry && logEntry.entries && logEntry.entries[0].ts === undefined
     // If user has decided to replace the given timestamps with a generated one, generate it
-    if (this.options.replaceTimestamp || logEntry.entries[0].ts === undefined) {
+    if (this.options.replaceTimestamp || noTimestamp) {
       logEntry.entries[0].ts = Date.now()
     }
 
