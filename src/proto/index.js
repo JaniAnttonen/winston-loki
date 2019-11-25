@@ -28,7 +28,7 @@ $root.logproto = (function () {
          * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
          * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
          */
-    function Pusher (rpcImpl, requestDelimited, responseDelimited) {
+    function Pusher(rpcImpl, requestDelimited, responseDelimited) {
       $protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited)
     }
 
@@ -44,7 +44,7 @@ $root.logproto = (function () {
          * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
          * @returns {Pusher} RPC service. Useful where requests and/or responses are streamed.
          */
-    Pusher.create = function create (rpcImpl, requestDelimited, responseDelimited) {
+    Pusher.create = function create(rpcImpl, requestDelimited, responseDelimited) {
       return new this(rpcImpl, requestDelimited, responseDelimited)
     }
 
@@ -67,7 +67,7 @@ $root.logproto = (function () {
          * @returns {undefined}
          * @variation 1
          */
-    Object.defineProperty(Pusher.prototype.push = function push (request, callback) {
+    Object.defineProperty(Pusher.prototype.push = function push(request, callback) {
       return this.rpcCall(push, $root.logproto.PushRequest, $root.logproto.PushResponse, request, callback)
     }, 'name', { value: 'Push' })
 
@@ -95,7 +95,7 @@ $root.logproto = (function () {
          * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
          * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
          */
-    function Querier (rpcImpl, requestDelimited, responseDelimited) {
+    function Querier(rpcImpl, requestDelimited, responseDelimited) {
       $protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited)
     }
 
@@ -111,7 +111,7 @@ $root.logproto = (function () {
          * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
          * @returns {Querier} RPC service. Useful where requests and/or responses are streamed.
          */
-    Querier.create = function create (rpcImpl, requestDelimited, responseDelimited) {
+    Querier.create = function create(rpcImpl, requestDelimited, responseDelimited) {
       return new this(rpcImpl, requestDelimited, responseDelimited)
     }
 
@@ -134,7 +134,7 @@ $root.logproto = (function () {
          * @returns {undefined}
          * @variation 1
          */
-    Object.defineProperty(Querier.prototype.query = function query (request, callback) {
+    Object.defineProperty(Querier.prototype.query = function query(request, callback) {
       return this.rpcCall(query, $root.logproto.QueryRequest, $root.logproto.QueryResponse, request, callback)
     }, 'name', { value: 'Query' })
 
@@ -167,7 +167,7 @@ $root.logproto = (function () {
          * @returns {undefined}
          * @variation 1
          */
-    Object.defineProperty(Querier.prototype.label = function label (request, callback) {
+    Object.defineProperty(Querier.prototype.label = function label(request, callback) {
       return this.rpcCall(label, $root.logproto.LabelRequest, $root.logproto.LabelResponse, request, callback)
     }, 'name', { value: 'Label' })
 
@@ -181,7 +181,107 @@ $root.logproto = (function () {
          * @variation 2
          */
 
+    /**
+         * Callback as used by {@link logproto.Querier#tail}.
+         * @memberof logproto.Querier
+         * @typedef TailCallback
+         * @type {function}
+         * @param {Error|null} error Error, if any
+         * @param {logproto.TailResponse} [response] TailResponse
+         */
+
+    /**
+         * Calls Tail.
+         * @function tail
+         * @memberof logproto.Querier
+         * @instance
+         * @param {logproto.ITailRequest} request TailRequest message or plain object
+         * @param {logproto.Querier.TailCallback} callback Node-style callback called with the error, if any, and TailResponse
+         * @returns {undefined}
+         * @variation 1
+         */
+    Object.defineProperty(Querier.prototype.tail = function tail(request, callback) {
+      return this.rpcCall(tail, $root.logproto.TailRequest, $root.logproto.TailResponse, request, callback)
+    }, 'name', { value: 'Tail' })
+
+    /**
+         * Calls Tail.
+         * @function tail
+         * @memberof logproto.Querier
+         * @instance
+         * @param {logproto.ITailRequest} request TailRequest message or plain object
+         * @returns {Promise<logproto.TailResponse>} Promise
+         * @variation 2
+         */
+
     return Querier
+  })()
+
+  logproto.Ingester = (function () {
+    /**
+         * Constructs a new Ingester service.
+         * @memberof logproto
+         * @classdesc Represents an Ingester
+         * @extends $protobuf.rpc.Service
+         * @constructor
+         * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
+         * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
+         * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+         */
+    function Ingester(rpcImpl, requestDelimited, responseDelimited) {
+      $protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited)
+    }
+
+    (Ingester.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = Ingester
+
+    /**
+         * Creates new Ingester service using the specified rpc implementation.
+         * @function create
+         * @memberof logproto.Ingester
+         * @static
+         * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
+         * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
+         * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+         * @returns {Ingester} RPC service. Useful where requests and/or responses are streamed.
+         */
+    Ingester.create = function create(rpcImpl, requestDelimited, responseDelimited) {
+      return new this(rpcImpl, requestDelimited, responseDelimited)
+    }
+
+    /**
+         * Callback as used by {@link logproto.Ingester#transferChunks}.
+         * @memberof logproto.Ingester
+         * @typedef TransferChunksCallback
+         * @type {function}
+         * @param {Error|null} error Error, if any
+         * @param {logproto.TransferChunksResponse} [response] TransferChunksResponse
+         */
+
+    /**
+         * Calls TransferChunks.
+         * @function transferChunks
+         * @memberof logproto.Ingester
+         * @instance
+         * @param {logproto.ITimeSeriesChunk} request TimeSeriesChunk message or plain object
+         * @param {logproto.Ingester.TransferChunksCallback} callback Node-style callback called with the error, if any, and TransferChunksResponse
+         * @returns {undefined}
+         * @variation 1
+         */
+    Object.defineProperty(Ingester.prototype.transferChunks = function transferChunks(request, callback) {
+      return this.rpcCall(transferChunks, $root.logproto.TimeSeriesChunk, $root.logproto.TransferChunksResponse, request, callback)
+    }, 'name', { value: 'TransferChunks' })
+
+    /**
+         * Calls TransferChunks.
+         * @function transferChunks
+         * @memberof logproto.Ingester
+         * @instance
+         * @param {logproto.ITimeSeriesChunk} request TimeSeriesChunk message or plain object
+         * @returns {Promise<logproto.TransferChunksResponse>} Promise
+         * @variation 2
+         */
+
+    return Ingester
   })()
 
   logproto.PushRequest = (function () {
@@ -200,7 +300,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.IPushRequest=} [properties] Properties to set
          */
-    function PushRequest (properties) {
+    function PushRequest(properties) {
       this.streams = []
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
@@ -225,7 +325,7 @@ $root.logproto = (function () {
          * @param {logproto.IPushRequest=} [properties] Properties to set
          * @returns {logproto.PushRequest} PushRequest instance
          */
-    PushRequest.create = function create (properties) {
+    PushRequest.create = function create(properties) {
       return new PushRequest(properties)
     }
 
@@ -238,7 +338,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    PushRequest.encode = function encode (message, writer) {
+    PushRequest.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       if (message.streams != null && message.streams.length) {
         for (var i = 0; i < message.streams.length; ++i) { $root.logproto.Stream.encode(message.streams[i], writer.uint32(/* id 1, wireType 2 = */10).fork()).ldelim() }
@@ -255,7 +355,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    PushRequest.encodeDelimited = function encodeDelimited (message, writer) {
+    PushRequest.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -270,7 +370,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    PushRequest.decode = function decode (reader, length) {
+    PushRequest.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.PushRequest()
       while (reader.pos < end) {
@@ -298,7 +398,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    PushRequest.decodeDelimited = function decodeDelimited (reader) {
+    PushRequest.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -311,7 +411,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    PushRequest.verify = function verify (message) {
+    PushRequest.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       if (message.streams != null && message.hasOwnProperty('streams')) {
         if (!Array.isArray(message.streams)) { return 'streams: array expected' }
@@ -331,7 +431,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.PushRequest} PushRequest
          */
-    PushRequest.fromObject = function fromObject (object) {
+    PushRequest.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.PushRequest) { return object }
       var message = new $root.logproto.PushRequest()
       if (object.streams) {
@@ -354,7 +454,7 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    PushRequest.toObject = function toObject (message, options) {
+    PushRequest.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.arrays || options.defaults) { object.streams = [] }
@@ -372,7 +472,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    PushRequest.prototype.toJSON = function toJSON () {
+    PushRequest.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -394,7 +494,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.IPushResponse=} [properties] Properties to set
          */
-    function PushResponse (properties) {
+    function PushResponse(properties) {
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
           if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
@@ -410,7 +510,7 @@ $root.logproto = (function () {
          * @param {logproto.IPushResponse=} [properties] Properties to set
          * @returns {logproto.PushResponse} PushResponse instance
          */
-    PushResponse.create = function create (properties) {
+    PushResponse.create = function create(properties) {
       return new PushResponse(properties)
     }
 
@@ -423,7 +523,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    PushResponse.encode = function encode (message, writer) {
+    PushResponse.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       return writer
     }
@@ -437,7 +537,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    PushResponse.encodeDelimited = function encodeDelimited (message, writer) {
+    PushResponse.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -452,7 +552,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    PushResponse.decode = function decode (reader, length) {
+    PushResponse.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.PushResponse()
       while (reader.pos < end) {
@@ -476,7 +576,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    PushResponse.decodeDelimited = function decodeDelimited (reader) {
+    PushResponse.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -489,7 +589,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    PushResponse.verify = function verify (message) {
+    PushResponse.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       return null
     }
@@ -502,7 +602,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.PushResponse} PushResponse
          */
-    PushResponse.fromObject = function fromObject (object) {
+    PushResponse.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.PushResponse) { return object }
       return new $root.logproto.PushResponse()
     }
@@ -516,7 +616,7 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    PushResponse.toObject = function toObject () {
+    PushResponse.toObject = function toObject() {
       return {}
     }
 
@@ -527,7 +627,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    PushResponse.prototype.toJSON = function toJSON () {
+    PushResponse.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -539,12 +639,11 @@ $root.logproto = (function () {
          * Properties of a QueryRequest.
          * @memberof logproto
          * @interface IQueryRequest
-         * @property {string|null} [query] QueryRequest query
+         * @property {string|null} [selector] QueryRequest selector
          * @property {number|null} [limit] QueryRequest limit
          * @property {google.protobuf.ITimestamp|null} [start] QueryRequest start
          * @property {google.protobuf.ITimestamp|null} [end] QueryRequest end
          * @property {logproto.Direction|null} [direction] QueryRequest direction
-         * @property {string|null} [regex] QueryRequest regex
          */
 
     /**
@@ -555,7 +654,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.IQueryRequest=} [properties] Properties to set
          */
-    function QueryRequest (properties) {
+    function QueryRequest(properties) {
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
           if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
@@ -564,12 +663,12 @@ $root.logproto = (function () {
     }
 
     /**
-         * QueryRequest query.
-         * @member {string} query
+         * QueryRequest selector.
+         * @member {string} selector
          * @memberof logproto.QueryRequest
          * @instance
          */
-    QueryRequest.prototype.query = ''
+    QueryRequest.prototype.selector = ''
 
     /**
          * QueryRequest limit.
@@ -604,14 +703,6 @@ $root.logproto = (function () {
     QueryRequest.prototype.direction = 0
 
     /**
-         * QueryRequest regex.
-         * @member {string} regex
-         * @memberof logproto.QueryRequest
-         * @instance
-         */
-    QueryRequest.prototype.regex = ''
-
-    /**
          * Creates a new QueryRequest instance using the specified properties.
          * @function create
          * @memberof logproto.QueryRequest
@@ -619,7 +710,7 @@ $root.logproto = (function () {
          * @param {logproto.IQueryRequest=} [properties] Properties to set
          * @returns {logproto.QueryRequest} QueryRequest instance
          */
-    QueryRequest.create = function create (properties) {
+    QueryRequest.create = function create(properties) {
       return new QueryRequest(properties)
     }
 
@@ -632,14 +723,13 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    QueryRequest.encode = function encode (message, writer) {
+    QueryRequest.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
-      if (message.query != null && message.hasOwnProperty('query')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.query) }
+      if (message.selector != null && message.hasOwnProperty('selector')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.selector) }
       if (message.limit != null && message.hasOwnProperty('limit')) { writer.uint32(/* id 2, wireType 0 = */16).uint32(message.limit) }
       if (message.start != null && message.hasOwnProperty('start')) { $root.google.protobuf.Timestamp.encode(message.start, writer.uint32(/* id 3, wireType 2 = */26).fork()).ldelim() }
       if (message.end != null && message.hasOwnProperty('end')) { $root.google.protobuf.Timestamp.encode(message.end, writer.uint32(/* id 4, wireType 2 = */34).fork()).ldelim() }
       if (message.direction != null && message.hasOwnProperty('direction')) { writer.uint32(/* id 5, wireType 0 = */40).int32(message.direction) }
-      if (message.regex != null && message.hasOwnProperty('regex')) { writer.uint32(/* id 6, wireType 2 = */50).string(message.regex) }
       return writer
     }
 
@@ -652,7 +742,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    QueryRequest.encodeDelimited = function encodeDelimited (message, writer) {
+    QueryRequest.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -667,14 +757,14 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    QueryRequest.decode = function decode (reader, length) {
+    QueryRequest.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.QueryRequest()
       while (reader.pos < end) {
         var tag = reader.uint32()
         switch (tag >>> 3) {
           case 1:
-            message.query = reader.string()
+            message.selector = reader.string()
             break
           case 2:
             message.limit = reader.uint32()
@@ -687,9 +777,6 @@ $root.logproto = (function () {
             break
           case 5:
             message.direction = reader.int32()
-            break
-          case 6:
-            message.regex = reader.string()
             break
           default:
             reader.skipType(tag & 7)
@@ -709,7 +796,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    QueryRequest.decodeDelimited = function decodeDelimited (reader) {
+    QueryRequest.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -722,10 +809,10 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    QueryRequest.verify = function verify (message) {
+    QueryRequest.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
-      if (message.query != null && message.hasOwnProperty('query')) {
-        if (!$util.isString(message.query)) { return 'query: string expected' }
+      if (message.selector != null && message.hasOwnProperty('selector')) {
+        if (!$util.isString(message.selector)) { return 'selector: string expected' }
       }
       if (message.limit != null && message.hasOwnProperty('limit')) {
         if (!$util.isInteger(message.limit)) { return 'limit: integer expected' }
@@ -747,9 +834,6 @@ $root.logproto = (function () {
             break
         }
       }
-      if (message.regex != null && message.hasOwnProperty('regex')) {
-        if (!$util.isString(message.regex)) { return 'regex: string expected' }
-      }
       return null
     }
 
@@ -761,10 +845,10 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.QueryRequest} QueryRequest
          */
-    QueryRequest.fromObject = function fromObject (object) {
+    QueryRequest.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.QueryRequest) { return object }
       var message = new $root.logproto.QueryRequest()
-      if (object.query != null) { message.query = String(object.query) }
+      if (object.selector != null) { message.selector = String(object.selector) }
       if (object.limit != null) { message.limit = object.limit >>> 0 }
       if (object.start != null) {
         if (typeof object.start !== 'object') { throw TypeError('.logproto.QueryRequest.start: object expected') }
@@ -784,7 +868,6 @@ $root.logproto = (function () {
           message.direction = 1
           break
       }
-      if (object.regex != null) { message.regex = String(object.regex) }
       return message
     }
 
@@ -797,23 +880,21 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    QueryRequest.toObject = function toObject (message, options) {
+    QueryRequest.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.defaults) {
-        object.query = ''
+        object.selector = ''
         object.limit = 0
         object.start = null
         object.end = null
         object.direction = options.enums === String ? 'FORWARD' : 0
-        object.regex = ''
       }
-      if (message.query != null && message.hasOwnProperty('query')) { object.query = message.query }
+      if (message.selector != null && message.hasOwnProperty('selector')) { object.selector = message.selector }
       if (message.limit != null && message.hasOwnProperty('limit')) { object.limit = message.limit }
       if (message.start != null && message.hasOwnProperty('start')) { object.start = $root.google.protobuf.Timestamp.toObject(message.start, options) }
       if (message.end != null && message.hasOwnProperty('end')) { object.end = $root.google.protobuf.Timestamp.toObject(message.end, options) }
       if (message.direction != null && message.hasOwnProperty('direction')) { object.direction = options.enums === String ? $root.logproto.Direction[message.direction] : message.direction }
-      if (message.regex != null && message.hasOwnProperty('regex')) { object.regex = message.regex }
       return object
     }
 
@@ -824,7 +905,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    QueryRequest.prototype.toJSON = function toJSON () {
+    QueryRequest.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -861,7 +942,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.IQueryResponse=} [properties] Properties to set
          */
-    function QueryResponse (properties) {
+    function QueryResponse(properties) {
       this.streams = []
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
@@ -886,7 +967,7 @@ $root.logproto = (function () {
          * @param {logproto.IQueryResponse=} [properties] Properties to set
          * @returns {logproto.QueryResponse} QueryResponse instance
          */
-    QueryResponse.create = function create (properties) {
+    QueryResponse.create = function create(properties) {
       return new QueryResponse(properties)
     }
 
@@ -899,7 +980,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    QueryResponse.encode = function encode (message, writer) {
+    QueryResponse.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       if (message.streams != null && message.streams.length) {
         for (var i = 0; i < message.streams.length; ++i) { $root.logproto.Stream.encode(message.streams[i], writer.uint32(/* id 1, wireType 2 = */10).fork()).ldelim() }
@@ -916,7 +997,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    QueryResponse.encodeDelimited = function encodeDelimited (message, writer) {
+    QueryResponse.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -931,7 +1012,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    QueryResponse.decode = function decode (reader, length) {
+    QueryResponse.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.QueryResponse()
       while (reader.pos < end) {
@@ -959,7 +1040,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    QueryResponse.decodeDelimited = function decodeDelimited (reader) {
+    QueryResponse.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -972,7 +1053,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    QueryResponse.verify = function verify (message) {
+    QueryResponse.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       if (message.streams != null && message.hasOwnProperty('streams')) {
         if (!Array.isArray(message.streams)) { return 'streams: array expected' }
@@ -992,7 +1073,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.QueryResponse} QueryResponse
          */
-    QueryResponse.fromObject = function fromObject (object) {
+    QueryResponse.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.QueryResponse) { return object }
       var message = new $root.logproto.QueryResponse()
       if (object.streams) {
@@ -1015,7 +1096,7 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    QueryResponse.toObject = function toObject (message, options) {
+    QueryResponse.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.arrays || options.defaults) { object.streams = [] }
@@ -1033,7 +1114,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    QueryResponse.prototype.toJSON = function toJSON () {
+    QueryResponse.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -1047,6 +1128,8 @@ $root.logproto = (function () {
          * @interface ILabelRequest
          * @property {string|null} [name] LabelRequest name
          * @property {boolean|null} [values] LabelRequest values
+         * @property {google.protobuf.ITimestamp|null} [start] LabelRequest start
+         * @property {google.protobuf.ITimestamp|null} [end] LabelRequest end
          */
 
     /**
@@ -1057,7 +1140,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.ILabelRequest=} [properties] Properties to set
          */
-    function LabelRequest (properties) {
+    function LabelRequest(properties) {
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
           if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
@@ -1082,6 +1165,22 @@ $root.logproto = (function () {
     LabelRequest.prototype.values = false
 
     /**
+         * LabelRequest start.
+         * @member {google.protobuf.ITimestamp|null|undefined} start
+         * @memberof logproto.LabelRequest
+         * @instance
+         */
+    LabelRequest.prototype.start = null
+
+    /**
+         * LabelRequest end.
+         * @member {google.protobuf.ITimestamp|null|undefined} end
+         * @memberof logproto.LabelRequest
+         * @instance
+         */
+    LabelRequest.prototype.end = null
+
+    /**
          * Creates a new LabelRequest instance using the specified properties.
          * @function create
          * @memberof logproto.LabelRequest
@@ -1089,7 +1188,7 @@ $root.logproto = (function () {
          * @param {logproto.ILabelRequest=} [properties] Properties to set
          * @returns {logproto.LabelRequest} LabelRequest instance
          */
-    LabelRequest.create = function create (properties) {
+    LabelRequest.create = function create(properties) {
       return new LabelRequest(properties)
     }
 
@@ -1102,10 +1201,12 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    LabelRequest.encode = function encode (message, writer) {
+    LabelRequest.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       if (message.name != null && message.hasOwnProperty('name')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.name) }
       if (message.values != null && message.hasOwnProperty('values')) { writer.uint32(/* id 2, wireType 0 = */16).bool(message.values) }
+      if (message.start != null && message.hasOwnProperty('start')) { $root.google.protobuf.Timestamp.encode(message.start, writer.uint32(/* id 3, wireType 2 = */26).fork()).ldelim() }
+      if (message.end != null && message.hasOwnProperty('end')) { $root.google.protobuf.Timestamp.encode(message.end, writer.uint32(/* id 4, wireType 2 = */34).fork()).ldelim() }
       return writer
     }
 
@@ -1118,7 +1219,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    LabelRequest.encodeDelimited = function encodeDelimited (message, writer) {
+    LabelRequest.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -1133,7 +1234,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    LabelRequest.decode = function decode (reader, length) {
+    LabelRequest.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.LabelRequest()
       while (reader.pos < end) {
@@ -1144,6 +1245,12 @@ $root.logproto = (function () {
             break
           case 2:
             message.values = reader.bool()
+            break
+          case 3:
+            message.start = $root.google.protobuf.Timestamp.decode(reader, reader.uint32())
+            break
+          case 4:
+            message.end = $root.google.protobuf.Timestamp.decode(reader, reader.uint32())
             break
           default:
             reader.skipType(tag & 7)
@@ -1163,7 +1270,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    LabelRequest.decodeDelimited = function decodeDelimited (reader) {
+    LabelRequest.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -1176,13 +1283,21 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    LabelRequest.verify = function verify (message) {
+    LabelRequest.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       if (message.name != null && message.hasOwnProperty('name')) {
         if (!$util.isString(message.name)) { return 'name: string expected' }
       }
       if (message.values != null && message.hasOwnProperty('values')) {
         if (typeof message.values !== 'boolean') { return 'values: boolean expected' }
+      }
+      if (message.start != null && message.hasOwnProperty('start')) {
+        var error = $root.google.protobuf.Timestamp.verify(message.start)
+        if (error) { return 'start.' + error }
+      }
+      if (message.end != null && message.hasOwnProperty('end')) {
+        var error = $root.google.protobuf.Timestamp.verify(message.end)
+        if (error) { return 'end.' + error }
       }
       return null
     }
@@ -1195,11 +1310,19 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.LabelRequest} LabelRequest
          */
-    LabelRequest.fromObject = function fromObject (object) {
+    LabelRequest.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.LabelRequest) { return object }
       var message = new $root.logproto.LabelRequest()
       if (object.name != null) { message.name = String(object.name) }
       if (object.values != null) { message.values = Boolean(object.values) }
+      if (object.start != null) {
+        if (typeof object.start !== 'object') { throw TypeError('.logproto.LabelRequest.start: object expected') }
+        message.start = $root.google.protobuf.Timestamp.fromObject(object.start)
+      }
+      if (object.end != null) {
+        if (typeof object.end !== 'object') { throw TypeError('.logproto.LabelRequest.end: object expected') }
+        message.end = $root.google.protobuf.Timestamp.fromObject(object.end)
+      }
       return message
     }
 
@@ -1212,15 +1335,19 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    LabelRequest.toObject = function toObject (message, options) {
+    LabelRequest.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.defaults) {
         object.name = ''
         object.values = false
+        object.start = null
+        object.end = null
       }
       if (message.name != null && message.hasOwnProperty('name')) { object.name = message.name }
       if (message.values != null && message.hasOwnProperty('values')) { object.values = message.values }
+      if (message.start != null && message.hasOwnProperty('start')) { object.start = $root.google.protobuf.Timestamp.toObject(message.start, options) }
+      if (message.end != null && message.hasOwnProperty('end')) { object.end = $root.google.protobuf.Timestamp.toObject(message.end, options) }
       return object
     }
 
@@ -1231,7 +1358,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    LabelRequest.prototype.toJSON = function toJSON () {
+    LabelRequest.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -1254,7 +1381,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.ILabelResponse=} [properties] Properties to set
          */
-    function LabelResponse (properties) {
+    function LabelResponse(properties) {
       this.values = []
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
@@ -1279,7 +1406,7 @@ $root.logproto = (function () {
          * @param {logproto.ILabelResponse=} [properties] Properties to set
          * @returns {logproto.LabelResponse} LabelResponse instance
          */
-    LabelResponse.create = function create (properties) {
+    LabelResponse.create = function create(properties) {
       return new LabelResponse(properties)
     }
 
@@ -1292,7 +1419,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    LabelResponse.encode = function encode (message, writer) {
+    LabelResponse.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       if (message.values != null && message.values.length) {
         for (var i = 0; i < message.values.length; ++i) { writer.uint32(/* id 1, wireType 2 = */10).string(message.values[i]) }
@@ -1309,7 +1436,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    LabelResponse.encodeDelimited = function encodeDelimited (message, writer) {
+    LabelResponse.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -1324,7 +1451,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    LabelResponse.decode = function decode (reader, length) {
+    LabelResponse.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.LabelResponse()
       while (reader.pos < end) {
@@ -1352,7 +1479,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    LabelResponse.decodeDelimited = function decodeDelimited (reader) {
+    LabelResponse.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -1365,7 +1492,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    LabelResponse.verify = function verify (message) {
+    LabelResponse.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       if (message.values != null && message.hasOwnProperty('values')) {
         if (!Array.isArray(message.values)) { return 'values: array expected' }
@@ -1384,7 +1511,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.LabelResponse} LabelResponse
          */
-    LabelResponse.fromObject = function fromObject (object) {
+    LabelResponse.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.LabelResponse) { return object }
       var message = new $root.logproto.LabelResponse()
       if (object.values) {
@@ -1404,7 +1531,7 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    LabelResponse.toObject = function toObject (message, options) {
+    LabelResponse.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.arrays || options.defaults) { object.values = [] }
@@ -1422,7 +1549,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    LabelResponse.prototype.toJSON = function toJSON () {
+    LabelResponse.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -1446,7 +1573,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.IStream=} [properties] Properties to set
          */
-    function Stream (properties) {
+    function Stream(properties) {
       this.entries = []
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
@@ -1479,7 +1606,7 @@ $root.logproto = (function () {
          * @param {logproto.IStream=} [properties] Properties to set
          * @returns {logproto.Stream} Stream instance
          */
-    Stream.create = function create (properties) {
+    Stream.create = function create(properties) {
       return new Stream(properties)
     }
 
@@ -1492,7 +1619,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    Stream.encode = function encode (message, writer) {
+    Stream.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       if (message.labels != null && message.hasOwnProperty('labels')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.labels) }
       if (message.entries != null && message.entries.length) {
@@ -1510,7 +1637,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    Stream.encodeDelimited = function encodeDelimited (message, writer) {
+    Stream.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -1525,7 +1652,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    Stream.decode = function decode (reader, length) {
+    Stream.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.Stream()
       while (reader.pos < end) {
@@ -1556,7 +1683,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    Stream.decodeDelimited = function decodeDelimited (reader) {
+    Stream.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -1569,7 +1696,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    Stream.verify = function verify (message) {
+    Stream.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       if (message.labels != null && message.hasOwnProperty('labels')) {
         if (!$util.isString(message.labels)) { return 'labels: string expected' }
@@ -1592,7 +1719,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.Stream} Stream
          */
-    Stream.fromObject = function fromObject (object) {
+    Stream.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.Stream) { return object }
       var message = new $root.logproto.Stream()
       if (object.labels != null) { message.labels = String(object.labels) }
@@ -1616,7 +1743,7 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    Stream.toObject = function toObject (message, options) {
+    Stream.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.arrays || options.defaults) { object.entries = [] }
@@ -1636,7 +1763,7 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    Stream.prototype.toJSON = function toJSON () {
+    Stream.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
@@ -1660,7 +1787,7 @@ $root.logproto = (function () {
          * @constructor
          * @param {logproto.IEntry=} [properties] Properties to set
          */
-    function Entry (properties) {
+    function Entry(properties) {
       if (properties) {
         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
           if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
@@ -1692,7 +1819,7 @@ $root.logproto = (function () {
          * @param {logproto.IEntry=} [properties] Properties to set
          * @returns {logproto.Entry} Entry instance
          */
-    Entry.create = function create (properties) {
+    Entry.create = function create(properties) {
       return new Entry(properties)
     }
 
@@ -1705,7 +1832,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    Entry.encode = function encode (message, writer) {
+    Entry.encode = function encode(message, writer) {
       if (!writer) { writer = $Writer.create() }
       if (message.timestamp != null && message.hasOwnProperty('timestamp')) { $root.google.protobuf.Timestamp.encode(message.timestamp, writer.uint32(/* id 1, wireType 2 = */10).fork()).ldelim() }
       if (message.line != null && message.hasOwnProperty('line')) { writer.uint32(/* id 2, wireType 2 = */18).string(message.line) }
@@ -1721,7 +1848,7 @@ $root.logproto = (function () {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-    Entry.encodeDelimited = function encodeDelimited (message, writer) {
+    Entry.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer).ldelim()
     }
 
@@ -1736,7 +1863,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    Entry.decode = function decode (reader, length) {
+    Entry.decode = function decode(reader, length) {
       if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
       var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.Entry()
       while (reader.pos < end) {
@@ -1766,7 +1893,7 @@ $root.logproto = (function () {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-    Entry.decodeDelimited = function decodeDelimited (reader) {
+    Entry.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
       return this.decode(reader, reader.uint32())
     }
@@ -1779,7 +1906,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-    Entry.verify = function verify (message) {
+    Entry.verify = function verify(message) {
       if (typeof message !== 'object' || message === null) { return 'object expected' }
       if (message.timestamp != null && message.hasOwnProperty('timestamp')) {
         var error = $root.google.protobuf.Timestamp.verify(message.timestamp)
@@ -1799,7 +1926,7 @@ $root.logproto = (function () {
          * @param {Object.<string,*>} object Plain object
          * @returns {logproto.Entry} Entry
          */
-    Entry.fromObject = function fromObject (object) {
+    Entry.fromObject = function fromObject(object) {
       if (object instanceof $root.logproto.Entry) { return object }
       var message = new $root.logproto.Entry()
       if (object.timestamp != null) {
@@ -1819,7 +1946,7 @@ $root.logproto = (function () {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-    Entry.toObject = function toObject (message, options) {
+    Entry.toObject = function toObject(message, options) {
       if (!options) { options = {} }
       var object = {}
       if (options.defaults) {
@@ -1838,11 +1965,1505 @@ $root.logproto = (function () {
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-    Entry.prototype.toJSON = function toJSON () {
+    Entry.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
     }
 
     return Entry
+  })()
+
+  logproto.TailRequest = (function () {
+    /**
+         * Properties of a TailRequest.
+         * @memberof logproto
+         * @interface ITailRequest
+         * @property {string|null} [query] TailRequest query
+         * @property {number|null} [delayFor] TailRequest delayFor
+         * @property {number|null} [limit] TailRequest limit
+         * @property {google.protobuf.ITimestamp|null} [start] TailRequest start
+         */
+
+    /**
+         * Constructs a new TailRequest.
+         * @memberof logproto
+         * @classdesc Represents a TailRequest.
+         * @implements ITailRequest
+         * @constructor
+         * @param {logproto.ITailRequest=} [properties] Properties to set
+         */
+    function TailRequest(properties) {
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * TailRequest query.
+         * @member {string} query
+         * @memberof logproto.TailRequest
+         * @instance
+         */
+    TailRequest.prototype.query = ''
+
+    /**
+         * TailRequest delayFor.
+         * @member {number} delayFor
+         * @memberof logproto.TailRequest
+         * @instance
+         */
+    TailRequest.prototype.delayFor = 0
+
+    /**
+         * TailRequest limit.
+         * @member {number} limit
+         * @memberof logproto.TailRequest
+         * @instance
+         */
+    TailRequest.prototype.limit = 0
+
+    /**
+         * TailRequest start.
+         * @member {google.protobuf.ITimestamp|null|undefined} start
+         * @memberof logproto.TailRequest
+         * @instance
+         */
+    TailRequest.prototype.start = null
+
+    /**
+         * Creates a new TailRequest instance using the specified properties.
+         * @function create
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {logproto.ITailRequest=} [properties] Properties to set
+         * @returns {logproto.TailRequest} TailRequest instance
+         */
+    TailRequest.create = function create(properties) {
+      return new TailRequest(properties)
+    }
+
+    /**
+         * Encodes the specified TailRequest message. Does not implicitly {@link logproto.TailRequest.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {logproto.ITailRequest} message TailRequest message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TailRequest.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      if (message.query != null && message.hasOwnProperty('query')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.query) }
+      if (message.delayFor != null && message.hasOwnProperty('delayFor')) { writer.uint32(/* id 3, wireType 0 = */24).uint32(message.delayFor) }
+      if (message.limit != null && message.hasOwnProperty('limit')) { writer.uint32(/* id 4, wireType 0 = */32).uint32(message.limit) }
+      if (message.start != null && message.hasOwnProperty('start')) { $root.google.protobuf.Timestamp.encode(message.start, writer.uint32(/* id 5, wireType 2 = */42).fork()).ldelim() }
+      return writer
+    }
+
+    /**
+         * Encodes the specified TailRequest message, length delimited. Does not implicitly {@link logproto.TailRequest.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {logproto.ITailRequest} message TailRequest message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TailRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a TailRequest message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.TailRequest} TailRequest
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TailRequest.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.TailRequest()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1:
+            message.query = reader.string()
+            break
+          case 3:
+            message.delayFor = reader.uint32()
+            break
+          case 4:
+            message.limit = reader.uint32()
+            break
+          case 5:
+            message.start = $root.google.protobuf.Timestamp.decode(reader, reader.uint32())
+            break
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a TailRequest message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.TailRequest} TailRequest
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TailRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a TailRequest message.
+         * @function verify
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    TailRequest.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      if (message.query != null && message.hasOwnProperty('query')) {
+        if (!$util.isString(message.query)) { return 'query: string expected' }
+      }
+      if (message.delayFor != null && message.hasOwnProperty('delayFor')) {
+        if (!$util.isInteger(message.delayFor)) { return 'delayFor: integer expected' }
+      }
+      if (message.limit != null && message.hasOwnProperty('limit')) {
+        if (!$util.isInteger(message.limit)) { return 'limit: integer expected' }
+      }
+      if (message.start != null && message.hasOwnProperty('start')) {
+        var error = $root.google.protobuf.Timestamp.verify(message.start)
+        if (error) { return 'start.' + error }
+      }
+      return null
+    }
+
+    /**
+         * Creates a TailRequest message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.TailRequest} TailRequest
+         */
+    TailRequest.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.TailRequest) { return object }
+      var message = new $root.logproto.TailRequest()
+      if (object.query != null) { message.query = String(object.query) }
+      if (object.delayFor != null) { message.delayFor = object.delayFor >>> 0 }
+      if (object.limit != null) { message.limit = object.limit >>> 0 }
+      if (object.start != null) {
+        if (typeof object.start !== 'object') { throw TypeError('.logproto.TailRequest.start: object expected') }
+        message.start = $root.google.protobuf.Timestamp.fromObject(object.start)
+      }
+      return message
+    }
+
+    /**
+         * Creates a plain object from a TailRequest message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.TailRequest
+         * @static
+         * @param {logproto.TailRequest} message TailRequest
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    TailRequest.toObject = function toObject(message, options) {
+      if (!options) { options = {} }
+      var object = {}
+      if (options.defaults) {
+        object.query = ''
+        object.delayFor = 0
+        object.limit = 0
+        object.start = null
+      }
+      if (message.query != null && message.hasOwnProperty('query')) { object.query = message.query }
+      if (message.delayFor != null && message.hasOwnProperty('delayFor')) { object.delayFor = message.delayFor }
+      if (message.limit != null && message.hasOwnProperty('limit')) { object.limit = message.limit }
+      if (message.start != null && message.hasOwnProperty('start')) { object.start = $root.google.protobuf.Timestamp.toObject(message.start, options) }
+      return object
+    }
+
+    /**
+         * Converts this TailRequest to JSON.
+         * @function toJSON
+         * @memberof logproto.TailRequest
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    TailRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return TailRequest
+  })()
+
+  logproto.TailResponse = (function () {
+    /**
+         * Properties of a TailResponse.
+         * @memberof logproto
+         * @interface ITailResponse
+         * @property {logproto.IStream|null} [stream] TailResponse stream
+         * @property {Array.<logproto.IDroppedStream>|null} [droppedStreams] TailResponse droppedStreams
+         */
+
+    /**
+         * Constructs a new TailResponse.
+         * @memberof logproto
+         * @classdesc Represents a TailResponse.
+         * @implements ITailResponse
+         * @constructor
+         * @param {logproto.ITailResponse=} [properties] Properties to set
+         */
+    function TailResponse(properties) {
+      this.droppedStreams = []
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * TailResponse stream.
+         * @member {logproto.IStream|null|undefined} stream
+         * @memberof logproto.TailResponse
+         * @instance
+         */
+    TailResponse.prototype.stream = null
+
+    /**
+         * TailResponse droppedStreams.
+         * @member {Array.<logproto.IDroppedStream>} droppedStreams
+         * @memberof logproto.TailResponse
+         * @instance
+         */
+    TailResponse.prototype.droppedStreams = $util.emptyArray
+
+    /**
+         * Creates a new TailResponse instance using the specified properties.
+         * @function create
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {logproto.ITailResponse=} [properties] Properties to set
+         * @returns {logproto.TailResponse} TailResponse instance
+         */
+    TailResponse.create = function create(properties) {
+      return new TailResponse(properties)
+    }
+
+    /**
+         * Encodes the specified TailResponse message. Does not implicitly {@link logproto.TailResponse.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {logproto.ITailResponse} message TailResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TailResponse.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      if (message.stream != null && message.hasOwnProperty('stream')) { $root.logproto.Stream.encode(message.stream, writer.uint32(/* id 1, wireType 2 = */10).fork()).ldelim() }
+      if (message.droppedStreams != null && message.droppedStreams.length) {
+        for (var i = 0; i < message.droppedStreams.length; ++i) { $root.logproto.DroppedStream.encode(message.droppedStreams[i], writer.uint32(/* id 2, wireType 2 = */18).fork()).ldelim() }
+      }
+      return writer
+    }
+
+    /**
+         * Encodes the specified TailResponse message, length delimited. Does not implicitly {@link logproto.TailResponse.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {logproto.ITailResponse} message TailResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TailResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a TailResponse message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.TailResponse} TailResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TailResponse.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.TailResponse()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1:
+            message.stream = $root.logproto.Stream.decode(reader, reader.uint32())
+            break
+          case 2:
+            if (!(message.droppedStreams && message.droppedStreams.length)) { message.droppedStreams = [] }
+            message.droppedStreams.push($root.logproto.DroppedStream.decode(reader, reader.uint32()))
+            break
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a TailResponse message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.TailResponse} TailResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TailResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a TailResponse message.
+         * @function verify
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    TailResponse.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      if (message.stream != null && message.hasOwnProperty('stream')) {
+        var error = $root.logproto.Stream.verify(message.stream)
+        if (error) { return 'stream.' + error }
+      }
+      if (message.droppedStreams != null && message.hasOwnProperty('droppedStreams')) {
+        if (!Array.isArray(message.droppedStreams)) { return 'droppedStreams: array expected' }
+        for (var i = 0; i < message.droppedStreams.length; ++i) {
+          var error = $root.logproto.DroppedStream.verify(message.droppedStreams[i])
+          if (error) { return 'droppedStreams.' + error }
+        }
+      }
+      return null
+    }
+
+    /**
+         * Creates a TailResponse message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.TailResponse} TailResponse
+         */
+    TailResponse.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.TailResponse) { return object }
+      var message = new $root.logproto.TailResponse()
+      if (object.stream != null) {
+        if (typeof object.stream !== 'object') { throw TypeError('.logproto.TailResponse.stream: object expected') }
+        message.stream = $root.logproto.Stream.fromObject(object.stream)
+      }
+      if (object.droppedStreams) {
+        if (!Array.isArray(object.droppedStreams)) { throw TypeError('.logproto.TailResponse.droppedStreams: array expected') }
+        message.droppedStreams = []
+        for (var i = 0; i < object.droppedStreams.length; ++i) {
+          if (typeof object.droppedStreams[i] !== 'object') { throw TypeError('.logproto.TailResponse.droppedStreams: object expected') }
+          message.droppedStreams[i] = $root.logproto.DroppedStream.fromObject(object.droppedStreams[i])
+        }
+      }
+      return message
+    }
+
+    /**
+         * Creates a plain object from a TailResponse message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.TailResponse
+         * @static
+         * @param {logproto.TailResponse} message TailResponse
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    TailResponse.toObject = function toObject(message, options) {
+      if (!options) { options = {} }
+      var object = {}
+      if (options.arrays || options.defaults) { object.droppedStreams = [] }
+      if (options.defaults) { object.stream = null }
+      if (message.stream != null && message.hasOwnProperty('stream')) { object.stream = $root.logproto.Stream.toObject(message.stream, options) }
+      if (message.droppedStreams && message.droppedStreams.length) {
+        object.droppedStreams = []
+        for (var j = 0; j < message.droppedStreams.length; ++j) { object.droppedStreams[j] = $root.logproto.DroppedStream.toObject(message.droppedStreams[j], options) }
+      }
+      return object
+    }
+
+    /**
+         * Converts this TailResponse to JSON.
+         * @function toJSON
+         * @memberof logproto.TailResponse
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    TailResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return TailResponse
+  })()
+
+  logproto.DroppedStream = (function () {
+    /**
+         * Properties of a DroppedStream.
+         * @memberof logproto
+         * @interface IDroppedStream
+         * @property {google.protobuf.ITimestamp|null} [from] DroppedStream from
+         * @property {google.protobuf.ITimestamp|null} [to] DroppedStream to
+         * @property {string|null} [labels] DroppedStream labels
+         */
+
+    /**
+         * Constructs a new DroppedStream.
+         * @memberof logproto
+         * @classdesc Represents a DroppedStream.
+         * @implements IDroppedStream
+         * @constructor
+         * @param {logproto.IDroppedStream=} [properties] Properties to set
+         */
+    function DroppedStream(properties) {
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * DroppedStream from.
+         * @member {google.protobuf.ITimestamp|null|undefined} from
+         * @memberof logproto.DroppedStream
+         * @instance
+         */
+    DroppedStream.prototype.from = null
+
+    /**
+         * DroppedStream to.
+         * @member {google.protobuf.ITimestamp|null|undefined} to
+         * @memberof logproto.DroppedStream
+         * @instance
+         */
+    DroppedStream.prototype.to = null
+
+    /**
+         * DroppedStream labels.
+         * @member {string} labels
+         * @memberof logproto.DroppedStream
+         * @instance
+         */
+    DroppedStream.prototype.labels = ''
+
+    /**
+         * Creates a new DroppedStream instance using the specified properties.
+         * @function create
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {logproto.IDroppedStream=} [properties] Properties to set
+         * @returns {logproto.DroppedStream} DroppedStream instance
+         */
+    DroppedStream.create = function create(properties) {
+      return new DroppedStream(properties)
+    }
+
+    /**
+         * Encodes the specified DroppedStream message. Does not implicitly {@link logproto.DroppedStream.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {logproto.IDroppedStream} message DroppedStream message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    DroppedStream.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      if (message.from != null && message.hasOwnProperty('from')) { $root.google.protobuf.Timestamp.encode(message.from, writer.uint32(/* id 1, wireType 2 = */10).fork()).ldelim() }
+      if (message.to != null && message.hasOwnProperty('to')) { $root.google.protobuf.Timestamp.encode(message.to, writer.uint32(/* id 2, wireType 2 = */18).fork()).ldelim() }
+      if (message.labels != null && message.hasOwnProperty('labels')) { writer.uint32(/* id 3, wireType 2 = */26).string(message.labels) }
+      return writer
+    }
+
+    /**
+         * Encodes the specified DroppedStream message, length delimited. Does not implicitly {@link logproto.DroppedStream.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {logproto.IDroppedStream} message DroppedStream message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    DroppedStream.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a DroppedStream message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.DroppedStream} DroppedStream
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    DroppedStream.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.DroppedStream()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1:
+            message.from = $root.google.protobuf.Timestamp.decode(reader, reader.uint32())
+            break
+          case 2:
+            message.to = $root.google.protobuf.Timestamp.decode(reader, reader.uint32())
+            break
+          case 3:
+            message.labels = reader.string()
+            break
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a DroppedStream message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.DroppedStream} DroppedStream
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    DroppedStream.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a DroppedStream message.
+         * @function verify
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    DroppedStream.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      if (message.from != null && message.hasOwnProperty('from')) {
+        var error = $root.google.protobuf.Timestamp.verify(message.from)
+        if (error) { return 'from.' + error }
+      }
+      if (message.to != null && message.hasOwnProperty('to')) {
+        var error = $root.google.protobuf.Timestamp.verify(message.to)
+        if (error) { return 'to.' + error }
+      }
+      if (message.labels != null && message.hasOwnProperty('labels')) {
+        if (!$util.isString(message.labels)) { return 'labels: string expected' }
+      }
+      return null
+    }
+
+    /**
+         * Creates a DroppedStream message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.DroppedStream} DroppedStream
+         */
+    DroppedStream.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.DroppedStream) { return object }
+      var message = new $root.logproto.DroppedStream()
+      if (object.from != null) {
+        if (typeof object.from !== 'object') { throw TypeError('.logproto.DroppedStream.from: object expected') }
+        message.from = $root.google.protobuf.Timestamp.fromObject(object.from)
+      }
+      if (object.to != null) {
+        if (typeof object.to !== 'object') { throw TypeError('.logproto.DroppedStream.to: object expected') }
+        message.to = $root.google.protobuf.Timestamp.fromObject(object.to)
+      }
+      if (object.labels != null) { message.labels = String(object.labels) }
+      return message
+    }
+
+    /**
+         * Creates a plain object from a DroppedStream message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.DroppedStream
+         * @static
+         * @param {logproto.DroppedStream} message DroppedStream
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    DroppedStream.toObject = function toObject(message, options) {
+      if (!options) { options = {} }
+      var object = {}
+      if (options.defaults) {
+        object.from = null
+        object.to = null
+        object.labels = ''
+      }
+      if (message.from != null && message.hasOwnProperty('from')) { object.from = $root.google.protobuf.Timestamp.toObject(message.from, options) }
+      if (message.to != null && message.hasOwnProperty('to')) { object.to = $root.google.protobuf.Timestamp.toObject(message.to, options) }
+      if (message.labels != null && message.hasOwnProperty('labels')) { object.labels = message.labels }
+      return object
+    }
+
+    /**
+         * Converts this DroppedStream to JSON.
+         * @function toJSON
+         * @memberof logproto.DroppedStream
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    DroppedStream.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return DroppedStream
+  })()
+
+  logproto.TimeSeriesChunk = (function () {
+    /**
+         * Properties of a TimeSeriesChunk.
+         * @memberof logproto
+         * @interface ITimeSeriesChunk
+         * @property {string|null} [fromIngesterId] TimeSeriesChunk fromIngesterId
+         * @property {string|null} [userId] TimeSeriesChunk userId
+         * @property {Array.<logproto.ILabelPair>|null} [labels] TimeSeriesChunk labels
+         * @property {Array.<logproto.IChunk>|null} [chunks] TimeSeriesChunk chunks
+         */
+
+    /**
+         * Constructs a new TimeSeriesChunk.
+         * @memberof logproto
+         * @classdesc Represents a TimeSeriesChunk.
+         * @implements ITimeSeriesChunk
+         * @constructor
+         * @param {logproto.ITimeSeriesChunk=} [properties] Properties to set
+         */
+    function TimeSeriesChunk(properties) {
+      this.labels = []
+      this.chunks = []
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * TimeSeriesChunk fromIngesterId.
+         * @member {string} fromIngesterId
+         * @memberof logproto.TimeSeriesChunk
+         * @instance
+         */
+    TimeSeriesChunk.prototype.fromIngesterId = ''
+
+    /**
+         * TimeSeriesChunk userId.
+         * @member {string} userId
+         * @memberof logproto.TimeSeriesChunk
+         * @instance
+         */
+    TimeSeriesChunk.prototype.userId = ''
+
+    /**
+         * TimeSeriesChunk labels.
+         * @member {Array.<logproto.ILabelPair>} labels
+         * @memberof logproto.TimeSeriesChunk
+         * @instance
+         */
+    TimeSeriesChunk.prototype.labels = $util.emptyArray
+
+    /**
+         * TimeSeriesChunk chunks.
+         * @member {Array.<logproto.IChunk>} chunks
+         * @memberof logproto.TimeSeriesChunk
+         * @instance
+         */
+    TimeSeriesChunk.prototype.chunks = $util.emptyArray
+
+    /**
+         * Creates a new TimeSeriesChunk instance using the specified properties.
+         * @function create
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {logproto.ITimeSeriesChunk=} [properties] Properties to set
+         * @returns {logproto.TimeSeriesChunk} TimeSeriesChunk instance
+         */
+    TimeSeriesChunk.create = function create(properties) {
+      return new TimeSeriesChunk(properties)
+    }
+
+    /**
+         * Encodes the specified TimeSeriesChunk message. Does not implicitly {@link logproto.TimeSeriesChunk.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {logproto.ITimeSeriesChunk} message TimeSeriesChunk message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TimeSeriesChunk.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      if (message.fromIngesterId != null && message.hasOwnProperty('fromIngesterId')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.fromIngesterId) }
+      if (message.userId != null && message.hasOwnProperty('userId')) { writer.uint32(/* id 2, wireType 2 = */18).string(message.userId) }
+      if (message.labels != null && message.labels.length) {
+        for (var i = 0; i < message.labels.length; ++i) { $root.logproto.LabelPair.encode(message.labels[i], writer.uint32(/* id 3, wireType 2 = */26).fork()).ldelim() }
+      }
+      if (message.chunks != null && message.chunks.length) {
+        for (var i = 0; i < message.chunks.length; ++i) { $root.logproto.Chunk.encode(message.chunks[i], writer.uint32(/* id 4, wireType 2 = */34).fork()).ldelim() }
+      }
+      return writer
+    }
+
+    /**
+         * Encodes the specified TimeSeriesChunk message, length delimited. Does not implicitly {@link logproto.TimeSeriesChunk.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {logproto.ITimeSeriesChunk} message TimeSeriesChunk message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TimeSeriesChunk.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a TimeSeriesChunk message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.TimeSeriesChunk} TimeSeriesChunk
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TimeSeriesChunk.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.TimeSeriesChunk()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1:
+            message.fromIngesterId = reader.string()
+            break
+          case 2:
+            message.userId = reader.string()
+            break
+          case 3:
+            if (!(message.labels && message.labels.length)) { message.labels = [] }
+            message.labels.push($root.logproto.LabelPair.decode(reader, reader.uint32()))
+            break
+          case 4:
+            if (!(message.chunks && message.chunks.length)) { message.chunks = [] }
+            message.chunks.push($root.logproto.Chunk.decode(reader, reader.uint32()))
+            break
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a TimeSeriesChunk message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.TimeSeriesChunk} TimeSeriesChunk
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TimeSeriesChunk.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a TimeSeriesChunk message.
+         * @function verify
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    TimeSeriesChunk.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      if (message.fromIngesterId != null && message.hasOwnProperty('fromIngesterId')) {
+        if (!$util.isString(message.fromIngesterId)) { return 'fromIngesterId: string expected' }
+      }
+      if (message.userId != null && message.hasOwnProperty('userId')) {
+        if (!$util.isString(message.userId)) { return 'userId: string expected' }
+      }
+      if (message.labels != null && message.hasOwnProperty('labels')) {
+        if (!Array.isArray(message.labels)) { return 'labels: array expected' }
+        for (var i = 0; i < message.labels.length; ++i) {
+          var error = $root.logproto.LabelPair.verify(message.labels[i])
+          if (error) { return 'labels.' + error }
+        }
+      }
+      if (message.chunks != null && message.hasOwnProperty('chunks')) {
+        if (!Array.isArray(message.chunks)) { return 'chunks: array expected' }
+        for (var i = 0; i < message.chunks.length; ++i) {
+          var error = $root.logproto.Chunk.verify(message.chunks[i])
+          if (error) { return 'chunks.' + error }
+        }
+      }
+      return null
+    }
+
+    /**
+         * Creates a TimeSeriesChunk message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.TimeSeriesChunk} TimeSeriesChunk
+         */
+    TimeSeriesChunk.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.TimeSeriesChunk) { return object }
+      var message = new $root.logproto.TimeSeriesChunk()
+      if (object.fromIngesterId != null) { message.fromIngesterId = String(object.fromIngesterId) }
+      if (object.userId != null) { message.userId = String(object.userId) }
+      if (object.labels) {
+        if (!Array.isArray(object.labels)) { throw TypeError('.logproto.TimeSeriesChunk.labels: array expected') }
+        message.labels = []
+        for (var i = 0; i < object.labels.length; ++i) {
+          if (typeof object.labels[i] !== 'object') { throw TypeError('.logproto.TimeSeriesChunk.labels: object expected') }
+          message.labels[i] = $root.logproto.LabelPair.fromObject(object.labels[i])
+        }
+      }
+      if (object.chunks) {
+        if (!Array.isArray(object.chunks)) { throw TypeError('.logproto.TimeSeriesChunk.chunks: array expected') }
+        message.chunks = []
+        for (var i = 0; i < object.chunks.length; ++i) {
+          if (typeof object.chunks[i] !== 'object') { throw TypeError('.logproto.TimeSeriesChunk.chunks: object expected') }
+          message.chunks[i] = $root.logproto.Chunk.fromObject(object.chunks[i])
+        }
+      }
+      return message
+    }
+
+    /**
+         * Creates a plain object from a TimeSeriesChunk message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.TimeSeriesChunk
+         * @static
+         * @param {logproto.TimeSeriesChunk} message TimeSeriesChunk
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    TimeSeriesChunk.toObject = function toObject(message, options) {
+      if (!options) { options = {} }
+      var object = {}
+      if (options.arrays || options.defaults) {
+        object.labels = []
+        object.chunks = []
+      }
+      if (options.defaults) {
+        object.fromIngesterId = ''
+        object.userId = ''
+      }
+      if (message.fromIngesterId != null && message.hasOwnProperty('fromIngesterId')) { object.fromIngesterId = message.fromIngesterId }
+      if (message.userId != null && message.hasOwnProperty('userId')) { object.userId = message.userId }
+      if (message.labels && message.labels.length) {
+        object.labels = []
+        for (var j = 0; j < message.labels.length; ++j) { object.labels[j] = $root.logproto.LabelPair.toObject(message.labels[j], options) }
+      }
+      if (message.chunks && message.chunks.length) {
+        object.chunks = []
+        for (var j = 0; j < message.chunks.length; ++j) { object.chunks[j] = $root.logproto.Chunk.toObject(message.chunks[j], options) }
+      }
+      return object
+    }
+
+    /**
+         * Converts this TimeSeriesChunk to JSON.
+         * @function toJSON
+         * @memberof logproto.TimeSeriesChunk
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    TimeSeriesChunk.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return TimeSeriesChunk
+  })()
+
+  logproto.LabelPair = (function () {
+    /**
+         * Properties of a LabelPair.
+         * @memberof logproto
+         * @interface ILabelPair
+         * @property {string|null} [name] LabelPair name
+         * @property {string|null} [value] LabelPair value
+         */
+
+    /**
+         * Constructs a new LabelPair.
+         * @memberof logproto
+         * @classdesc Represents a LabelPair.
+         * @implements ILabelPair
+         * @constructor
+         * @param {logproto.ILabelPair=} [properties] Properties to set
+         */
+    function LabelPair(properties) {
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * LabelPair name.
+         * @member {string} name
+         * @memberof logproto.LabelPair
+         * @instance
+         */
+    LabelPair.prototype.name = ''
+
+    /**
+         * LabelPair value.
+         * @member {string} value
+         * @memberof logproto.LabelPair
+         * @instance
+         */
+    LabelPair.prototype.value = ''
+
+    /**
+         * Creates a new LabelPair instance using the specified properties.
+         * @function create
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {logproto.ILabelPair=} [properties] Properties to set
+         * @returns {logproto.LabelPair} LabelPair instance
+         */
+    LabelPair.create = function create(properties) {
+      return new LabelPair(properties)
+    }
+
+    /**
+         * Encodes the specified LabelPair message. Does not implicitly {@link logproto.LabelPair.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {logproto.ILabelPair} message LabelPair message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    LabelPair.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      if (message.name != null && message.hasOwnProperty('name')) { writer.uint32(/* id 1, wireType 2 = */10).string(message.name) }
+      if (message.value != null && message.hasOwnProperty('value')) { writer.uint32(/* id 2, wireType 2 = */18).string(message.value) }
+      return writer
+    }
+
+    /**
+         * Encodes the specified LabelPair message, length delimited. Does not implicitly {@link logproto.LabelPair.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {logproto.ILabelPair} message LabelPair message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    LabelPair.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a LabelPair message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.LabelPair} LabelPair
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    LabelPair.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.LabelPair()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1:
+            message.name = reader.string()
+            break
+          case 2:
+            message.value = reader.string()
+            break
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a LabelPair message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.LabelPair} LabelPair
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    LabelPair.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a LabelPair message.
+         * @function verify
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    LabelPair.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      if (message.name != null && message.hasOwnProperty('name')) {
+        if (!$util.isString(message.name)) { return 'name: string expected' }
+      }
+      if (message.value != null && message.hasOwnProperty('value')) {
+        if (!$util.isString(message.value)) { return 'value: string expected' }
+      }
+      return null
+    }
+
+    /**
+         * Creates a LabelPair message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.LabelPair} LabelPair
+         */
+    LabelPair.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.LabelPair) { return object }
+      var message = new $root.logproto.LabelPair()
+      if (object.name != null) { message.name = String(object.name) }
+      if (object.value != null) { message.value = String(object.value) }
+      return message
+    }
+
+    /**
+         * Creates a plain object from a LabelPair message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.LabelPair
+         * @static
+         * @param {logproto.LabelPair} message LabelPair
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    LabelPair.toObject = function toObject(message, options) {
+      if (!options) { options = {} }
+      var object = {}
+      if (options.defaults) {
+        object.name = ''
+        object.value = ''
+      }
+      if (message.name != null && message.hasOwnProperty('name')) { object.name = message.name }
+      if (message.value != null && message.hasOwnProperty('value')) { object.value = message.value }
+      return object
+    }
+
+    /**
+         * Converts this LabelPair to JSON.
+         * @function toJSON
+         * @memberof logproto.LabelPair
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    LabelPair.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return LabelPair
+  })()
+
+  logproto.Chunk = (function () {
+    /**
+         * Properties of a Chunk.
+         * @memberof logproto
+         * @interface IChunk
+         * @property {Uint8Array|null} [data] Chunk data
+         */
+
+    /**
+         * Constructs a new Chunk.
+         * @memberof logproto
+         * @classdesc Represents a Chunk.
+         * @implements IChunk
+         * @constructor
+         * @param {logproto.IChunk=} [properties] Properties to set
+         */
+    function Chunk(properties) {
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * Chunk data.
+         * @member {Uint8Array} data
+         * @memberof logproto.Chunk
+         * @instance
+         */
+    Chunk.prototype.data = $util.newBuffer([])
+
+    /**
+         * Creates a new Chunk instance using the specified properties.
+         * @function create
+         * @memberof logproto.Chunk
+         * @static
+         * @param {logproto.IChunk=} [properties] Properties to set
+         * @returns {logproto.Chunk} Chunk instance
+         */
+    Chunk.create = function create(properties) {
+      return new Chunk(properties)
+    }
+
+    /**
+         * Encodes the specified Chunk message. Does not implicitly {@link logproto.Chunk.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.Chunk
+         * @static
+         * @param {logproto.IChunk} message Chunk message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    Chunk.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      if (message.data != null && message.hasOwnProperty('data')) { writer.uint32(/* id 1, wireType 2 = */10).bytes(message.data) }
+      return writer
+    }
+
+    /**
+         * Encodes the specified Chunk message, length delimited. Does not implicitly {@link logproto.Chunk.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.Chunk
+         * @static
+         * @param {logproto.IChunk} message Chunk message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    Chunk.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a Chunk message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.Chunk
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.Chunk} Chunk
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    Chunk.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.Chunk()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          case 1:
+            message.data = reader.bytes()
+            break
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a Chunk message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.Chunk
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.Chunk} Chunk
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    Chunk.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a Chunk message.
+         * @function verify
+         * @memberof logproto.Chunk
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    Chunk.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      if (message.data != null && message.hasOwnProperty('data')) {
+        if (!((message.data && typeof message.data.length === 'number') || $util.isString(message.data))) { return 'data: buffer expected' }
+      }
+      return null
+    }
+
+    /**
+         * Creates a Chunk message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.Chunk
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.Chunk} Chunk
+         */
+    Chunk.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.Chunk) { return object }
+      var message = new $root.logproto.Chunk()
+      if (object.data != null) {
+        if (typeof object.data === 'string') { $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0) } else if (object.data.length) { message.data = object.data }
+      }
+      return message
+    }
+
+    /**
+         * Creates a plain object from a Chunk message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.Chunk
+         * @static
+         * @param {logproto.Chunk} message Chunk
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    Chunk.toObject = function toObject(message, options) {
+      if (!options) { options = {} }
+      var object = {}
+      if (options.defaults) {
+        if (options.bytes === String) { object.data = '' } else {
+          object.data = []
+          if (options.bytes !== Array) { object.data = $util.newBuffer(object.data) }
+        }
+      }
+      if (message.data != null && message.hasOwnProperty('data')) { object.data = options.bytes === String ? $util.base64.encode(message.data, 0, message.data.length) : options.bytes === Array ? Array.prototype.slice.call(message.data) : message.data }
+      return object
+    }
+
+    /**
+         * Converts this Chunk to JSON.
+         * @function toJSON
+         * @memberof logproto.Chunk
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    Chunk.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return Chunk
+  })()
+
+  logproto.TransferChunksResponse = (function () {
+    /**
+         * Properties of a TransferChunksResponse.
+         * @memberof logproto
+         * @interface ITransferChunksResponse
+         */
+
+    /**
+         * Constructs a new TransferChunksResponse.
+         * @memberof logproto
+         * @classdesc Represents a TransferChunksResponse.
+         * @implements ITransferChunksResponse
+         * @constructor
+         * @param {logproto.ITransferChunksResponse=} [properties] Properties to set
+         */
+    function TransferChunksResponse(properties) {
+      if (properties) {
+        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+          if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+        }
+      }
+    }
+
+    /**
+         * Creates a new TransferChunksResponse instance using the specified properties.
+         * @function create
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {logproto.ITransferChunksResponse=} [properties] Properties to set
+         * @returns {logproto.TransferChunksResponse} TransferChunksResponse instance
+         */
+    TransferChunksResponse.create = function create(properties) {
+      return new TransferChunksResponse(properties)
+    }
+
+    /**
+         * Encodes the specified TransferChunksResponse message. Does not implicitly {@link logproto.TransferChunksResponse.verify|verify} messages.
+         * @function encode
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {logproto.ITransferChunksResponse} message TransferChunksResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TransferChunksResponse.encode = function encode(message, writer) {
+      if (!writer) { writer = $Writer.create() }
+      return writer
+    }
+
+    /**
+         * Encodes the specified TransferChunksResponse message, length delimited. Does not implicitly {@link logproto.TransferChunksResponse.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {logproto.ITransferChunksResponse} message TransferChunksResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+    TransferChunksResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim()
+    }
+
+    /**
+         * Decodes a TransferChunksResponse message from the specified reader or buffer.
+         * @function decode
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {logproto.TransferChunksResponse} TransferChunksResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TransferChunksResponse.decode = function decode(reader, length) {
+      if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+      var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.logproto.TransferChunksResponse()
+      while (reader.pos < end) {
+        var tag = reader.uint32()
+        switch (tag >>> 3) {
+          default:
+            reader.skipType(tag & 7)
+            break
+        }
+      }
+      return message
+    }
+
+    /**
+         * Decodes a TransferChunksResponse message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {logproto.TransferChunksResponse} TransferChunksResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+    TransferChunksResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+      return this.decode(reader, reader.uint32())
+    }
+
+    /**
+         * Verifies a TransferChunksResponse message.
+         * @function verify
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+    TransferChunksResponse.verify = function verify(message) {
+      if (typeof message !== 'object' || message === null) { return 'object expected' }
+      return null
+    }
+
+    /**
+         * Creates a TransferChunksResponse message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {logproto.TransferChunksResponse} TransferChunksResponse
+         */
+    TransferChunksResponse.fromObject = function fromObject(object) {
+      if (object instanceof $root.logproto.TransferChunksResponse) { return object }
+      return new $root.logproto.TransferChunksResponse()
+    }
+
+    /**
+         * Creates a plain object from a TransferChunksResponse message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof logproto.TransferChunksResponse
+         * @static
+         * @param {logproto.TransferChunksResponse} message TransferChunksResponse
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+    TransferChunksResponse.toObject = function toObject() {
+      return {}
+    }
+
+    /**
+         * Converts this TransferChunksResponse to JSON.
+         * @function toJSON
+         * @memberof logproto.TransferChunksResponse
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+    TransferChunksResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+    }
+
+    return TransferChunksResponse
   })()
 
   return logproto
@@ -1881,7 +3502,7 @@ $root.google = (function () {
              * @constructor
              * @param {google.protobuf.ITimestamp=} [properties] Properties to set
              */
-      function Timestamp (properties) {
+      function Timestamp(properties) {
         if (properties) {
           for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
             if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
@@ -1913,7 +3534,7 @@ $root.google = (function () {
              * @param {google.protobuf.ITimestamp=} [properties] Properties to set
              * @returns {google.protobuf.Timestamp} Timestamp instance
              */
-      Timestamp.create = function create (properties) {
+      Timestamp.create = function create(properties) {
         return new Timestamp(properties)
       }
 
@@ -1926,7 +3547,7 @@ $root.google = (function () {
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-      Timestamp.encode = function encode (message, writer) {
+      Timestamp.encode = function encode(message, writer) {
         if (!writer) { writer = $Writer.create() }
         if (message.seconds != null && message.hasOwnProperty('seconds')) { writer.uint32(/* id 1, wireType 0 = */8).int64(message.seconds) }
         if (message.nanos != null && message.hasOwnProperty('nanos')) { writer.uint32(/* id 2, wireType 0 = */16).int32(message.nanos) }
@@ -1942,7 +3563,7 @@ $root.google = (function () {
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-      Timestamp.encodeDelimited = function encodeDelimited (message, writer) {
+      Timestamp.encodeDelimited = function encodeDelimited(message, writer) {
         return this.encode(message, writer).ldelim()
       }
 
@@ -1957,7 +3578,7 @@ $root.google = (function () {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-      Timestamp.decode = function decode (reader, length) {
+      Timestamp.decode = function decode(reader, length) {
         if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
         var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.google.protobuf.Timestamp()
         while (reader.pos < end) {
@@ -1987,7 +3608,7 @@ $root.google = (function () {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-      Timestamp.decodeDelimited = function decodeDelimited (reader) {
+      Timestamp.decodeDelimited = function decodeDelimited(reader) {
         if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
         return this.decode(reader, reader.uint32())
       }
@@ -2000,7 +3621,7 @@ $root.google = (function () {
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-      Timestamp.verify = function verify (message) {
+      Timestamp.verify = function verify(message) {
         if (typeof message !== 'object' || message === null) { return 'object expected' }
         if (message.seconds != null && message.hasOwnProperty('seconds')) {
           if (!$util.isInteger(message.seconds) && !(message.seconds && $util.isInteger(message.seconds.low) && $util.isInteger(message.seconds.high))) { return 'seconds: integer|Long expected' }
@@ -2019,7 +3640,7 @@ $root.google = (function () {
              * @param {Object.<string,*>} object Plain object
              * @returns {google.protobuf.Timestamp} Timestamp
              */
-      Timestamp.fromObject = function fromObject (object) {
+      Timestamp.fromObject = function fromObject(object) {
         if (object instanceof $root.google.protobuf.Timestamp) { return object }
         var message = new $root.google.protobuf.Timestamp()
         if (object.seconds != null) {
@@ -2038,7 +3659,7 @@ $root.google = (function () {
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-      Timestamp.toObject = function toObject (message, options) {
+      Timestamp.toObject = function toObject(message, options) {
         if (!options) { options = {} }
         var object = {}
         if (options.defaults) {
@@ -2062,7 +3683,7 @@ $root.google = (function () {
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-      Timestamp.prototype.toJSON = function toJSON () {
+      Timestamp.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
       }
 

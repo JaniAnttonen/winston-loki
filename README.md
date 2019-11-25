@@ -6,8 +6,9 @@
 
 
 A Grafana Loki transport for the nodejs logging library Winston.
+__Tested to work with Grafana Loki v1.0.0__
 
-__NOTE: Latest version only guaranteed to work with the latest version of Grafana Loki. Make sure to update Loki if you have updated this package__
+*NOTE: Latest version only guaranteed to work with the latest version of Grafana Loki. Make sure to update Loki if you have updated this package*
 
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
@@ -53,8 +54,6 @@ npm install
 And you should have a working, requirable winston-loki package under your project's node_modules.
 
 Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
-
-Grafana Loki *doesn't have any official releases or version numbers* as of now, so if the API is changed, it's going to be fun, but it's working as of now.
 
 ### Run tests
 ```sh
