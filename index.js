@@ -1,5 +1,6 @@
 const Transport = require('winston-transport')
 const Batcher = require('./src/batcher')
+const { MESSAGE } = require('triple-beam')
 
 /**
  * A Winston transport for Grafana Loki.
@@ -26,6 +27,9 @@ class LokiTransport extends Transport {
       replaceOnError: options.replaceOnError,
       replaceTimestamp: options.replaceTimestamp
     })
+
+    this.useCustomFormat = options.format !== undefined
+    this.labels = options.labels
   }
 
   /**
@@ -46,15 +50,30 @@ class LokiTransport extends Transport {
     // Deconstruct the log
     const { label, timestamp, level, message, ...rest } = info
 
+    // build custom labels if provided
+    let labels
+    if (this.labels) {
+      labels = `{level="${level}"`
+      for (let key in this.labels) {
+        labels += `,${key}="${this.labels[key]}"`
+      }
+      labels += '}'
+    } else {
+      labels = `{job="${label}", level="${level}"}`
+    }
+
+    // follow the format provided
+    const line = this.useCustomFormat ? info[MESSAGE] : `${message} ${
+      rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
+    }`
+
     // Construct the log to fit Grafana Loki's accepted format
     const logEntry = {
-      labels: `{job="${label}", level="${level}"}`,
+      labels: labels,
       entries: [
         {
           ts: timestamp || Date.now(),
-          line: `${message} ${
-            rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
-          }`
+          line
         }
       ]
     }
