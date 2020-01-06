@@ -23,6 +23,8 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `batching`         | If batching is not used, the logs are sent as they come   | true                   | true          |
 | `clearOnError`     | Discard any logs that result in an error during transport | true                   | false         |
 | `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false         |
+| `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | null          |
+| `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | null          |
 
 ### Example
 ```js
