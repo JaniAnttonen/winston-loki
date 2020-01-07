@@ -123,8 +123,14 @@ describe('Batcher tests with JSON transport', function () {
     }
     got.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+
     expect(batcher.batch.streams.length).toBe(1)
+
     await batcher.sendBatchToLoki()
+
+    expect(got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body).toBe(
+      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[0])] })
+    )
     expect(batcher.batch.streams.length).toBe(0)
   })
   it('Should reject promise and not clear batch on unsuccessful send', async function () {
