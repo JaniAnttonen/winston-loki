@@ -1,2 +1,3 @@
 exclude_patterns:
 - "src/proto/index.js"
+- "*.test.js"
