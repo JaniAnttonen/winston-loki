@@ -1,7 +1,9 @@
 # winston-loki
+
 [![npm version](https://badge.fury.io/js/winston-loki.svg)](https://badge.fury.io/js/winston-loki)
 [![Build Status](https://travis-ci.com/JaniAnttonen/winston-loki.svg?branch=master)](https://travis-ci.com/JaniAnttonen/winston-loki)
 [![Coverage Status](https://coveralls.io/repos/github/JaniAnttonen/winston-loki/badge.svg?branch=master)](https://coveralls.io/github/JaniAnttonen/winston-loki?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/17a55cce14d581c308bc/maintainability)](https://codeclimate.com/github/JaniAnttonen/winston-loki/maintainability)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 
