@@ -150,7 +150,7 @@ class Batcher {
             reqBody = JSON.stringify({ streams: [logEntry] })
           } else {
             // Stringify the JSON ready for transport
-            reqBody = JSON.stringify(reqBody)
+            reqBody = JSON.stringify(this.batch)
           }
         } else {
           try {

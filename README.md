@@ -7,8 +7,6 @@
 
 A Grafana Loki transport for the nodejs logging library Winston.
 
-__NOTE: Latest version only guaranteed to work with the latest version of Grafana Loki. Make sure to update Loki if you have updated this package__
-
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
 
@@ -27,6 +25,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | null          |
 
 ### Example
+With default formatting:
 ```js
 const { createLogger, transports } = require("winston");
 const LokiTransport = require("winston-loki");
@@ -41,8 +40,15 @@ const options = {
 };
 const logger = createLogger(options);
 ```
+TODO: Add custom formatting example
 
 ## Developing
+### Requirements
+Running a local Loki for testing is probably required, and the easiest way to do that is to follow this guide: https://github.com/grafana/loki/tree/master/production#run-locally-using-docker. After that, Grafana Loki instance is available at `http://localhost:3100`, with a Grafana instance running at `http://localhost:3000`. Username `admin`, password `admin`. Add the Loki source with the URL `http://loki:3100`, and the explorer should work.
+
+Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
+
+### Example
 ```sh
 npm install
 npm link
@@ -51,10 +57,7 @@ npm link winston-loki
 npm install
 ```
 And you should have a working, requirable winston-loki package under your project's node_modules.
-
-Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
-
-Grafana Loki *doesn't have any official releases or version numbers* as of now, so if the API is changed, it's going to be fun, but it's working as of now.
+After the link has been established, any changes to winston-loki should show on rerun of the software that uses it.
 
 ### Run tests
 ```sh
@@ -62,5 +65,3 @@ npm test
 ```
 
 Write new ones under `/test`
-
-TODO: Remove *got* dependency
