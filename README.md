@@ -42,6 +42,12 @@ const options = {
 };
 const logger = createLogger(options);
 ```
+
+You can set custom labels in every log as well like this:
+```js
+logger.debug({ message: 'test', labels: { 'key': 'value' } })
+```
+
 TODO: Add custom formatting example
 
 ## Developing
