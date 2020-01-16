@@ -48,18 +48,23 @@ class LokiTransport extends Transport {
     })
 
     // Deconstruct the log
-    const { label, timestamp, level, message, ...rest } = info
+    const { label, labels, timestamp, level, message, ...rest } = info
 
     // build custom labels if provided
-    let labels
+    let lokiLabels
     if (this.labels) {
-      labels = `{level="${level}"`
+      lokiLabels = `{level="${level}"`
       for (let key in this.labels) {
-        labels += `,${key}="${this.labels[key]}"`
+        lokiLabels += `,${key}="${this.labels[key]}"`
       }
-      labels += '}'
+      if (labels) {
+        for (let key in labels) {
+          lokiLabels += `,${key}="${labels[key]}"`
+        }
+      }
+      lokiLabels += '}'
     } else {
-      labels = `{job="${label}", level="${level}"}`
+      lokiLabels = `{job="${label}", level="${level}"}`
     }
 
     // follow the format provided
@@ -69,7 +74,7 @@ class LokiTransport extends Transport {
 
     // Construct the log to fit Grafana Loki's accepted format
     const logEntry = {
-      labels: labels,
+      labels: lokiLabels,
       entries: [
         {
           ts: timestamp || Date.now(),
