@@ -49,8 +49,8 @@
   },
   "dependencies": {
     "async-exit-hook": "2.0.1",
+    "date-fns": "^2.9.0",
     "got": "^9.5.0",
-    "moment": "^2.24.0",
     "protobufjs": "^6.8.8",
     "winston-transport": "^4.3.0"
   },
