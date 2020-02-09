@@ -1,5 +1,5 @@
 const Batcher = require('../src/batcher')
-const got = require('got')
+const req = require('../src/requests')
 const { logproto } = require('../src/proto')
 const fixtures = require('./fixtures.json')
 
@@ -11,13 +11,13 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   beforeEach(async function () {
     jest.resetModules()
     batcher = new Batcher(fixtures.options_protobuf)
-    got.post = await jest
-      .spyOn(got, 'post')
+    req.post = await jest
+      .spyOn(req, 'post')
       .mockImplementation(() => Promise.resolve())
   })
   afterEach(function () {
     batcher.clearBatch()
-    got.post.mockRestore()
+    req.post.mockRestore()
   })
   it('Should add same items in the same stream', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
@@ -81,7 +81,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.mockResolvedValue(responseObject)
+    req.post.mockResolvedValue(responseObject)
     await batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
 
     const logEntryConverted = createProtoTimestamps(
@@ -94,7 +94,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     const snappy = require('snappy')
     const data = snappy.compressSync(buffer)
     expect(
-      got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body
+      req.post.mock.calls[0][req.post.mock.calls[0].length - 1]
     ).toEqual(data)
   })
   it('Should construct without snappy binaries to a JSON transport', function () {

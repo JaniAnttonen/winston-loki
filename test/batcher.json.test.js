@@ -1,5 +1,5 @@
 const Batcher = require('../src/batcher')
-const got = require('got')
+const req = require('../src/requests')
 const fixtures = require('./fixtures.json')
 
 let batcher
@@ -8,13 +8,13 @@ describe('Batcher tests with JSON transport', function () {
   beforeEach(async function () {
     jest.resetModules()
     batcher = new Batcher(fixtures.options_json)
-    got.post = await jest
-      .spyOn(got, 'post')
+    req.post = await jest
+      .spyOn(req, 'post')
       .mockImplementation(() => Promise.resolve())
   })
   afterEach(function () {
     batcher.clearBatch()
-    got.post.mockRestore()
+    req.post.mockRestore()
   })
   it('Should construct with default interval if one is not given', function () {
     const options = JSON.parse(JSON.stringify(fixtures.options_json))
@@ -107,10 +107,10 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.mockResolvedValue(responseObject)
+    req.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
 
-    expect(got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body).toBe(
+    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
       JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[1])] })
     )
   })
@@ -121,14 +121,14 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.mockResolvedValue(responseObject)
+    req.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
 
     expect(batcher.batch.streams.length).toBe(1)
 
     await batcher.sendBatchToLoki()
 
-    expect(got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body).toBe(
+    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
       JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[0])] })
     )
     expect(batcher.batch.streams.length).toBe(0)
@@ -137,7 +137,7 @@ describe('Batcher tests with JSON transport', function () {
     const errorObject = {
       statusCode: 404
     }
-    got.post.mockRejectedValue(errorObject)
+    req.post.mockRejectedValue(errorObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
     try {
@@ -155,7 +155,7 @@ describe('Batcher tests with JSON transport', function () {
     const errorObject = {
       statusCode: 404
     }
-    got.post.mockRejectedValue(errorObject)
+    req.post.mockRejectedValue(errorObject)
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
     expect(batcher.batch.streams.length).toBe(1)
 
@@ -174,7 +174,7 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.mockResolvedValue(responseObject)
+    req.post.mockResolvedValue(responseObject)
     batcher.pushLogEntry(fixtures.incorrectly_mapped)
     try {
       await batcher.sendBatchToLoki()
@@ -186,7 +186,7 @@ describe('Batcher tests with JSON transport', function () {
     const errorObject = {
       statusCode: 404
     }
-    got.post.mockRejectedValue(errorObject)
+    req.post.mockRejectedValue(errorObject)
 
     const circuitBreakerInterval = fixtures.options_json.interval * 1000 * 1.01
     const waitFor = fixtures.options_json.interval * 1000 * 1.05
@@ -209,7 +209,7 @@ describe('Batcher tests with JSON transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.mockResolvedValue(responseObject)
+    req.post.mockResolvedValue(responseObject)
 
     await batcher.wait(waitFor)
 

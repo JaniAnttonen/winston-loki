@@ -1,9 +1,9 @@
-const got = require('got')
 const url = require('url')
 const exitHook = require('async-exit-hook')
 
 const { logproto } = require('./proto')
 const protoHelpers = require('./proto/helpers')
+const req = require('./requests')
 let snappy = false
 
 /**
@@ -26,7 +26,7 @@ class Batcher {
     this.options = options
 
     // Construct Grafana Loki push API url
-    this.url = new url.URL(this.options.host + '/api/prom/push').toString()
+    this.url = new url.URL(this.options.host + '/api/prom/push')
 
     // Define the batching intervals
     this.interval = this.options.interval
@@ -182,13 +182,7 @@ class Batcher {
         }
 
         // Send the data to Grafana Loki
-        got
-          .post(this.url, {
-            body: reqBody,
-            headers: {
-              'content-type': this.contentType
-            }
-          })
+        req.post(this.url, this.contentType, reqBody)
           .then(res => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
