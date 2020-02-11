@@ -2,12 +2,11 @@ const http = require('http')
 const https = require('https')
 
 const post = async (lokiUrl, contentType, data) => {
-  console.log(lokiUrl)
   return new Promise((resolve, reject) => {
     const lib = lokiUrl.protocol === 'https:' ? https : http
     const options = {
       hostname: lokiUrl.hostname,
-      port: lokiUrl.port === '' ? 80 : 443,
+      port: lokiUrl.port !== '' ? lokiUrl.port : (lokiUrl.protocol === 'https:' ? 443 : 80),
       path: lokiUrl.pathname,
       method: 'POST',
       headers: {
@@ -16,9 +15,9 @@ const post = async (lokiUrl, contentType, data) => {
       }
     }
     const req = lib.request(options, res => {
-      res.on('data', response => {
-        resolve(response)
-      })
+      let resData = ''
+      res.on('data', _data => (resData += _data))
+      res.on('end', () => resolve(resData))
     })
     req.on('error', error => {
       reject(error)
