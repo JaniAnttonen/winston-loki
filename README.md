@@ -25,6 +25,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false         |
 | `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | null          |
 | `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | null          |
+| `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true          |
 
 ### Example
 With default formatting:

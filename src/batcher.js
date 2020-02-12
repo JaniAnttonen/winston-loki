@@ -60,11 +60,13 @@ class Batcher {
     // If batching is enabled, run the loop
     this.options.batching && this.run()
 
-    exitHook(callback => {
-      this.sendBatchToLoki()
-        .then(() => callback())
-        .catch(() => callback())
-    })
+    if (this.options.gracefulShutdown) {
+      exitHook(callback => {
+        this.sendBatchToLoki()
+          .then(() => callback())
+          .catch(() => callback())
+      })
+    }
   }
 
   /**
