@@ -90,6 +90,15 @@ class LokiTransport extends Transport {
     // Trigger the optional callback
     callback()
   }
+
+  /**
+   * Send batch to loki when clean up
+   */
+  close () {
+    this.batcher.sendBatchToLoki()
+      .then(() => {}) // maybe should emit something here
+      .catch(() => {}) // maybe should emit something here
+  }
 }
 
 module.exports = LokiTransport
