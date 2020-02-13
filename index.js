@@ -22,11 +22,11 @@ class LokiTransport extends Transport {
       host: options.host,
       interval: options.interval,
       json: options.json,
-      batching: !options.batching,
+      batching: options.batching !== false,
       clearOnError: options.clearOnError,
       replaceOnError: options.replaceOnError,
       replaceTimestamp: options.replaceTimestamp,
-      gracefulShutdown: !options.gracefulShutdown
+      gracefulShutdown: options.gracefulShutdown !== false
     })
 
     this.useCustomFormat = options.format !== undefined
@@ -89,6 +89,15 @@ class LokiTransport extends Transport {
 
     // Trigger the optional callback
     callback()
+  }
+
+  /**
+   * Send batch to loki when clean up
+   */
+  close () {
+    this.batcher.sendBatchToLoki()
+      .then(() => {}) // maybe should emit something here
+      .catch(() => {}) // maybe should emit something here
   }
 }
 
