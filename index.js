@@ -22,11 +22,11 @@ class LokiTransport extends Transport {
       host: options.host,
       interval: options.interval,
       json: options.json,
-      batching: !options.batching,
+      batching: options.batching !== false,
       clearOnError: options.clearOnError,
       replaceOnError: options.replaceOnError,
       replaceTimestamp: options.replaceTimestamp,
-      gracefulShutdown: !options.gracefulShutdown
+      gracefulShutdown: options.gracefulShutdown !== false
     })
 
     this.useCustomFormat = options.format !== undefined
