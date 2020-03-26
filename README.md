@@ -17,7 +17,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 
 | **Parameter**      | **Description**                                           | **Example**            | **Default**   |
 | ------------------ | --------------------------------------------------------- | -----------------------| ------------- |
-| __`host`__         | URL for Grafana Loki                                      | http://localhost:3100  | null          |
+| __`host`__         | URL for Grafana Loki                                      | http://127.0.0.1:3100  | null          |
 | `interval`         | The interval at which batched logs are sent in seconds    | 30                     | 5             |
 | `json`             | Use JSON instead of Protobuf for transport                | true                   | false         |
 | `batching`         | If batching is not used, the logs are sent as they come   | true                   | true          |
@@ -36,7 +36,7 @@ const options = {
   ...,
   transports: [
     new LokiTransport({
-      host: "http://localhost:3100"
+      host: "http://127.0.0.1:3100"
     })
   ]
   ...
