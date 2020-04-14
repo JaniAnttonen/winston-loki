@@ -56,11 +56,11 @@ class LokiTransport extends Transport {
     let lokiLabels
     if (this.labels) {
       lokiLabels = `{level="${level}"`
-      for (let key in this.labels) {
+      for (const key in this.labels) {
         lokiLabels += `,${key}="${this.labels[key]}"`
       }
       if (labels) {
-        for (let key in labels) {
+        for (const key in labels) {
           lokiLabels += `,${key}="${labels[key]}"`
         }
       }

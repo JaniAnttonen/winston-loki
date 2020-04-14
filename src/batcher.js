@@ -15,6 +15,7 @@ class Batcher {
   loadSnappy () {
     return require('snappy')
   }
+
   /**
    * Creates an instance of Batcher.
    * Starts the batching loop if enabled.
