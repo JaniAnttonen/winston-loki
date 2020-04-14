@@ -20,6 +20,7 @@ class LokiTransport extends Transport {
     // Pass all the given options to batcher
     this.batcher = new Batcher({
       host: options.host,
+      headers: options.headers,
       interval: options.interval,
       json: options.json,
       batching: options.batching !== undefined ? options.batching : true,

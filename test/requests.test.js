@@ -53,7 +53,7 @@ describe('Requests tests', function () {
   it('Should return promise', function () {
     http.request.mockImplementation(mockedResponse)
     https.request.mockImplementation(mockedResponse)
-    const promise = req.post(httpUrl, httpOptions.headers['Content-Type'], testData)
+    const promise = req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData)
     expect(typeof promise).toBe('object')
     expect(typeof promise.then).toBe('function')
     expect(
@@ -68,12 +68,8 @@ describe('Requests tests', function () {
       http.request.mock.calls[1][0].port
     ).toEqual(httpPort)
   })
-  it('Should read config correctly', async function () {
-    let response = await req.post(httpsUrl, httpsOptions.headers['Content-Type'], testData)
-    console.log(response)
-    expect(
-      https.request.mock.calls[1][0]
-    ).toEqual(httpsOptions)
-    expect(response).not.toBe(undefined)
+  it('Should be able to run https and http', () => {
+    const promise = req.post(httpsUrl, httpsOptions.headers['Content-Type'], {}, testData)
+    expect(typeof promise).toBe('object')
   })
 })
