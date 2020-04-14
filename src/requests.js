@@ -6,6 +6,7 @@ const post = async (lokiUrl, contentType, headers = {}, data = '') => {
     'Content-Type': contentType,
     'Content-Length': data.length
   }
+  console.log(data)
   return new Promise((resolve, reject) => {
     const lib = lokiUrl.protocol === 'https:' ? https : http
     const options = {
