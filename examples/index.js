@@ -12,7 +12,7 @@ logger.add(new LokiTransport({
   json: true,
   batching: true,
   interval: 15,
-  labels: { job: 'winston-loki-example' },
+  labels: { job: 'winston-loki-example' }
 }))
 
 const wait = (duration) => new Promise(resolve => {
@@ -29,4 +29,3 @@ const run = async () => {
 }
 
 run()
-
