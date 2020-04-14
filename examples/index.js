@@ -8,11 +8,10 @@ logger.add(new winston.transports.Console({
 }))
 
 logger.add(new LokiTransport({
-  host: 'http://127.0.0.1:3100',
+  host: 'http://0.0.0.0:3100',
   json: true,
   batching: true,
-  interval: 15,
-  label: 'winston-loki-example'
+  labels: { job: 'winston-loki-example' }
 }))
 
 const wait = (duration) => new Promise(resolve => {

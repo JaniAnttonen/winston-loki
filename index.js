@@ -68,10 +68,10 @@ class LokiTransport extends Transport {
 
     // Construct the log to fit Grafana Loki's accepted format
     const logEntry = {
-      stream: lokiLabels,
+      labels: lokiLabels,
       entries: [
         {
-          ts: timestamp || Date.now(),
+          ts: timestamp || Date.now().valueOf(),
           line
         }
       ]

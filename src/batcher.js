@@ -109,7 +109,7 @@ class Batcher {
 
       // Find if there's already a log with identical labels in the batch
       const match = streams.findIndex(
-        stream => stream.labels === logEntry.labels
+        stream => JSON.stringify(stream.labels) === JSON.stringify(logEntry.labels)
       )
 
       if (match > -1) {
@@ -148,13 +148,15 @@ class Batcher {
 
         // If the data format is JSON, there's no need to construct a buffer
         if (this.options.json) {
+          let preparedJSONBatch
           if (logEntry !== undefined) {
             // If a single logEntry is given, wrap it according to the batch format
-            reqBody = JSON.stringify({ streams: [logEntry] })
+            preparedJSONBatch = protoHelpers.prepareJSONBatch({ streams: [logEntry] })
           } else {
             // Stringify the JSON ready for transport
-            reqBody = JSON.stringify(this.batch)
+            preparedJSONBatch = protoHelpers.prepareJSONBatch(this.batch)
           }
+          reqBody = JSON.stringify(preparedJSONBatch)
         } else {
           try {
             let batch
