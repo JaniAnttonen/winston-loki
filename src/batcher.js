@@ -167,21 +167,24 @@ class Batcher {
               batch = this.batch
             }
 
+            const preparedBatch = protoHelpers.prepareProtoBatch(batch)
+
             // Check if the batch can be encoded in Protobuf and is correct format
-            const err = logproto.PushRequest.verify(batch)
+            const err = logproto.PushRequest.verify(preparedBatch)
 
             // Reject the promise if the batch is not of correct format
             if (err) reject(err)
 
             // Create the PushRequest object
-            const message = logproto.PushRequest.create(batch)
-
+            const message = logproto.PushRequest.create(preparedBatch)
+            console.log(message)
             // Encode the PushRequest object and create the binary buffer
             const buffer = logproto.PushRequest.encode(message).finish()
-
+            console.log(buffer)
             // Compress the buffer with snappy
             reqBody = snappy.compressSync(buffer)
           } catch (err) {
+            console.log(err)
             reject(err)
           }
         }

@@ -25,5 +25,12 @@ module.exports = {
       return logEntry
     })
     return batch
+  },
+  prepareProtoBatch: batch => {
+    batch.streams = batch.streams.map(logEntry => {
+      logEntry.labels = JSON.stringify(logEntry.labels)
+      return logEntry
+    })
+    return batch
   }
 }
