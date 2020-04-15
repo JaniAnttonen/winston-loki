@@ -9,8 +9,6 @@ logger.add(new winston.transports.Console({
 
 logger.add(new LokiTransport({
   host: 'http://127.0.0.1:3100',
-  json: false,
-  batching: true,
   labels: { job: 'winston-loki-example' }
 }))
 
