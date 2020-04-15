@@ -28,7 +28,13 @@ module.exports = {
   },
   prepareProtoBatch: batch => {
     batch.streams = batch.streams.map(logEntry => {
-      logEntry.labels = JSON.stringify(logEntry.labels)
+      let protoLabels = `{level="${logEntry.labels.level}"`
+      delete logEntry.labels.level
+      for (let key in logEntry.labels) {
+        protoLabels += `,${key}="${logEntry.labels[key]}"`
+      }
+      protoLabels += '}'
+      logEntry.labels = protoLabels
       return logEntry
     })
     return batch
