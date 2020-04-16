@@ -36,9 +36,9 @@ const httpsOptions = {
 }
 
 const mockedRequest = {
-  write: () => console.log('called!'),
-  end: () => console.log('end called!'),
-  on: eventName => jest.fn(done => done())
+  write: () => null,
+  end: () => null,
+  on: () => jest.fn(done => done())
 }
 
 const mockedResponse = (options, callback) => {
