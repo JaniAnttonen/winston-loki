@@ -12,7 +12,7 @@ A Grafana Loki transport for the nodejs logging library Winston.
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
 
-### Examples
+### [Examples](./examples/)
 Several usage examples with a test configuration for Grafana+Loki+Promtail reside under [`examples/`](./examples/). If you want the simplest possible configuration, that's probably the place to check out. By defining `json: true` and giving `winston-loki` the correct `host` address for Loki is enough for most.
 
 ### Options
