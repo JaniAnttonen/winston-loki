@@ -83,14 +83,13 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    await batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
+    await batcher.pushLogEntry(fixtures.logs[1])
 
     const logEntryConverted = createProtoTimestamps(
-      JSON.parse(fixtures.logs_mapped[1])
+      fixtures.logs[1]
     )
-    const buffer = logproto.PushRequest.encode({
-      streams: [logEntryConverted]
-    }).finish()
+    const preparedLogEntry = prepareProtoBatch({ streams: [ logEntryConverted ] })
+    const buffer = logproto.PushRequest.encode(preparedLogEntry).finish()
 
     const snappy = require('snappy')
     const data = snappy.compressSync(buffer)

@@ -51,7 +51,7 @@ describe('Batcher tests with JSON transport', function () {
     await stub.mockReturnValue(() => call())
     const spy = jest.fn(call)
 
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
 
     function call () {
       expect(spy).toHaveBeenCalledTimes(1)
@@ -59,22 +59,22 @@ describe('Batcher tests with JSON transport', function () {
     await stub.mockRestore()
   })
   it('Should add same items in the same stream', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     expect(batcher.batch.streams.length).toBe(1)
   })
   it('Should add items with same labels in the same stream', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(1)
   })
   it('Should add items with different labels in separate streams', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(2)
   })
   it('Should replace timestamps with Date.now() if replaceTimestamp is enabled', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
 
     expect(batcher.batch.streams[0].entries[0].ts).toBe(
       fixtures.logs[1].timestamp
@@ -84,15 +84,15 @@ describe('Batcher tests with JSON transport', function () {
     options.replaceTimestamp = true
     batcher = new Batcher(options)
 
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
 
     expect(batcher.batch.streams[0].entries[0].ts).not.toBe(
       fixtures.logs[1].timestamp
     )
   })
   it('Should be able to clear the batch of streams', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(2)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
@@ -108,10 +108,10 @@ describe('Batcher tests with JSON transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    batcher.pushLogEntry(fixtures.logs[1])
 
     expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
-      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[1])] })
+      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after[1])] })
     )
   })
   it('Should clear batch and resolve on successful send', async function () {
@@ -122,14 +122,14 @@ describe('Batcher tests with JSON transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(fixtures.logs[0])
 
     expect(batcher.batch.streams.length).toBe(1)
 
     await batcher.sendBatchToLoki()
 
     expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
-      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped[0])] })
+      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after[0])] })
     )
     expect(batcher.batch.streams.length).toBe(0)
   })
@@ -138,7 +138,7 @@ describe('Batcher tests with JSON transport', function () {
       statusCode: 404
     }
     req.post.mockRejectedValue(errorObject)
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     expect(batcher.batch.streams.length).toBe(1)
     try {
       await batcher.sendBatchToLoki()
@@ -156,7 +156,7 @@ describe('Batcher tests with JSON transport', function () {
       statusCode: 404
     }
     req.post.mockRejectedValue(errorObject)
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     expect(batcher.batch.streams.length).toBe(1)
 
     try {
@@ -193,7 +193,7 @@ describe('Batcher tests with JSON transport', function () {
 
     batcher.circuitBreakerInterval = circuitBreakerInterval
     batcher.run()
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(fixtures.logs[0])
 
     expect(batcher.batch.streams.length).toBe(1)
     expect(batcher.interval).toBe(fixtures.options_json.interval * 1000)
