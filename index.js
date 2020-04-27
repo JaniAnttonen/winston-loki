@@ -20,6 +20,8 @@ class LokiTransport extends Transport {
     // Pass all the given options to batcher
     this.batcher = new Batcher({
       host: options.host,
+      basicAuth: options.basicAuth,
+      headers: options.headers || {},
       interval: options.interval,
       json: options.json,
       batching: options.batching !== false,
@@ -52,20 +54,12 @@ class LokiTransport extends Transport {
     const { label, labels, timestamp, level, message, ...rest } = info
 
     // build custom labels if provided
-    let lokiLabels
+    let lokiLabels = { level: level }
+
     if (this.labels) {
-      lokiLabels = `{level="${level}"`
-      for (let key in this.labels) {
-        lokiLabels += `,${key}="${this.labels[key]}"`
-      }
-      if (labels) {
-        for (let key in labels) {
-          lokiLabels += `,${key}="${labels[key]}"`
-        }
-      }
-      lokiLabels += '}'
+      lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
-      lokiLabels = `{job="${label}", level="${level}"}`
+      lokiLabels['job'] = label
     }
 
     // follow the format provided
@@ -78,7 +72,7 @@ class LokiTransport extends Transport {
       labels: lokiLabels,
       entries: [
         {
-          ts: timestamp || Date.now(),
+          ts: timestamp || Date.now().valueOf(),
           line
         }
       ]

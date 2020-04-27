@@ -1,9 +1,9 @@
 const Batcher = require('../src/batcher')
-const got = require('got')
+const req = require('../src/requests')
 const { logproto } = require('../src/proto')
 const fixtures = require('./fixtures.json')
 
-const { createProtoTimestamps } = require('../src/proto/helpers')
+const { createProtoTimestamps, prepareProtoBatch } = require('../src/proto/helpers')
 
 let batcher
 
@@ -11,22 +11,22 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   beforeEach(async function () {
     jest.resetModules()
     batcher = new Batcher(fixtures.options_protobuf)
-    got.post = await jest
-      .spyOn(got, 'post')
+    req.post = await jest
+      .spyOn(req, 'post')
       .mockImplementation(() => Promise.resolve())
   })
   afterEach(function () {
     batcher.clearBatch()
-    got.post.mockRestore()
+    req.post.mockRestore()
   })
   it('Should add same items in the same stream', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     expect(batcher.batch.streams.length).toBe(1)
   })
   it('Should add items with same labels in the same stream', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(1)
   })
   it('Should convert the timestamps on push when batching is disabled', async function () {
@@ -35,17 +35,18 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     batcher = new Batcher(options)
 
     const logEntryConverted = createProtoTimestamps(
-      JSON.parse(fixtures.logs_mapped[1])
+      fixtures.logs[1]
     )
+    const preparedLogEntry = prepareProtoBatch({ streams: [ logEntryConverted ] })
     const stub = await jest.spyOn(batcher, 'sendBatchToLoki')
 
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
-    expect(stub).toHaveBeenCalledWith(logEntryConverted)
+    batcher.pushLogEntry(fixtures.logs[1])
+    expect(stub).toHaveBeenCalledWith(preparedLogEntry)
     stub.mockRestore()
   })
   it('Should be able to clear the batch of streams', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(2)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
@@ -59,7 +60,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     }
   })
   it("Should fail if snappy can't compress the buffer", async function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[2]))
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     this.finish = await jest.spyOn(
       logproto.PushRequest.encode(batcher.batch),
       'finish'
@@ -81,20 +82,19 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
         'content-type': 'application/json'
       }
     }
-    got.post.mockResolvedValue(responseObject)
-    await batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped[1]))
+    req.post.mockResolvedValue(responseObject)
+    await batcher.pushLogEntry(fixtures.logs[1])
 
     const logEntryConverted = createProtoTimestamps(
-      JSON.parse(fixtures.logs_mapped[1])
+      fixtures.logs[1]
     )
-    const buffer = logproto.PushRequest.encode({
-      streams: [logEntryConverted]
-    }).finish()
+    const preparedLogEntry = prepareProtoBatch({ streams: [ logEntryConverted ] })
+    const buffer = logproto.PushRequest.encode(preparedLogEntry).finish()
 
     const snappy = require('snappy')
     const data = snappy.compressSync(buffer)
     expect(
-      got.post.mock.calls[0][got.post.mock.calls[0].length - 1].body
+      req.post.mock.calls[0][req.post.mock.calls[0].length - 1]
     ).toEqual(data)
   })
   it('Should construct without snappy binaries to a JSON transport', function () {

@@ -47,7 +47,7 @@ describe('Integration tests', function () {
     const testMessage = 'testMessage'
     const testLabel = 'testLabel'
     const now = Date.now() / 1000
-    logger.debug({ message: testMessage, labels: { 'customLabel': testLabel } })
+    logger.debug({ message: testMessage, labels: { customLabel: testLabel } })
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
       lokiTransport.batcher.batch.streams[0]

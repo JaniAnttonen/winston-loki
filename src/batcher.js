@@ -1,9 +1,9 @@
-const got = require('got')
 const url = require('url')
 const exitHook = require('async-exit-hook')
 
 const { logproto } = require('./proto')
 const protoHelpers = require('./proto/helpers')
+const req = require('./requests')
 let snappy = false
 
 /**
@@ -15,6 +15,7 @@ class Batcher {
   loadSnappy () {
     return require('snappy')
   }
+
   /**
    * Creates an instance of Batcher.
    * Starts the batching loop if enabled.
@@ -26,7 +27,14 @@ class Batcher {
     this.options = options
 
     // Construct Grafana Loki push API url
-    this.url = new url.URL(this.options.host + '/api/prom/push').toString()
+    this.url = new url.URL(this.options.host + '/loki/api/v1/push')
+
+    // Parse basic auth parameters if given
+    if (options.basicAuth) {
+      const btoa = require('btoa')
+      const basicAuth = 'Basic: ' + btoa(options.basicAuth)
+      this.options.headers = Object.assign(this.options.headers, { 'Authorization': basicAuth })
+    }
 
     // Define the batching intervals
     this.interval = this.options.interval
@@ -108,7 +116,7 @@ class Batcher {
 
       // Find if there's already a log with identical labels in the batch
       const match = streams.findIndex(
-        stream => stream.labels === logEntry.labels
+        stream => JSON.stringify(stream.labels) === JSON.stringify(logEntry.labels)
       )
 
       if (match > -1) {
@@ -147,13 +155,15 @@ class Batcher {
 
         // If the data format is JSON, there's no need to construct a buffer
         if (this.options.json) {
+          let preparedJSONBatch
           if (logEntry !== undefined) {
             // If a single logEntry is given, wrap it according to the batch format
-            reqBody = JSON.stringify({ streams: [logEntry] })
+            preparedJSONBatch = protoHelpers.prepareJSONBatch({ streams: [logEntry] })
           } else {
             // Stringify the JSON ready for transport
-            reqBody = JSON.stringify(this.batch)
+            preparedJSONBatch = protoHelpers.prepareJSONBatch(this.batch)
           }
+          reqBody = JSON.stringify(preparedJSONBatch)
         } else {
           try {
             let batch
@@ -164,33 +174,30 @@ class Batcher {
               batch = this.batch
             }
 
+            const preparedBatch = protoHelpers.prepareProtoBatch(batch)
+
             // Check if the batch can be encoded in Protobuf and is correct format
-            const err = logproto.PushRequest.verify(batch)
+            const err = logproto.PushRequest.verify(preparedBatch)
 
             // Reject the promise if the batch is not of correct format
             if (err) reject(err)
 
             // Create the PushRequest object
-            const message = logproto.PushRequest.create(batch)
-
+            const message = logproto.PushRequest.create(preparedBatch)
+            console.log(message)
             // Encode the PushRequest object and create the binary buffer
             const buffer = logproto.PushRequest.encode(message).finish()
-
+            console.log(buffer)
             // Compress the buffer with snappy
             reqBody = snappy.compressSync(buffer)
           } catch (err) {
+            console.log(err)
             reject(err)
           }
         }
 
         // Send the data to Grafana Loki
-        got
-          .post(this.url, {
-            body: reqBody,
-            headers: {
-              'content-type': this.contentType
-            }
-          })
+        req.post(this.url, this.contentType, this.options.headers, reqBody)
           .then(res => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
