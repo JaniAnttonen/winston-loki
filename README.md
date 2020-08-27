@@ -6,11 +6,14 @@
 [![Coverage Status](https://coveralls.io/repos/github/JaniAnttonen/winston-loki/badge.svg?branch=master)](https://coveralls.io/github/JaniAnttonen/winston-loki?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/17a55cce14d581c308bc/maintainability)](https://codeclimate.com/github/JaniAnttonen/winston-loki/maintainability)
 
-
 A Grafana Loki transport for the nodejs logging library Winston.
 
+## Releases
+
+### Stable
 A stable, /fully/ tested version is always available with the tag `latest`.
 
+### Development
 The latest development build is available with the tag `next`. If you're experiencing any issues, it is recommended to try out the `next` version, since some things in the stable version might be deprecated in the latest Grafana Loki. Development build has a higher probability of bugs though, and will not work with earlier versions of Loki.
 
 ## Usage
