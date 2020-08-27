@@ -11,7 +11,7 @@ A Grafana Loki transport for the nodejs logging library Winston.
 
 A stable, /fully/ tested version is always available with the tag `latest`.
 
-The latest development build is available with the tag `next`. If you're experiencing any issues, it is recommended to try out the `next` version, since some things in the stable version might be deprecated in the latest Grafana Loki version. Development build has a higher probability of bugs though, and will not work with earlier versions of Loki.
+The latest development build is available with the tag `next`. If you're experiencing any issues, it is recommended to try out the `next` version, since some things in the stable version might be deprecated in the latest Grafana Loki. Development build has a higher probability of bugs though, and will not work with earlier versions of Loki.
 
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
