@@ -16,9 +16,6 @@ The latest version, which might not be fully tested, but should be compatible wi
 ### Stable
 A stable, /fully/ tested version is `5.1.2`.
 
-### Development
-The latest development build is available with the tag `next`. If you're experiencing any issues, it is recommended to try out the `next` version, since some things in the stable version might be deprecated in the latest Grafana Loki. Development build has a higher probability of bugs though, and will not work with earlier versions of Loki.
-
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
 
