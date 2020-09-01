@@ -32,7 +32,7 @@ class Batcher {
     // Parse basic auth parameters if given
     if (options.basicAuth) {
       const btoa = require('btoa')
-      const basicAuth = 'Basic: ' + btoa(options.basicAuth)
+      const basicAuth = 'Basic ' + btoa(options.basicAuth)
       this.options.headers = Object.assign(this.options.headers, { 'Authorization': basicAuth })
     }
 
