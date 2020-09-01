@@ -1,6 +1,6 @@
 {
   "name": "winston-loki",
-  "version": "5.1.2",
+  "version": "6.0.0-rc.3",
   "description": "A Winston transport for Grafana Loki",
   "keywords": [
     "winston",
@@ -49,8 +49,7 @@
   },
   "dependencies": {
     "async-exit-hook": "2.0.1",
-    "got": "^9.5.0",
-    "moment": "^2.24.0",
+    "btoa": "^1.2.1",
     "protobufjs": "^6.8.8",
     "winston-transport": "^4.3.0"
   },

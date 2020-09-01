@@ -1,16 +1,29 @@
 # winston-loki
 
 [![npm version](https://badge.fury.io/js/winston-loki.svg)](https://badge.fury.io/js/winston-loki)
+[![install size](https://packagephobia.now.sh/badge?p=winston-loki)](https://packagephobia.now.sh/result?p=winston-loki)
 [![Build Status](https://travis-ci.com/JaniAnttonen/winston-loki.svg?branch=master)](https://travis-ci.com/JaniAnttonen/winston-loki)
 [![Coverage Status](https://coveralls.io/repos/github/JaniAnttonen/winston-loki/badge.svg?branch=master)](https://coveralls.io/github/JaniAnttonen/winston-loki?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/17a55cce14d581c308bc/maintainability)](https://codeclimate.com/github/JaniAnttonen/winston-loki/maintainability)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
 
 A Grafana Loki transport for the nodejs logging library Winston.
 
+## Releases
+
+### Latest
+The latest version, which might not be fully tested, but should be compatible with the latest Grafana Loki, is `6.0.0-rc.3`. It is recommended to use this one if you're using the latest version of Loki.
+
+### Stable
+A stable, /fully/ tested version is `5.1.2`.
+
+### Development
+The latest development build is available with the tag `next`. If you're experiencing any issues, it is recommended to try out the `next` version, since some things in the stable version might be deprecated in the latest Grafana Loki. Development build has a higher probability of bugs though, and will not work with earlier versions of Loki.
+
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
+
+### [Examples](./examples/)
+Several usage examples with a test configuration for Grafana+Loki+Promtail reside under [`examples/`](./examples/). If you want the simplest possible configuration, that's probably the place to check out. By defining `json: true` and giving `winston-loki` the correct `host` address for Loki is enough for most.
 
 ### Options
 LokiTransport() takes a Javascript object as an input. These are the options that are available, __required in bold__:

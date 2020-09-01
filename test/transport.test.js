@@ -39,14 +39,14 @@ describe('Integration tests', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
     const spy = jest.spyOn(lokiTransport.batcher, 'pushLogEntry')
     lokiTransport.log(fixtures.logs[0], () => {})
-    expect(spy).toHaveBeenCalledWith(JSON.parse(fixtures.logs_mapped[0]))
+    expect(spy).toHaveBeenCalledWith(JSON.parse(fixtures.logs_mapped_before[0]))
   })
   it('LokiTransport should map logs correctly from Winston to Grafana Loki format', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(lokiTransport.batcher.batch.streams[0]).toEqual(
-      JSON.parse(fixtures.logs_mapped[0])
+      fixtures.logs[0]
     )
   })
   it("LokiTransport should append anything else than the message after it in the log's entry", function () {
@@ -55,7 +55,7 @@ describe('Integration tests', function () {
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
       JSON.stringify(lokiTransport.batcher.batch.streams[0]).replace(/\s/g, '')
-    ).toEqual(fixtures.logs_mapped[3].replace(/\s/g, ''))
+    ).toEqual(fixtures.logs_mapped_before[3].replace(/\s/g, ''))
   })
   it('LokiTransport should not append anything else after the message if there are no extra keys in the log object', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
@@ -63,6 +63,6 @@ describe('Integration tests', function () {
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
       JSON.stringify(lokiTransport.batcher.batch.streams[0]).replace(/\s/g, '')
-    ).toEqual(fixtures.logs_mapped[2].replace(/\s/g, ''))
+    ).toEqual(fixtures.logs_mapped_before[2].replace(/\s/g, ''))
   })
 })
