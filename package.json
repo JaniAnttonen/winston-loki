@@ -15,6 +15,7 @@
     "grafana loki"
   ],
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./src/proto/index.js ./src/proto/logproto.proto && npm run lint:fix",
     "test": "./node_modules/.bin/standard && ./node_modules/.bin/jest",
