@@ -37,7 +37,7 @@ class Batcher {
     }
 
     // Define the batching intervals
-    this.interval = this.options.interval
+    this.interval = this.options.interval && this.options.interval !== undefined
       ? Number(this.options.interval) * 1000
       : 5000
     this.circuitBreakerInterval = 60000
@@ -184,21 +184,18 @@ class Batcher {
 
             // Create the PushRequest object
             const message = logproto.PushRequest.create(preparedBatch)
-            console.log(message)
             // Encode the PushRequest object and create the binary buffer
             const buffer = logproto.PushRequest.encode(message).finish()
-            console.log(buffer)
             // Compress the buffer with snappy
             reqBody = snappy.compressSync(buffer)
           } catch (err) {
-            console.log(err)
             reject(err)
           }
         }
 
         // Send the data to Grafana Loki
         req.post(this.url, this.contentType, this.options.headers, reqBody)
-          .then(res => {
+          .then(() => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
             resolve()
