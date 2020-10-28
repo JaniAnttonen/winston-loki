@@ -37,7 +37,7 @@ class Batcher {
     }
 
     // Define the batching intervals
-    this.interval = this.options.interval && this.options.interval !== undefined
+    this.interval = this.options.interval
       ? Number(this.options.interval) * 1000
       : 5000
     this.circuitBreakerInterval = 60000
@@ -220,7 +220,11 @@ class Batcher {
       try {
         await this.sendBatchToLoki()
         if (this.interval === this.circuitBreakerInterval) {
-          this.interval = Number(this.options.interval) * 1000
+          if (this.options.interval !== undefined) {
+            this.interval = Number(this.options.interval) * 1000
+          } else {
+            this.interval = 5000
+          }
         }
       } catch (e) {
         this.interval = this.circuitBreakerInterval
