@@ -90,9 +90,7 @@ class LokiTransport extends Transport {
    * Send batch to loki when clean up
    */
   close () {
-    this.batcher.sendBatchToLoki()
-      .then(() => {}) // maybe should emit something here
-      .catch(() => {}) // maybe should emit something here
+    this.batcher.close()
   }
 }
 

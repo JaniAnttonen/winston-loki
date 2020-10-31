@@ -70,9 +70,7 @@ class Batcher {
 
     if (this.options.gracefulShutdown) {
       exitHook(callback => {
-        this.sendBatchToLoki()
-          .then(() => callback())
-          .catch(() => callback())
+        this.close(() => callback())
       })
     }
   }
@@ -216,7 +214,8 @@ class Batcher {
    * the amount of this.interval between requests.
    */
   async run () {
-    while (true) {
+    this.runLoop = true
+    while (this.runLoop) {
       try {
         await this.sendBatchToLoki()
         if (this.interval === this.circuitBreakerInterval) {
@@ -231,6 +230,18 @@ class Batcher {
       }
       await this.wait(this.interval)
     }
+  }
+
+  /**
+   * Stops the batch push loop
+   *
+   * @param {() => void} [callback]
+   */
+  close (callback) {
+    this.runLoop = false
+    this.sendBatchToLoki()
+      .then(() => { if (callback) { callback() } }) // maybe should emit something here
+      .catch(() => { if (callback) { callback() } }) // maybe should emit something here
   }
 }
 
