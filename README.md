@@ -11,7 +11,7 @@ A Grafana Loki transport for the nodejs logging library Winston.
 ## Releases
 
 ### Latest
-The latest version, which might not be fully tested, but should be compatible with the latest Grafana Loki, is `6.0.0-rc.6`. It is recommended to use this one if you're using the latest version of Loki. _Last tested working with Loki 1.4.1_
+The latest version, which might not be fully tested, but should be compatible with the latest Grafana Loki, is `6.0.0-rc.7`. It is recommended to use this one if you're using the latest version of Loki. _Last tested working with Loki 1.4.1_
 
 ### Stable
 A stable, /fully/ tested version is `5.1.2`. Should work with Loki versions <=1.0.0.
