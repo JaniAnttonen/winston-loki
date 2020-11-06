@@ -4,7 +4,7 @@ const https = require('https')
 const post = async (lokiUrl, contentType, headers = {}, data = '') => {
   const defaultHeaders = {
     'Content-Type': contentType,
-    'Content-Length': data.length
+    'Content-Length': Buffer.from(data, "utf8").length
   }
   return new Promise((resolve, reject) => {
     const lib = lokiUrl.protocol === 'https:' ? https : http
