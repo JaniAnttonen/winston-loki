@@ -1,6 +1,6 @@
 {
   "name": "winston-loki",
-  "version": "6.0.0-rc.7",
+  "version": "6.0.0-rc.8",
   "description": "A Winston transport for Grafana Loki",
   "keywords": [
     "winston",
