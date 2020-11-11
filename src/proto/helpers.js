@@ -5,7 +5,7 @@ module.exports = {
         return {
           timestamp: {
             seconds: Math.floor(entry.ts / 1000),
-            nanos: (entry.ts % 1000) * 1000
+            nanos: (entry.ts % 1000) * 1000000
           },
           line: entry.line
         }
