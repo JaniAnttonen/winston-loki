@@ -192,7 +192,7 @@ class Batcher {
         }
 
         // Send the data to Grafana Loki
-        req.post(this.url, this.contentType, this.options.headers, reqBody)
+        req.post(this.url, this.contentType, this.options.headers, reqBody, this.options.timeout)
           .then(() => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()

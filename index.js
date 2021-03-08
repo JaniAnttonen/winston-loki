@@ -28,7 +28,8 @@ class LokiTransport extends Transport {
       clearOnError: options.clearOnError,
       replaceOnError: options.replaceOnError,
       replaceTimestamp: options.replaceTimestamp,
-      gracefulShutdown: options.gracefulShutdown !== false
+      gracefulShutdown: options.gracefulShutdown !== false,
+      timeout: options.timeout
     })
 
     this.useCustomFormat = options.format !== undefined

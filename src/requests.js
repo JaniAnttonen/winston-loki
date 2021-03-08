@@ -1,7 +1,7 @@
 const http = require('http')
 const https = require('https')
 
-const post = async (lokiUrl, contentType, headers = {}, data = '') => {
+const post = async (lokiUrl, contentType, headers = {}, data = '', timeout) => {
   // Construct a buffer from the data string to have deterministic data size
   const dataBuffer = Buffer.from(data, 'utf8')
 
@@ -21,7 +21,8 @@ const post = async (lokiUrl, contentType, headers = {}, data = '') => {
       port: lokiUrl.port !== '' ? lokiUrl.port : (lokiUrl.protocol === 'https:' ? 443 : 80),
       path: lokiUrl.pathname,
       method: 'POST',
-      headers: Object.assign(defaultHeaders, headers)
+      headers: Object.assign(defaultHeaders, headers),
+      timeout: timeout
     }
 
     // Construct the request
