@@ -70,9 +70,7 @@ class Batcher {
 
     if (this.options.gracefulShutdown) {
       exitHook(callback => {
-        this.sendBatchToLoki()
-          .then(() => callback())
-          .catch(() => callback())
+        this.close(() => callback())
       })
     }
   }
@@ -184,21 +182,18 @@ class Batcher {
 
             // Create the PushRequest object
             const message = logproto.PushRequest.create(preparedBatch)
-            console.log(message)
             // Encode the PushRequest object and create the binary buffer
             const buffer = logproto.PushRequest.encode(message).finish()
-            console.log(buffer)
             // Compress the buffer with snappy
             reqBody = snappy.compressSync(buffer)
           } catch (err) {
-            console.log(err)
             reject(err)
           }
         }
 
         // Send the data to Grafana Loki
-        req.post(this.url, this.contentType, this.options.headers, reqBody)
-          .then(res => {
+        req.post(this.url, this.contentType, this.options.headers, reqBody, this.options.timeout)
+          .then(() => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
             resolve()
@@ -219,17 +214,34 @@ class Batcher {
    * the amount of this.interval between requests.
    */
   async run () {
-    while (true) {
+    this.runLoop = true
+    while (this.runLoop) {
       try {
         await this.sendBatchToLoki()
         if (this.interval === this.circuitBreakerInterval) {
-          this.interval = Number(this.options.interval) * 1000
+          if (this.options.interval !== undefined) {
+            this.interval = Number(this.options.interval) * 1000
+          } else {
+            this.interval = 5000
+          }
         }
       } catch (e) {
         this.interval = this.circuitBreakerInterval
       }
       await this.wait(this.interval)
     }
+  }
+
+  /**
+   * Stops the batch push loop
+   *
+   * @param {() => void} [callback]
+   */
+  close (callback) {
+    this.runLoop = false
+    this.sendBatchToLoki()
+      .then(() => { if (callback) { callback() } }) // maybe should emit something here
+      .catch(() => { if (callback) { callback() } }) // maybe should emit something here
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "winston-loki",
-  "version": "6.0.0-rc.3",
+  "version": "6.0.0-rc.9",
   "description": "A Winston transport for Grafana Loki",
   "keywords": [
     "winston",
@@ -15,10 +15,11 @@
     "grafana loki"
   ],
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./src/proto/index.js ./src/proto/logproto.proto && npm run lint:fix",
     "test": "./node_modules/.bin/standard && ./node_modules/.bin/jest",
-    "lint": "./node_modules/.bin/standard",
+    "lint": "./node_modules/.bin/eslint *",
     "lint:fix": "./node_modules/.bin/standard --fix",
     "coverage": "jest --coverage",
     "coveralls": "jest --coverage && cat ./test/coverage/lcov.info | coveralls"

@@ -11,13 +11,10 @@ A Grafana Loki transport for the nodejs logging library Winston.
 ## Releases
 
 ### Latest
-The latest version, which might not be fully tested, but should be compatible with the latest Grafana Loki, is `6.0.0-rc.3`. It is recommended to use this one if you're using the latest version of Loki.
+The latest version, which might not be fully tested, but should be compatible with the latest Grafana Loki, is `6.0.0-rc.9`. It is recommended to use this one if you're using the latest version of Loki. _Last tested working with Loki 1.4.1_
 
 ### Stable
-A stable, /fully/ tested version is `5.1.2`.
-
-### Development
-The latest development build is available with the tag `next`. If you're experiencing any issues, it is recommended to try out the `next` version, since some things in the stable version might be deprecated in the latest Grafana Loki. Development build has a higher probability of bugs though, and will not work with earlier versions of Loki.
+A stable, /fully/ tested version is `5.1.2`. Should work with Loki versions <=1.0.0.
 
 ## Usage
 This Winston transport is used similarly to other Winston transports. Require winston and define a new LokiTransport() inside its options when creating it.
@@ -39,6 +36,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | null          |
 | `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | null          |
 | `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true          |
+| `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | null          | 
 
 ### Example
 With default formatting:
