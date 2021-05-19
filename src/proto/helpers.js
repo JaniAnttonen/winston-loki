@@ -28,6 +28,11 @@ module.exports = {
   },
   prepareProtoBatch: batch => {
     batch.streams = batch.streams.map(logEntry => {
+      // Skip preparation when the batch has been prepared already
+      // TODO: The patch blocks new labels to be added, although the situation is better than before
+      if (typeof logEntry.labels === 'string') {
+        return logEntry
+      }
       let protoLabels = `{level="${logEntry.labels.level}"`
       delete logEntry.labels.level
       for (let key in logEntry.labels) {
