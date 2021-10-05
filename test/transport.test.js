@@ -30,6 +30,22 @@ describe('Integration tests', function () {
     })
     expect(callback).toBe(true)
   })
+  it('LokiTransport shouldn\'t cause unhandledPromiseRejection when batching is turned off', async function () {
+    let consoleError = false
+    // eslint-disable-next-line no-console
+    console.error = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {
+        consoleError = true
+      })
+
+    const lokiTransport = new LokiTransport(fixtures.options_no_batching)
+    lokiTransport.log(fixtures.logs[0], () => {})
+
+    // Wait for Promise (this.batcher.pushLogEntry) be rejected
+    await new Promise(resolve => setTimeout(resolve, 100))
+    expect(consoleError).toBe(true)
+  })
   it('LokiTransport should transfer logs to the Batcher', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
     lokiTransport.log(fixtures.logs[0], () => {})
