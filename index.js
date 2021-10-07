@@ -84,7 +84,10 @@ class LokiTransport extends Transport {
     }
 
     // Pushes the log to the batcher
-    this.batcher.pushLogEntry(logEntry)
+    this.batcher.pushLogEntry(logEntry).catch(err => {
+      // eslint-disable-next-line no-console
+      console.error(err)
+    })
 
     // Trigger the optional callback
     callback()
