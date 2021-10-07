@@ -69,6 +69,9 @@ class LokiTransport extends Transport {
       rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
     }`
 
+    // Make sure all label values are strings
+    lokiLabels = JSON.parse(JSON.stringify(lokiLabels, (key, value) => value ? value.toString() : value))
+
     // Construct the log to fit Grafana Loki's accepted format
     const logEntry = {
       labels: lokiLabels,
@@ -81,7 +84,10 @@ class LokiTransport extends Transport {
     }
 
     // Pushes the log to the batcher
-    this.batcher.pushLogEntry(logEntry)
+    this.batcher.pushLogEntry(logEntry).catch(err => {
+      // eslint-disable-next-line no-console
+      console.error(err)
+    })
 
     // Trigger the optional callback
     callback()
