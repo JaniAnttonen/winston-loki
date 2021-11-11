@@ -52,7 +52,7 @@ describe('Integration tests', function () {
     expect(
       lokiTransport.batcher.batch.streams[0]
     ).toEqual({
-      labels: `{level="debug",module="name",app="appname",customLabel="${testLabel}"}`,
+      labels: { level: 'debug', module: 'name', app: 'appname', customLabel: testLabel },
       entries: [{
         line: `[name] ${testMessage}`,
         timestamp: {
