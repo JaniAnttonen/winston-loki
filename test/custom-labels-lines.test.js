@@ -46,19 +46,16 @@ describe('Integration tests', function () {
 
     const testMessage = 'testMessage'
     const testLabel = 'testLabel'
-    const now = Date.now() / 1000
+    const now = Date.now()
     logger.debug({ message: testMessage, labels: { customLabel: testLabel } })
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
       lokiTransport.batcher.batch.streams[0]
     ).toEqual({
-      labels: `{level="debug",module="name",app="appname",customLabel="${testLabel}"}`,
+      labels: { level: 'debug', module: 'name', app: 'appname', customLabel: testLabel },
       entries: [{
         line: `[name] ${testMessage}`,
-        timestamp: {
-          nanos: expect.any(Number),
-          seconds: expect.toBeWithinRange(now - 5, now + 5)
-        }
+        ts: expect.toBeWithinRange(now - 5, now + 5)
       }]
     })
   })
