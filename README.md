@@ -29,6 +29,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | null          |
 | `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true          |
 | `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | null          | 
+| `basicAuth`        | basic authentication credentials to access Loki over HTTP | bob:ilovealice123      | null          | 
 
 ### Example
 With default formatting:
