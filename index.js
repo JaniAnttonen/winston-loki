@@ -70,7 +70,7 @@ class LokiTransport extends Transport {
     }`
 
     // Make sure all label values are strings
-    lokiLabels = JSON.parse(JSON.stringify(lokiLabels, (key, value) => value ? value.toString() : value))
+    lokiLabels = Object.fromEntries(Object.entries(lokiLabels).map(([key, value]) => [key, value ? value.toString() : value]))
 
     // Construct the log to fit Grafana Loki's accepted format
     const logEntry = {
