@@ -59,7 +59,7 @@ TODO: Add custom formatting example
 ### Requirements
 Running a local Loki for testing is probably required, and the easiest way to do that is to follow this guide: https://github.com/grafana/loki/tree/master/production#run-locally-using-docker. After that, Grafana Loki instance is available at `http://localhost:3100`, with a Grafana instance running at `http://localhost:3000`. Username `admin`, password `admin`. Add the Loki source with the URL `http://loki:3100`, and the explorer should work.
 
-Refer to https://github.com/grafana/loki/blob/master/docs/api.md for documentation about the available endpoints, data formats etc.
+Refer to https://grafana.com/docs/loki/latest/api/ for documentation about the available endpoints, data formats etc.
 
 ### Example
 ```sh
