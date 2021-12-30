@@ -14,17 +14,11 @@ module.exports = {
     return logEntry
   },
   prepareJSONBatch: batch => {
-    batch.streams = batch.streams.map(logEntry => {
-      logEntry.stream = logEntry.labels
-      logEntry.values = logEntry.entries
-      logEntry.values = logEntry.values.map(entry => {
-        return [JSON.stringify(entry.ts * 1000 * 1000), entry.line]
-      })
-      delete logEntry.entries
-      delete logEntry.labels
-      return logEntry
-    })
-    return batch
+    const streams = batch.streams.map(logStream => ({
+      stream: logStream.labels,
+      values: logStream.entries.map(entry => [JSON.stringify(entry.ts * 1000 * 1000), entry.line])
+    }))
+    return { streams }
   },
   prepareProtoBatch: batch => {
     batch.streams = batch.streams.map(logEntry => {
