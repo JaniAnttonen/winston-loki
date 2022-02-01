@@ -1,10 +1,10 @@
 module.exports = {
-  extends: "standard",
+  extends: 'standard',
   env: {
     node: true,
     jest: true
   },
   rules: {
-    "no-console": "error"
+    'no-console': 'error'
   }
-};
+}

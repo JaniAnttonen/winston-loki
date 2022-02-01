@@ -29,7 +29,7 @@ module.exports = {
       }
       let protoLabels = `{level="${logEntry.labels.level}"`
       delete logEntry.labels.level
-      for (let key in logEntry.labels) {
+      for (const key in logEntry.labels) {
         protoLabels += `,${key}="${logEntry.labels[key]}"`
       }
       protoLabels += '}'
