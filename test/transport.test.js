@@ -67,7 +67,7 @@ describe('Integration tests', function () {
           line: 'testings ',
           ts: 1546977515828
         }],
-        'labels': {
+        labels: {
           job: 'test',
           level: 'info'
         }

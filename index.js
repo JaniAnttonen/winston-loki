@@ -61,11 +61,13 @@ class LokiTransport extends Transport {
     if (this.labels) {
       lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
-      lokiLabels['job'] = label
+      lokiLabels.job = label
     }
 
     // follow the format provided
-    const line = this.useCustomFormat ? info[MESSAGE] : `${message} ${
+    const line = this.useCustomFormat
+      ? info[MESSAGE]
+      : `${message} ${
       rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
     }`
 

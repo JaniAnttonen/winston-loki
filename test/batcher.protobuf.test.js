@@ -37,7 +37,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     const logEntryConverted = createProtoTimestamps(
       fixtures.logs[1]
     )
-    const preparedLogEntry = prepareProtoBatch({ streams: [ logEntryConverted ] })
+    const preparedLogEntry = prepareProtoBatch({ streams: [logEntryConverted] })
     const stub = await jest.spyOn(batcher, 'sendBatchToLoki')
 
     batcher.pushLogEntry(fixtures.logs[1])
@@ -88,7 +88,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     const logEntryConverted = createProtoTimestamps(
       fixtures.logs[1]
     )
-    const preparedLogEntry = prepareProtoBatch({ streams: [ logEntryConverted ] })
+    const preparedLogEntry = prepareProtoBatch({ streams: [logEntryConverted] })
     const buffer = logproto.PushRequest.encode(preparedLogEntry).finish()
 
     const snappy = require('snappy')

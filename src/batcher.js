@@ -33,7 +33,7 @@ class Batcher {
     if (options.basicAuth) {
       const btoa = require('btoa')
       const basicAuth = 'Basic ' + btoa(options.basicAuth)
-      this.options.headers = Object.assign(this.options.headers, { 'Authorization': basicAuth })
+      this.options.headers = Object.assign(this.options.headers, { Authorization: basicAuth })
     }
 
     // Define the batching intervals
