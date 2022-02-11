@@ -21,8 +21,6 @@ jobs:
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
-      - name: Test
-        run: yarn test --ci --coverage
       - name: Version
         run: yarn version --new-version "${GITHUB_REF:11}" --no-git-tag-version
       - name: Publish
