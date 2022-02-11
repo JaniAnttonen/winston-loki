@@ -9,10 +9,10 @@ declare interface LokiTransportOptions extends TransportStream.TransportStreamOp
     batching?: boolean;
     labels?: object;
     clearOnError?: boolean,
-    replaceOnError?: boolean,
     replaceTimestamp?: boolean,
     gracefulShutdown?: boolean,
     timeout?: number,
+    onConnectionError?(error: unknown): void
 }
 
 declare class LokiTransport extends TransportStream {

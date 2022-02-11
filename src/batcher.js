@@ -201,6 +201,9 @@ class Batcher {
           .catch(err => {
             // Clear the batch on error if enabled
             this.options.clearOnError && this.clearBatch()
+
+            this.options.onConnectionError !== undefined && this.options.onConnectionError(err)
+
             reject(err)
           })
       }
