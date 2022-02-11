@@ -26,7 +26,7 @@ class LokiTransport extends Transport {
       json: options.json,
       batching: options.batching !== false,
       clearOnError: options.clearOnError,
-      replaceOnError: options.replaceOnError,
+      onConnectionError: options.onConnectionError,
       replaceTimestamp: options.replaceTimestamp,
       gracefulShutdown: options.gracefulShutdown !== false,
       timeout: options.timeout
