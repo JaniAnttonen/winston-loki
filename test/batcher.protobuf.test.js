@@ -48,7 +48,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
   it('Should be able to clear the batch of streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
-    expect(batcher.batch.streams.length).toBe(2)
+    expect(batcher.batch.streams.length).toBe(1)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
   })

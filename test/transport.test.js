@@ -61,18 +61,7 @@ describe('Integration tests', function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
-    expect(lokiTransport.batcher.batch.streams[0]).toEqual(
-      {
-        entries: [{
-          line: 'testings ',
-          ts: 1546977515828
-        }],
-        labels: {
-          job: 'test',
-          level: 'info'
-        }
-      }
-    )
+    expect(lokiTransport.batcher.batch.streams[0]).toEqual(JSON.parse(fixtures.logs_mapped_before[0]))
   })
   it("LokiTransport should append anything else than the message after it in the log's entry", function () {
     const lokiTransport = new LokiTransport(fixtures.options_json)

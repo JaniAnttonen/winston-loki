@@ -53,7 +53,7 @@ describe('Integration tests', function () {
     expect(
       lokiTransport.batcher.batch.streams[0]
     ).toEqual({
-      labels: { level: 'debug', module: 'name', app: 'appname', customLabel: testLabel },
+      labels: { module: 'name', app: 'appname'},
       entries: [{
         line: `[name] ${testMessage}`,
         ts: expect.toBeWithinRange(now - 5, now + 5)
