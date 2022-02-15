@@ -27,6 +27,7 @@ describe('Integration tests', function () {
       host: 'http://localhost',
       level: 'debug',
       interval: 10,
+      json: true,
       labels: {
         module: 'name',
         app: 'appname'

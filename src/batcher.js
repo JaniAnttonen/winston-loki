@@ -4,6 +4,7 @@ const exitHook = require('async-exit-hook')
 const { logproto } = require('./proto')
 const protoHelpers = require('./proto/helpers')
 const req = require('./requests')
+const {deepEqual} = require("./helpers");
 let snappy = false
 
 /**
@@ -114,7 +115,7 @@ class Batcher {
 
       // Find if there's already a log with identical labels in the batch
       const match = streams.findIndex(
-        stream => JSON.stringify(stream.labels) === JSON.stringify(logEntry.labels)
+        stream => deepEqual(stream.labels, logEntry.labels)
       )
 
       if (match > -1) {
