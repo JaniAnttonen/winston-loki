@@ -56,13 +56,14 @@ class LokiTransport extends Transport {
 
     // build custom labels if provided
     let lokiLabels = { level: level }
-    lokiLabels = Object.assign(lokiLabels, labels)
 
     if (this.labels) {
       lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
       lokiLabels.job = label
     }
+
+    lokiLabels = Object.assign(lokiLabels, labels)
 
     // follow the format provided
     const line = this.useCustomFormat
