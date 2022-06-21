@@ -2,12 +2,12 @@ import TransportStream from "winston-transport";
 
 declare interface LokiTransportOptions extends TransportStream.TransportStreamOptions{
     host: string;
-    basicAuth?: string;
-    headers?: object;
+    basicAuth?: `${string}:${string}`;
+    headers?: Record<string, string>;
     interval?: number;
     json?: boolean;
     batching?: boolean;
-    labels?: object;
+    labels?: Record<string, string>;
     clearOnError?: boolean,
     replaceTimestamp?: boolean,
     gracefulShutdown?: boolean,
