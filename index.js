@@ -54,22 +54,15 @@ class LokiTransport extends Transport {
     // Deconstruct the log
     const { timestamp } = info
 
-    // build custom labels if provided
-    let lokiLabels = {}
-
-    if (this.labels) {
-      lokiLabels = Object.assign(lokiLabels, this.labels)
-    }
-
     // follow the format provided
     const line = this.useCustomFormat ? info[MESSAGE] : JSON.stringify(info)
 
     // Make sure all label values are strings
-    lokiLabels = Object.fromEntries(Object.entries(lokiLabels).map(([key, value]) => [key, value ? value.toString() : value]))
+    this.labels = Object.fromEntries(Object.entries(this.labels).map(([key, value]) => [key, value ? value.toString() : value]))
 
     // Construct the log to fit Grafana Loki's accepted format
     const logEntry = {
-      labels: lokiLabels,
+      labels: this.labels,
       entries: [
         {
           ts: timestamp || Date.now().valueOf(),
