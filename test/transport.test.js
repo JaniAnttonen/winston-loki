@@ -90,4 +90,47 @@ describe('Integration tests', function () {
       JSON.stringify(lokiTransport.batcher.batch.streams[0]).replace(/\s/g, '')
     ).toEqual(fixtures.logs_mapped_before[2].replace(/\s/g, ''))
   })
+  describe('custom timestamp', () => {
+    it('LokiTransport should convert provided timestamp to number and use it for Loki format', function () {
+      const lokiTransport = new LokiTransport(fixtures.options_json)
+      const timestampString = new Date(fixtures.logs[0].timestamp).toISOString()
+      const log = { ...fixtures.logs[0], timestamp: timestampString }
+      lokiTransport.log(log, () => {})
+      expect(lokiTransport.batcher.batch.streams.length).toBe(1)
+      expect(lokiTransport.batcher.batch.streams[0]).toEqual(
+        {
+          entries: [{
+            line: 'testings ',
+            ts: 1546977515828
+          }],
+          labels: {
+            job: 'test',
+            level: 'info'
+          }
+        }
+      )
+    })
+    it('LokiTransport should current time for timestamp in Loki format ' +
+      'when provided timestamp cannot be converted to a valid date',
+    function () {
+      jest.useFakeTimers()
+      const lokiTransport = new LokiTransport(fixtures.options_json)
+      const invalidTimestamp = '12:00:00'
+      const log = { ...fixtures.logs[0], timestamp: invalidTimestamp }
+      lokiTransport.log(log, () => {})
+      expect(lokiTransport.batcher.batch.streams.length).toBe(1)
+      expect(lokiTransport.batcher.batch.streams[0]).toEqual(
+        {
+          entries: [{
+            line: 'testings ',
+            ts: Date.now()
+          }],
+          labels: {
+            job: 'test',
+            level: 'info'
+          }
+        }
+      )
+    })
+  })
 })
