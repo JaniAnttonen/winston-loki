@@ -56,13 +56,14 @@ class LokiTransport extends Transport {
 
     // build custom labels if provided
     let lokiLabels = { level: level }
-    lokiLabels = Object.assign(lokiLabels, labels)
 
     if (this.labels) {
       lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
       lokiLabels.job = label
     }
+
+    lokiLabels = Object.assign(lokiLabels, labels)
 
     // follow the format provided
     const line = this.useCustomFormat
@@ -75,11 +76,19 @@ class LokiTransport extends Transport {
     lokiLabels = Object.fromEntries(Object.entries(lokiLabels).map(([key, value]) => [key, value ? value.toString() : value]))
 
     // Construct the log to fit Grafana Loki's accepted format
+    let ts
+    if (timestamp) {
+      ts = new Date(timestamp)
+      ts = isNaN(ts) ? Date.now() : ts.valueOf()
+    } else {
+      ts = Date.now()
+    }
+
     const logEntry = {
       labels: lokiLabels,
       entries: [
         {
-          ts: timestamp || Date.now().valueOf(),
+          ts,
           line
         }
       ]
