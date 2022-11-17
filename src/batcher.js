@@ -16,16 +16,14 @@ class Batcher {
 
   loadUrl () {
     let URL
-    if (window && window.URL) {
-      URL = window.URL
-    } else {
-      try {
-        const url = require('url')
-        URL = url.URL
-      } catch (_error) {
-        const url = require('url-polyfill')
-        URL = url.URL
+    try {
+      if (typeof window !== 'undefined' && window.URL) {
+        URL = window.URL
+      } else {
+        URL = require('url').URL
       }
+    } catch (_error) {
+      URL = require('url-polyfill').URL
     }
     return URL
   }
