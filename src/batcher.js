@@ -78,6 +78,9 @@ class Batcher {
       this.contentType = 'application/json'
     }
 
+    this.batchesSending = 0
+    this.onBatchesFlushed = () => {}
+
     // If batching is enabled, run the loop
     this.options.batching && this.run()
 
@@ -86,6 +89,46 @@ class Batcher {
         this.close(() => callback())
       })
     }
+  }
+
+  /**
+   * Marks the start of batch submitting.
+   *
+   * Must be called right before batcher starts sending logs.
+   */
+  batchSending () {
+    this.batchesSending++
+  }
+
+  /**
+   * Marks the end of batch submitting
+   *
+   * Must be called after the response from Grafana Loki push endpoint
+   * is received and completely processed, right before
+   * resolving/rejecting the promise.
+   */
+  batchSent () {
+    if (--this.batchesSending) return
+
+    this.onBatchesFlushed()
+  }
+
+  /**
+   * Returns a promise that resolves after all the logs sent before
+   * via log(), info(), etc calls are sent to Grafana Loki push endpoint
+   * and the responses for all of them are received and processed.
+   *
+   * @returns {Promise}
+   */
+  waitFlushed () {
+    return new Promise((resolve, reject) => {
+      if (!this.batchesSending && !this.batch.streams.length) { return resolve() }
+
+      this.onBatchesFlushed = () => {
+        this.onBatchesFlushed = () => {}
+        return resolve()
+      }
+    })
   }
 
   /**
@@ -157,9 +200,11 @@ class Batcher {
    * @returns {Promise}
    */
   sendBatchToLoki (logEntry) {
+    this.batchSending()
     return new Promise((resolve, reject) => {
       // If the batch is empty, do nothing
       if (this.batch.streams.length === 0 && !logEntry) {
+        this.batchSent()
         resolve()
       } else {
         let reqBody
@@ -200,6 +245,7 @@ class Batcher {
             // Compress the buffer with snappy
             reqBody = snappy.compressSync(buffer)
           } catch (err) {
+            this.batchSent()
             reject(err)
           }
         }
@@ -209,6 +255,7 @@ class Batcher {
           .then(() => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
+            this.batchSent()
             resolve()
           })
           .catch(err => {
@@ -217,6 +264,7 @@ class Batcher {
 
             this.options.onConnectionError !== undefined && this.options.onConnectionError(err)
 
+            this.batchSent()
             reject(err)
           })
       }

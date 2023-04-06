@@ -18,6 +18,7 @@ declare interface LokiTransportOptions extends TransportStream.TransportStreamOp
 declare class LokiTransport extends TransportStream {
 
     constructor(opts: LokiTransportOptions);
+    flush(): Promise<null>;
 }
 
 export = LokiTransport;

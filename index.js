@@ -105,6 +105,21 @@ class LokiTransport extends Transport {
   }
 
   /**
+   * Flush unsent batched logs to Winston transport and return
+   * a promise that resolves after response is received from
+   * the transport. If some (batched or not) logs are being sent
+   * at the time of call, the promise resolves after the transport
+   * responds.
+   *
+   * As a result the promise returned resolves only when the transport
+   * has confirmed receiving all the logs sent via log(), info(), etc
+   * calls preceding the flush() call.
+   */
+  async flush () {
+    return await this.batcher.waitFlushed();
+  }
+
+  /**
    * Send batch to loki when clean up
    */
   close () {
