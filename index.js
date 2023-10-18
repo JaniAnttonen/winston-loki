@@ -33,7 +33,7 @@ class LokiTransport extends Transport {
     })
 
     this.useCustomFormat = options.format !== undefined
-    this.labels = options.labels
+    this.labels = options.labels || { job: 'winston-loki' }
   }
 
   /**
@@ -52,28 +52,13 @@ class LokiTransport extends Transport {
     })
 
     // Deconstruct the log
-    const { label, labels, timestamp, level, message, ...rest } = info
-
-    // build custom labels if provided
-    let lokiLabels = { level: level }
-
-    if (this.labels) {
-      lokiLabels = Object.assign(lokiLabels, this.labels)
-    } else {
-      lokiLabels.job = label
-    }
-
-    lokiLabels = Object.assign(lokiLabels, labels)
+    const { timestamp } = info
 
     // follow the format provided
-    const line = this.useCustomFormat
-      ? info[MESSAGE]
-      : `${message} ${
-      rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
-    }`
+    const line = this.useCustomFormat ? info[MESSAGE] : JSON.stringify(info)
 
     // Make sure all label values are strings
-    lokiLabels = Object.fromEntries(Object.entries(lokiLabels).map(([key, value]) => [key, value ? value.toString() : value]))
+    this.labels = Object.fromEntries(Object.entries(this.labels).map(([key, value]) => [key, value ? value.toString() : value]))
 
     // Construct the log to fit Grafana Loki's accepted format
     let ts
@@ -85,7 +70,7 @@ class LokiTransport extends Transport {
     }
 
     const logEntry = {
-      labels: lokiLabels,
+      labels: this.labels,
       entries: [
         {
           ts,

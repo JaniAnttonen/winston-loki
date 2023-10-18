@@ -17,20 +17,20 @@ Several usage examples with a test configuration for Grafana+Loki+Promtail resid
 ### Options
 LokiTransport() takes a Javascript object as an input. These are the options that are available, __required in bold__:
 
-| **Parameter**      | **Description**                                           | **Example**            | **Default**   |
-| ------------------ | --------------------------------------------------------- | -----------------------| ------------- |
-| __`host`__         | URL for Grafana Loki                                      | http://127.0.0.1:3100  | null          |
-| `interval`         | The interval at which batched logs are sent in seconds    | 30                     | 5             |
-| `json`             | Use JSON instead of Protobuf for transport                | true                   | false         |
-| `batching`         | If batching is not used, the logs are sent as they come   | true                   | true          |
-| `clearOnError`     | Discard any logs that result in an error during transport | true                   | false         |
-| `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false         |
-| `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | undefined     |
-| `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | undefined     |
-| `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true          |
-| `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | undefined     | 
-| `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined     | 
-| `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined     | 
+| **Parameter**      | **Description**                                           | **Example**            | **Default**          |
+| ------------------ | --------------------------------------------------------- | -----------------------|----------------------|
+| __`host`__         | URL for Grafana Loki                                      | http://127.0.0.1:3100  | null                 |
+| `interval`         | The interval at which batched logs are sent in seconds    | 30                     | 5                    |
+| `json`             | Use JSON instead of Protobuf for transport                | true                   | false                |
+| `batching`         | If batching is not used, the logs are sent as they come   | true                   | true                 |
+| `clearOnError`     | Discard any logs that result in an error during transport | true                   | false                |
+| `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false                |
+| `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | {job:'winston-loki'} |
+| `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | undefined            |
+| `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true                 |
+| `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | undefined            | 
+| `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined            | 
+| `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined            | 
 
 ### Example
 With default formatting:

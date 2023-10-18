@@ -8,6 +8,7 @@ describe('Integration tests', function () {
       host: 'http://localhost',
       level: 'debug',
       interval: 10,
+      json: true,
       labels: {
         module: 'name',
         app: 'appname'
@@ -32,7 +33,7 @@ describe('Integration tests', function () {
     expect(
       lokiTransport.batcher.batch.streams[0]
     ).toEqual({
-      labels: { level: 'debug', module: 'name', app: 'appname', customLabel: testLabel },
+      labels: { module: 'name', app: 'appname'},
       entries: [{
         line: `[name] ${testMessage}`,
         ts: Date.now()

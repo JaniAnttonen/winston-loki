@@ -68,7 +68,8 @@ describe('Batcher tests with JSON transport', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(1)
   })
-  it('Should add items with different labels in separate streams', function () {
+  // Skip as there are currently no way to add dynamic labels
+  it.skip('Should add items with different labels in separate streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
     expect(batcher.batch.streams.length).toBe(2)
@@ -93,7 +94,7 @@ describe('Batcher tests with JSON transport', function () {
   it('Should be able to clear the batch of streams', function () {
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
     batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
-    expect(batcher.batch.streams.length).toBe(2)
+    expect(batcher.batch.streams.length).toBe(1)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
   })
@@ -108,10 +109,10 @@ describe('Batcher tests with JSON transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(fixtures.logs[1])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
 
-    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
-      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after[1])] })
+    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 2]).toBe(
+      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after_json[1])] })
     )
   })
   it('Should clear batch and resolve on successful send', async function () {
@@ -122,14 +123,14 @@ describe('Batcher tests with JSON transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(fixtures.logs[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
 
     expect(batcher.batch.streams.length).toBe(1)
 
     await batcher.sendBatchToLoki()
 
-    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
-      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after[0])] })
+    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 2]).toBe(
+      JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after_json[0])] })
     )
     expect(batcher.batch.streams.length).toBe(0)
   })
@@ -193,7 +194,7 @@ describe('Batcher tests with JSON transport', function () {
 
     batcher.circuitBreakerInterval = circuitBreakerInterval
     batcher.run()
-    batcher.pushLogEntry(fixtures.logs[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
 
     expect(batcher.batch.streams.length).toBe(1)
     expect(batcher.interval).toBe(fixtures.options_json.interval * 1000)

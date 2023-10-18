@@ -27,13 +27,11 @@ module.exports = {
       if (typeof logEntry.labels === 'string') {
         return logEntry
       }
-      let protoLabels = `{level="${logEntry.labels.level}"`
-      delete logEntry.labels.level
+      let protoLabels = ''
       for (const key in logEntry.labels) {
         protoLabels += `,${key}="${logEntry.labels[key]}"`
       }
-      protoLabels += '}'
-      logEntry.labels = protoLabels
+      logEntry.labels = `{${protoLabels.substring(1)}}`
       return logEntry
     })
     return batch
