@@ -2,6 +2,7 @@ const exitHook = require('async-exit-hook')
 const { logproto } = require('./proto')
 const protoHelpers = require('./proto/helpers')
 const req = require('./requests')
+const { loadSnappy } = require('./snappyLoader')
 let snappy = false
 
 /**
@@ -11,7 +12,7 @@ let snappy = false
  */
 class Batcher {
   loadSnappy () {
-    return require('snappy')
+    return loadSnappy()
   }
 
   loadUrl () {
