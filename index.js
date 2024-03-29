@@ -52,7 +52,8 @@ class LokiTransport extends Transport {
     })
 
     // Deconstruct the log
-    const { label, labels, timestamp, level, message, ...rest } = info
+    const { label, labels, timestamp, message, ...rest } = info
+    const level = info[Symbol.for('level')]
 
     // build custom labels if provided
     let lokiLabels = { level: level }
