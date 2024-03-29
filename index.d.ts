@@ -12,6 +12,7 @@ declare interface LokiTransportOptions extends TransportStream.TransportStreamOp
     replaceTimestamp?: boolean,
     gracefulShutdown?: boolean,
     timeout?: number,
+    timeout?: number,
     onConnectionError?(error: unknown): void
 }
 
