@@ -32,6 +32,11 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined     | 
 | `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined     | 
 
+### Using with Next.js and Webpack
+`winston-loki` can be seamlessly integrated with Next.js and Webpack-based projects. The library attempts to load `snappy` for enhanced performance. However, in scenarios where `snappy` cannot be loaded, such as certain Webpack configurations that do not support `.node` files, `winston-loki` will automatically fall back to using JSON transport. This ensures compatibility across different environments without requiring additional configuration.
+
+For most users, no extra steps will be necessary to use `winston-loki` with Next.js and Webpack. However, if you encounter issues related to loading `.node` files, please ensure that your Webpack version and configuration are set up to support such files. Alternatively, consider using `winston-loki` in environments where native addons are supported, to leverage the full capabilities of the library.
+
 ### Example
 With default formatting:
 ```js
