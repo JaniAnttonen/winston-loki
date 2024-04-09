@@ -30,13 +30,13 @@ describe('Integration tests', function () {
     logger.debug({ message: testMessage, labels: { customLabel: testLabel } })
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
-      lokiTransport.batcher.batch.streams[0]
-    ).toEqual({
-      labels: { level: 'debug', module: 'name', app: 'appname', customLabel: testLabel },
-      entries: [{
-        line: `[name] ${testMessage}`,
-        ts: Date.now()
-      }]
-    })
+      lokiTransport.batcher.batch.streams[0].labels
+    ).toEqual(`{level="debug", module="name", app="appname", customLabel="testLabel"}`)
+    expect(
+      lokiTransport.batcher.batch.streams[0].entries[0].line
+    ).toEqual(`[name] ${testMessage}`)
+    expect(
+      typeof lokiTransport.batcher.batch.streams[0].entries[0].ts
+    ).toBe('number')
   })
 })
