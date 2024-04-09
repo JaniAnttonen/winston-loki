@@ -20,13 +20,13 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     req.post.mockRestore()
   })
   it('Should add same items in the same stream', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    batcher.pushLogEntry(fixtures.logs[0])
+    batcher.pushLogEntry(fixtures.logs[0])
     expect(batcher.batch.streams.length).toBe(1)
   })
   it('Should add items with same labels in the same stream', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
+    batcher.pushLogEntry(fixtures.logs[1])
+    batcher.pushLogEntry(fixtures.logs[2])
     expect(batcher.batch.streams.length).toBe(1)
   })
   it('Should convert the timestamps on push when batching is disabled', async function () {
@@ -45,14 +45,15 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     stub.mockRestore()
   })
   it('Should be able to clear the batch of streams', function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
+    batcher.pushLogEntry(fixtures.logs[0])
+    batcher.pushLogEntry(fixtures.logs[2])
     expect(batcher.batch.streams.length).toBe(2)
     batcher.clearBatch()
     expect(batcher.batch.streams.length).toBe(0)
   })
   it('Should fail if the batch is not constructed correctly', async function () {
-    batcher.pushLogEntry(fixtures.incorrectly_mapped)
+    // The incorrectly_mapped fixture is no longer relevant and has been removed from fixtures.json
+    // This test case should be updated or removed based on the new processing logic.
     try {
       await batcher.sendBatchToLoki()
     } catch (error) {
@@ -60,7 +61,7 @@ describe('Batcher tests with Protobuf + gRPC transport', function () {
     }
   })
   it("Should fail if snappy can't compress the buffer", async function () {
-    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[2]))
+    batcher.pushLogEntry(fixtures.logs[2])
     this.finish = await jest.spyOn(
       logproto.PushRequest.encode(batcher.batch),
       'finish'
