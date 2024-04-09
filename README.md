@@ -24,7 +24,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `json`             | Use JSON instead of Protobuf for transport                | true                   | false         |
 | `batching`         | If batching is not used, the logs are sent as they come   | true                   | true          |
 | `clearOnError`     | Discard any logs that result in an error during transport | true                   | false         |
-| `replaceTimestamp` | Replace any log timestamps with Date.now()                | true                   | false         |
+| `replaceTimestamp` | Replace any log timestamps with Date.now(). Warning: Disabling `replaceTimestamp` may result in logs failing to upload due to recent changes in the upstream Loki project. It is recommended to leave this option enabled unless you have a specific reason to disable it. | true                   | true          |
 | `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | undefined     |
 | `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | undefined     |
 | `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true          |
