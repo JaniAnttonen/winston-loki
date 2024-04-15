@@ -1,7 +1,7 @@
 const http = require('http')
 const https = require('https')
 
-const post = async (lokiUrl, contentType, headers = {}, data = '', timeout) => {
+const post = async (lokiUrl, contentType, headers = {}, data = '', timeout, httpAgent, httpsAgent) => {
   // Construct a buffer from the data string to have deterministic data size
   const dataBuffer = Buffer.from(data, 'utf8')
 
@@ -14,6 +14,7 @@ const post = async (lokiUrl, contentType, headers = {}, data = '', timeout) => {
   return new Promise((resolve, reject) => {
     // Decide which http library to use based on the url
     const lib = lokiUrl.protocol === 'https:' ? https : http
+    const agent = lokiUrl.protocol === 'https:' ? httpsAgent : httpAgent
 
     // Construct the node request options
     const options = {
@@ -22,7 +23,8 @@ const post = async (lokiUrl, contentType, headers = {}, data = '', timeout) => {
       path: lokiUrl.pathname,
       method: 'POST',
       headers: Object.assign(defaultHeaders, headers),
-      timeout: timeout
+      timeout: timeout,
+      agent: agent
     }
 
     // Construct the request
