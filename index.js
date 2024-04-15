@@ -29,7 +29,9 @@ class LokiTransport extends Transport {
       onConnectionError: options.onConnectionError,
       replaceTimestamp: options.replaceTimestamp !== false,
       gracefulShutdown: options.gracefulShutdown !== false,
-      timeout: options.timeout
+      timeout: options.timeout,
+      httpAgent: options.httpAgent,
+      httpsAgent: options.httpsAgent
     })
 
     this.useCustomFormat = options.format !== undefined
