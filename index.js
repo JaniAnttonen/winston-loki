@@ -36,6 +36,7 @@ class LokiTransport extends Transport {
 
     this.useCustomFormat = options.format !== undefined
     this.labels = options.labels
+    this.useWinstonMetaAsLabels = options.useWinstonMetaAsLabels
   }
 
   /**
@@ -60,10 +61,14 @@ class LokiTransport extends Transport {
     // build custom labels if provided
     let lokiLabels = { level: level }
 
-    if (this.labels) {
-      lokiLabels = Object.assign(lokiLabels, this.labels)
+    if (this.useWinstonMetaAsLabels) {
+      lokiLabels = Object.assign(lokiLabels, rest)
     } else {
-      lokiLabels.job = label
+      if (this.labels) {
+        lokiLabels = Object.assign(lokiLabels, this.labels)
+      } else {
+        lokiLabels.job = label
+      }
     }
 
     lokiLabels = Object.assign(lokiLabels, labels)

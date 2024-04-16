@@ -31,6 +31,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | undefined     | 
 | `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined     | 
 | `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined     | 
+| `useWinstonMetaAsLabels` | Use Winston's "meta" (such as defaultMeta values) as Loki labels | true        | false         |
 
 ### Example
 With default formatting:
