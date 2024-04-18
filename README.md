@@ -32,6 +32,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined     | 
 | `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined     | 
 | `useWinstonMetaAsLabels` | Use Winston's "meta" (such as defaultMeta values) as Loki labels | true        | false         |
+| `ignoredMeta`      | When useWinstonMetaAsLabels is enabled, a list of meta values to ignore | ["error_description"]  | undefined |
 
 ### Example
 With default formatting:

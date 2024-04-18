@@ -17,6 +17,7 @@ declare interface LokiTransportOptions extends TransportStream.TransportStreamOp
     httpAgent?: http.Agent | boolean;
     httpsAgent?: https.Agent | boolean;
     useWinstonMetaAsLabels?: boolean;
+    ignoredMeta?: Array<string>;
     onConnectionError?(error: unknown): void
 }
 
