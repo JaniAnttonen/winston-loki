@@ -42,10 +42,13 @@ class Batcher {
     const URL = this.loadUrl()
     this.url = new URL(this.options.host + '/loki/api/v1/push')
 
+    const btoa = require('btoa')
     // Parse basic auth parameters if given
     if (options.basicAuth) {
-      const btoa = require('btoa')
       const basicAuth = 'Basic ' + btoa(options.basicAuth)
+      this.options.headers = Object.assign(this.options.headers, { Authorization: basicAuth })
+    } else if(this.url.username && this.url.password) {
+      const basicAuth = 'Basic ' + btoa(this.url.username + ':' + this.url.password)
       this.options.headers = Object.assign(this.options.headers, { Authorization: basicAuth })
     }
 
