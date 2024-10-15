@@ -1,4 +1,6 @@
 import TransportStream from "winston-transport";
+import http from 'http';
+import https from 'https';
 
 declare interface LokiTransportOptions extends TransportStream.TransportStreamOptions{
     host: string;
@@ -12,6 +14,10 @@ declare interface LokiTransportOptions extends TransportStream.TransportStreamOp
     replaceTimestamp?: boolean,
     gracefulShutdown?: boolean,
     timeout?: number,
+    httpAgent?: http.Agent | boolean;
+    httpsAgent?: https.Agent | boolean;
+    useWinstonMetaAsLabels?: boolean;
+    ignoredMeta?: Array<string>;
     onConnectionError?(error: unknown): void
 }
 

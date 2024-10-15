@@ -31,8 +31,10 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | undefined     | 
 | `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined     | 
 | `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined     | 
+| `useWinstonMetaAsLabels` | Use Winston's "meta" (such as defaultMeta values) as Loki labels | true        | false         |
+| `ignoredMeta`      | When useWinstonMetaAsLabels is enabled, a list of meta values to ignore | ["error_description"]  | undefined |
 
-### Example
+### Example (Running Loki Locally)
 With default formatting:
 ```js
 const { createLogger, transports } = require("winston");
@@ -55,6 +57,37 @@ logger.debug({ message: 'test', labels: { 'key': 'value' } })
 ```
 
 TODO: Add custom formatting example
+
+### Example (Grafana Cloud Loki)
+
+**Important**: this snippet requires the following values, here are the instructions for how you can find them.
+
+* `LOKI_HOST`: find this in your Grafana Cloud instance by checking Connections > Data Sources, find the right Loki connection, and copy its URL, which may look like `https://logs-prod-006.grafana.net`
+* `USER_ID`: the user number in the same data source definition, it will be a multi-digit number like `372040`
+* `GRAFANA_CLOUD_TOKEN`: In Grafana Cloud, search for Cloud Access Policies. Create a new Cloud Access Policy, ensuring its scopes include `logs:write`.  Generate a token for this cloud access policy, and use this value here.
+
+```js
+const { createLogger, transports } = require("winston");
+const LokiTransport = require("winston-loki");
+const options = {
+  ...,
+  transports: [
+    new LokiTransport({
+        host: 'LOKI_HOST',
+        labels: { app: 'my-app' },
+        json: true,
+        basicAuth: 'USER_ID:GRAFANA_CLOUD_TOKEN',
+        format: winston.format.json(),
+        replaceTimestamp: true,
+        onConnectionError: (err) => console.error(err),
+    })
+  ]
+  ...
+};
+const logger = createLogger(options);
+logger.debug({ message: 'test', labels: { 'key': 'value' } })
+```
+
 
 ## Developing
 ### Requirements

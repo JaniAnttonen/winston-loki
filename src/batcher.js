@@ -42,10 +42,13 @@ class Batcher {
     const URL = this.loadUrl()
     this.url = new URL(this.options.host + '/loki/api/v1/push')
 
+    const btoa = require('btoa')
     // Parse basic auth parameters if given
     if (options.basicAuth) {
-      const btoa = require('btoa')
       const basicAuth = 'Basic ' + btoa(options.basicAuth)
+      this.options.headers = Object.assign(this.options.headers, { Authorization: basicAuth })
+    } else if(this.url.username && this.url.password) {
+      const basicAuth = 'Basic ' + btoa(this.url.username + ':' + this.url.password)
       this.options.headers = Object.assign(this.options.headers, { Authorization: basicAuth })
     }
 
@@ -251,7 +254,7 @@ class Batcher {
         }
 
         // Send the data to Grafana Loki
-        req.post(this.url, this.contentType, this.options.headers, reqBody, this.options.timeout)
+        req.post(this.url, this.contentType, this.options.headers, reqBody, this.options.timeout, this.options.httpAgent, this.options.httpsAgent)
           .then(() => {
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
