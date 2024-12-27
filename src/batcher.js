@@ -38,9 +38,29 @@ class Batcher {
     // Load given options to the object
     this.options = options
 
-    // Construct Grafana Loki push API url
+    if (!options.host) {
+      throw new Error('Host parameter is required')
+    }
+
+    // Validate and construct Grafana Loki push API url
     const URL = this.loadUrl()
-    this.url = new URL(this.options.host + '/loki/api/v1/push')
+    try {
+      // Check if host is already a full URL
+      const hostUrl = new URL(options.host)
+      // If host contains path, warn user and strip it
+      if (hostUrl.pathname !== '/') {
+        console.warn('Host parameter should only contain the base URL. Path will be ignored.')
+        hostUrl.pathname = '/'
+      }
+      this.url = new URL('/loki/api/v1/push', hostUrl.toString())
+    } catch (err) {
+      // If host is not a valid URL, try prepending http://
+      try {
+        this.url = new URL('/loki/api/v1/push', 'http://' + options.host)
+      } catch (err) {
+        throw new Error('Invalid host parameter: ' + options.host)
+      }
+    }
 
     const btoa = require('btoa')
     // Parse basic auth parameters if given
@@ -255,7 +275,17 @@ class Batcher {
 
         // Send the data to Grafana Loki
         req.post(this.url, this.contentType, this.options.headers, reqBody, this.options.timeout, this.options.httpAgent, this.options.httpsAgent)
-          .then(() => {
+          .then((response) => {
+            // Validate response
+            if (typeof response === 'string') {
+              if (response.includes('404')) {
+                throw new Error('Loki API endpoint not found: ' + response)
+              }
+              if (response.includes('error')) {
+                throw new Error('Loki API error: ' + response)
+              }
+            }
+            
             // No need to clear the batch if batching is disabled
             logEntry === undefined && this.clearBatch()
             this.batchSent()
@@ -265,10 +295,16 @@ class Batcher {
             // Clear the batch on error if enabled
             this.options.clearOnError && this.clearBatch()
 
-            this.options.onConnectionError !== undefined && this.options.onConnectionError(err)
+            // Enhanced error handling
+            const error = new Error(
+              `Failed to send logs to Loki: ${err.message || err}`
+            )
+            error.originalError = err
+
+            this.options.onConnectionError !== undefined && this.options.onConnectionError(error)
 
             this.batchSent()
-            reject(err)
+            reject(error)
           })
       }
     })

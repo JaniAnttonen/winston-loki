@@ -182,6 +182,53 @@ describe('Batcher tests with JSON transport', function () {
       expect(error).toBeTruthy()
     }
   })
+
+  describe('URL validation tests', () => {
+    it('Should throw error when host is missing', () => {
+      const options = JSON.parse(JSON.stringify(fixtures.options_json))
+      delete options.host
+      expect(() => new Batcher(options)).toThrow('Host parameter is required')
+    })
+
+    it('Should handle full URL in host parameter', () => {
+      const options = JSON.parse(JSON.stringify(fixtures.options_json))
+      options.host = 'http://localhost:3100/some/path'
+      const batcher = new Batcher(options)
+      expect(batcher.url.toString()).toBe('http://localhost:3100/loki/api/v1/push')
+    })
+
+    it('Should handle invalid URLs', () => {
+      const options = JSON.parse(JSON.stringify(fixtures.options_json))
+      options.host = ':::invalid:::'
+      expect(() => new Batcher(options)).toThrow('Invalid host parameter')
+    })
+  })
+
+  describe('Error handling tests', () => {
+    it('Should handle 404 responses', async () => {
+      const responseText = '404 Not Found'
+      req.post.mockResolvedValue(responseText)
+      
+      try {
+        await batcher.sendBatchToLoki()
+        fail('Should have thrown error')
+      } catch (err) {
+        expect(err.message).toContain('Loki API endpoint not found')
+      }
+    })
+
+    it('Should handle API errors', async () => {
+      const responseText = 'error: invalid request'
+      req.post.mockResolvedValue(responseText)
+      
+      try {
+        await batcher.sendBatchToLoki()
+        fail('Should have thrown error')
+      } catch (err) {
+        expect(err.message).toContain('Loki API error')
+      }
+    })
+  })
   it('Run loop should work correctly', async function () {
     const errorObject = {
       statusCode: 404
