@@ -37,6 +37,7 @@ class LokiTransport extends Transport {
     this.useCustomFormat = options.format !== undefined
     this.labels = options.labels
     this.useWinstonMetaAsLabels = options.useWinstonMetaAsLabels
+    this.metaToUseAsLabels = options.metaToUseAsLabels || []
     this.ignoredMeta = options.ignoredMeta || []
   }
 
@@ -64,10 +65,14 @@ class LokiTransport extends Transport {
 
     if (this.useWinstonMetaAsLabels) {
       // deleting the keys (labels) that we want to ignore from Winston's meta
-      for (const [key, _] of Object.entries(rest)) {
-        if (this.ignoredMeta.includes(key)) delete rest[key]
+      lokiLabels = {
+        ...lokiLabels,
+        ...(Object.fromEntries(this.metaToUseAsLabels.map(e => [e, rest[e]]))),
+        ...(this.labels ? this.labels : {})
       }
-      lokiLabels = Object.assign(lokiLabels, rest)
+      for (const [key, _] of Object.entries(rest)) {
+        if (this.ignoredMeta.includes(key) || this.metaToUseAsLabels.includes(key)) delete rest[key]
+      }
     } else if (this.labels) {
       lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
@@ -79,9 +84,7 @@ class LokiTransport extends Transport {
     // follow the format provided
     const line = this.useCustomFormat
       ? info[MESSAGE]
-      : `${message} ${
-      rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
-    }`
+      : [message, rest && Object.keys(rest).length ? JSON.stringify(rest) : undefined].filter(Boolean).join(' ')
 
     // Make sure all label values are strings
     lokiLabels = Object.fromEntries(Object.entries(lokiLabels).map(([key, value]) => [key, value ? value.toString() : value]))
@@ -127,7 +130,7 @@ class LokiTransport extends Transport {
    * calls preceding the flush() call.
    */
   async flush () {
-    return await this.batcher.waitFlushed();
+    return await this.batcher.waitFlushed()
   }
 
   /**
