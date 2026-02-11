@@ -16,7 +16,7 @@ module.exports = {
   prepareJSONBatch: batch => {
     const streams = batch.streams.map(logStream => ({
       stream: logStream.labels,
-      values: logStream.entries.map(entry => [JSON.stringify(entry.ts * 1000 * 1000), entry.line])
+      values: logStream.entries.map(entry => [JSON.stringify(entry.ts * 1000 * 1000), entry.line, entry.rest])
     }))
     return { streams }
   },
