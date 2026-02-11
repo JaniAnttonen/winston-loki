@@ -100,7 +100,8 @@ class LokiTransport extends Transport {
       entries: [
         {
           ts,
-          line
+          line,
+          rest
         }
       ]
     }
