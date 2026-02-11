@@ -56,11 +56,10 @@ class LokiTransport extends Transport {
     })
 
     // Deconstruct the log
-    const { label, labels, timestamp, message, ...rest } = info
-    const level = info[Symbol.for('level')]
+    const { label, labels, timestamp, level, message, ...rest } = info
 
     // build custom labels if provided
-    let lokiLabels = { level: level }
+    let lokiLabels = { level: info[Symbol.for('level')] || level }
 
     if (this.useWinstonMetaAsLabels) {
       // deleting the keys (labels) that we want to ignore from Winston's meta

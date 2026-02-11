@@ -52,13 +52,13 @@ describe('Integration tests', function () {
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
   })
   it('LokiTransport should correctly map values before sending to Batcher', function () {
-    const lokiTransport = new LokiTransport(fixtures.options_json)
+    const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
     const spy = jest.spyOn(lokiTransport.batcher, 'pushLogEntry')
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(spy).toHaveBeenCalledWith(JSON.parse(fixtures.logs_mapped_before[0]))
   })
   it('LokiTransport should map logs correctly from Winston to Grafana Loki format', function () {
-    const lokiTransport = new LokiTransport(fixtures.options_json)
+    const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
     lokiTransport.log(fixtures.logs[0], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(lokiTransport.batcher.batch.streams[0]).toEqual(
@@ -75,7 +75,7 @@ describe('Integration tests', function () {
     )
   })
   it("LokiTransport should append anything else than the message after it in the log's entry", function () {
-    const lokiTransport = new LokiTransport(fixtures.options_json)
+    const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
     lokiTransport.log(fixtures.logs[3], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
@@ -83,7 +83,7 @@ describe('Integration tests', function () {
     ).toEqual(fixtures.logs_mapped_before[3].replace(/\s/g, ''))
   })
   it('LokiTransport should not append anything else after the message if there are no extra keys in the log object', function () {
-    const lokiTransport = new LokiTransport(fixtures.options_json)
+    const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
     lokiTransport.log(fixtures.logs[2], () => {})
     expect(lokiTransport.batcher.batch.streams.length).toBe(1)
     expect(
@@ -92,7 +92,7 @@ describe('Integration tests', function () {
   })
   describe('custom timestamp', () => {
     it('LokiTransport should convert provided timestamp to number and use it for Loki format', function () {
-      const lokiTransport = new LokiTransport(fixtures.options_json)
+      const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
       const timestampString = new Date(fixtures.logs[0].timestamp).toISOString()
       const log = { ...fixtures.logs[0], timestamp: timestampString }
       lokiTransport.log(log, () => {})
@@ -114,7 +114,7 @@ describe('Integration tests', function () {
       'when provided timestamp cannot be converted to a valid date',
     function () {
       jest.useFakeTimers()
-      const lokiTransport = new LokiTransport(fixtures.options_json)
+      const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
       const invalidTimestamp = '12:00:00'
       const log = { ...fixtures.logs[0], timestamp: invalidTimestamp }
       lokiTransport.log(log, () => {})
@@ -132,5 +132,35 @@ describe('Integration tests', function () {
         }
       )
     })
+  })
+  it('LokiTransport should use Winston meta as labels when useWinstonMetaAsLabels is enabled', function () {
+    const lokiTransport = new LokiTransport({
+      ...fixtures.options_json,
+      replaceTimestamp: false,
+      useWinstonMetaAsLabels: true,
+      ignoredMeta: ['ignoreMe']
+    })
+    lokiTransport.log({ ...fixtures.logs[0], extra: 'value', ignoreMe: 'gone' }, () => {})
+    const stream = lokiTransport.batcher.batch.streams[0]
+    expect(stream.labels.extra).toBe('value')
+    expect(stream.labels.ignoreMe).toBeUndefined()
+  })
+  it('LokiTransport flush() should resolve', async function () {
+    const lokiTransport = new LokiTransport(fixtures.options_json)
+    await lokiTransport.flush()
+  })
+  it('LokiTransport close() should call batcher close', function () {
+    const lokiTransport = new LokiTransport(fixtures.options_json)
+    const spy = jest.spyOn(lokiTransport.batcher, 'close')
+    lokiTransport.close()
+    expect(spy).toHaveBeenCalled()
+    spy.mockRestore()
+  })
+  it('LokiTransport should handle falsy label values without calling toString', function () {
+    const lokiTransport = new LokiTransport({ ...fixtures.options_json, replaceTimestamp: false })
+    lokiTransport.log({ ...fixtures.logs[0], labels: { nullLabel: null, undefinedLabel: undefined } }, () => {})
+    const stream = lokiTransport.batcher.batch.streams[0]
+    expect(stream.labels.nullLabel).toBeNull()
+    expect(stream.labels.undefinedLabel).toBeUndefined()
   })
 })

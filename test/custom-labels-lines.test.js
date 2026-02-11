@@ -6,6 +6,7 @@ describe('Integration tests', function () {
     jest.useFakeTimers()
     const lokiTransport = new LokiTransport({
       host: 'http://localhost',
+      json: true,
       level: 'debug',
       interval: 10,
       labels: {

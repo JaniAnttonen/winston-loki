@@ -1,5 +1,6 @@
 const req = require('../src/requests')
 const url = require('url')
+const { EventEmitter } = require('events')
 const http = require('http')
 jest.mock('http')
 const https = require('https')
@@ -42,11 +43,20 @@ const mockedRequest = {
 }
 
 const mockedResponse = (options, callback) => {
-  const incomingMessage = new http.IncomingMessage()
+  const incomingMessage = new EventEmitter()
   callback(incomingMessage)
   incomingMessage.emit('data', testData)
   incomingMessage.emit('end')
   return mockedRequest
+}
+
+const mockedErrorResponse = (options, callback) => {
+  const mockReq = new EventEmitter()
+  mockReq.write = () => null
+  mockReq.end = () => {
+    mockReq.emit('error', new Error('connection refused'))
+  }
+  return mockReq
 }
 
 describe('Requests tests', function () {
@@ -71,5 +81,20 @@ describe('Requests tests', function () {
   it('Should be able to run https and http', () => {
     const promise = req.post(httpsUrl, httpsOptions.headers['Content-Type'], {}, testData)
     expect(typeof promise).toBe('object')
+  })
+  it('Should resolve with response data', async function () {
+    http.request.mockImplementation(mockedResponse)
+    const result = await req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData)
+    expect(result).toBe(testData)
+  })
+  it('Should reject on request error', async function () {
+    http.request.mockImplementation(mockedErrorResponse)
+    await expect(req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData))
+      .rejects.toThrow('connection refused')
+  })
+  it('Should use default headers and data when not provided', async function () {
+    http.request.mockImplementation(mockedResponse)
+    const result = await req.post(httpUrl, httpOptions.headers['Content-Type'])
+    expect(result).toBe(testData)
   })
 })

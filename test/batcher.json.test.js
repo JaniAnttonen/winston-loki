@@ -13,6 +13,7 @@ describe('Batcher tests with JSON transport', function () {
       .mockImplementation(() => Promise.resolve())
   })
   afterEach(function () {
+    batcher.runLoop = false
     batcher.clearBatch()
     req.post.mockRestore()
   })
@@ -108,9 +109,9 @@ describe('Batcher tests with JSON transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(fixtures.logs[1])
+    await batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[1]))
 
-    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
+    expect(req.post.mock.calls[0][3]).toBe(
       JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after[1])] })
     )
   })
@@ -122,13 +123,13 @@ describe('Batcher tests with JSON transport', function () {
       }
     }
     req.post.mockResolvedValue(responseObject)
-    batcher.pushLogEntry(fixtures.logs[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
 
     expect(batcher.batch.streams.length).toBe(1)
 
     await batcher.sendBatchToLoki()
 
-    expect(req.post.mock.calls[0][req.post.mock.calls[0].length - 1]).toBe(
+    expect(req.post.mock.calls[0][3]).toBe(
       JSON.stringify({ streams: [JSON.parse(fixtures.logs_mapped_after[0])] })
     )
     expect(batcher.batch.streams.length).toBe(0)
@@ -193,7 +194,7 @@ describe('Batcher tests with JSON transport', function () {
 
     batcher.circuitBreakerInterval = circuitBreakerInterval
     batcher.run()
-    batcher.pushLogEntry(fixtures.logs[0])
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
 
     expect(batcher.batch.streams.length).toBe(1)
     expect(batcher.interval).toBe(fixtures.options_json.interval * 1000)
@@ -214,5 +215,84 @@ describe('Batcher tests with JSON transport', function () {
     await batcher.wait(waitFor)
 
     expect(batcher.interval).toBe(fixtures.options_json.interval * 1000)
+  })
+  it('Should construct with basic auth', function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.basicAuth = 'user:pass'
+    options.headers = {}
+    batcher = new Batcher(options)
+    expect(batcher.options.headers.Authorization).toMatch(/^Basic /)
+  })
+  it('Should construct with URL username and password', function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.host = 'http://user:pass@localhost'
+    options.headers = {}
+    batcher = new Batcher(options)
+    expect(batcher.options.headers.Authorization).toMatch(/^Basic /)
+  })
+  it('Should resolve waitFlushed when batches are pending', async function () {
+    req.post.mockResolvedValue({})
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    const sendPromise = batcher.sendBatchToLoki()
+    const flushed = batcher.waitFlushed()
+    await sendPromise
+    await flushed
+  })
+  it('Should close and flush remaining entries', async function () {
+    req.post.mockResolvedValue({})
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    await new Promise(resolve => batcher.close(resolve))
+    expect(batcher.batch.streams.length).toBe(0)
+  })
+  it('Run loop should reset interval to default when options.interval is unset', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    delete options.interval
+    batcher = new Batcher(options)
+    batcher.interval = 50
+    batcher.circuitBreakerInterval = 50
+
+    batcher.run()
+
+    await batcher.wait(60)
+
+    expect(batcher.interval).toBe(5000)
+  })
+  it('Should call onConnectionError when send fails', async function () {
+    const onConnectionError = jest.fn()
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.onConnectionError = onConnectionError
+    batcher = new Batcher(options)
+    req.post.mockRejectedValue({ statusCode: 500 })
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+    try {
+      await batcher.sendBatchToLoki()
+    } catch (e) {}
+    expect(onConnectionError).toHaveBeenCalledWith({ statusCode: 500 })
+  })
+  it('Should register and invoke exit hook when gracefulShutdown is enabled', function (done) {
+    jest.isolateModules(() => {
+      let hookCallback
+      jest.doMock('async-exit-hook', () => (cb) => { hookCallback = cb })
+      const IsolatedBatcher = require('../src/batcher')
+      const mockReq = require('../src/requests')
+      jest.spyOn(mockReq, 'post').mockResolvedValue({})
+      const options = JSON.parse(JSON.stringify(fixtures.options_json))
+      options.gracefulShutdown = true
+      const b = new IsolatedBatcher(options)
+      expect(hookCallback).toBeDefined()
+      hookCallback(() => {
+        done()
+      })
+    })
+  })
+  it('Should use window.URL when available', function () {
+    const origWindow = global.window
+    global.window = { URL: require('url').URL }
+    jest.isolateModules(() => {
+      const IsolatedBatcher = require('../src/batcher')
+      const b = new IsolatedBatcher(JSON.parse(JSON.stringify(fixtures.options_json)))
+      expect(b.url.href).toContain('/loki/api/v1/push')
+    })
+    global.window = origWindow
   })
 })
