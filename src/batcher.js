@@ -82,10 +82,11 @@ class Batcher {
     }
 
     this.batchesSending = 0
-    this.onBatchesFlushed = () => {}
+    this.flushCallbacks = []
+    this.waitResolve = null
 
     // If batching is enabled, run the loop
-    this.options.batching && this.run()
+    this.runPromise = this.options.batching ? this.run() : null
 
     if (this.options.gracefulShutdown) {
       exitHook(callback => {
@@ -113,7 +114,9 @@ class Batcher {
   batchSent () {
     if (--this.batchesSending) return
 
-    this.onBatchesFlushed()
+    const callbacks = this.flushCallbacks
+    this.flushCallbacks = []
+    callbacks.forEach(cb => cb())
   }
 
   /**
@@ -127,10 +130,7 @@ class Batcher {
     return new Promise((resolve, reject) => {
       if (!this.batchesSending && !this.batch.streams.length) { return resolve() }
 
-      this.onBatchesFlushed = () => {
-        this.onBatchesFlushed = () => {}
-        return resolve()
-      }
+      this.flushCallbacks.push(resolve)
     })
   }
 
@@ -142,7 +142,15 @@ class Batcher {
    */
   wait (duration) {
     return new Promise(resolve => {
-      setTimeout(resolve, duration)
+      const timer = setTimeout(() => {
+        this.waitResolve = null
+        resolve()
+      }, duration)
+      this.waitResolve = () => {
+        clearTimeout(timer)
+        this.waitResolve = null
+        resolve()
+      }
     })
   }
 
@@ -212,17 +220,32 @@ class Batcher {
       } else {
         let reqBody
 
+        // Snapshot-and-swap: isolate the batch being sent from new incoming entries
+        let snapshot
+        if (logEntry === undefined) {
+          snapshot = this.batch
+          this.batch = { streams: [] }
+        }
+
         // If the data format is JSON, there's no need to construct a buffer
         if (this.options.json) {
-          let preparedJSONBatch
-          if (logEntry !== undefined) {
-            // If a single logEntry is given, wrap it according to the batch format
-            preparedJSONBatch = protoHelpers.prepareJSONBatch({ streams: [logEntry] })
-          } else {
-            // Stringify the JSON ready for transport
-            preparedJSONBatch = protoHelpers.prepareJSONBatch(this.batch)
+          try {
+            let preparedJSONBatch
+            if (logEntry !== undefined) {
+              // If a single logEntry is given, wrap it according to the batch format
+              preparedJSONBatch = protoHelpers.prepareJSONBatch({ streams: [logEntry] })
+            } else {
+              // Stringify the JSON ready for transport
+              preparedJSONBatch = protoHelpers.prepareJSONBatch(snapshot)
+            }
+            reqBody = JSON.stringify(preparedJSONBatch)
+          } catch (err) {
+            if (snapshot && !this.options.clearOnError) {
+              this._requeue(snapshot)
+            }
+            this.batchSent()
+            return reject(err)
           }
-          reqBody = JSON.stringify(preparedJSONBatch)
         } else {
           try {
             let batch
@@ -230,7 +253,7 @@ class Batcher {
               // If a single logEntry is given, wrap it according to the batch format
               batch = { streams: [logEntry] }
             } else {
-              batch = this.batch
+              batch = snapshot
             }
 
             const preparedBatch = protoHelpers.prepareProtoBatch(batch)
@@ -248,22 +271,25 @@ class Batcher {
             // Compress the buffer with snappy
             reqBody = snappy.compressSync(buffer)
           } catch (err) {
+            if (snapshot && !this.options.clearOnError) {
+              this._requeue(snapshot)
+            }
             this.batchSent()
-            reject(err)
+            return reject(err)
           }
         }
 
         // Send the data to Grafana Loki
         req.post(this.url, this.contentType, this.options.headers, reqBody, this.options.timeout, this.options.httpAgent, this.options.httpsAgent)
           .then(() => {
-            // No need to clear the batch if batching is disabled
-            logEntry === undefined && this.clearBatch()
             this.batchSent()
             resolve()
           })
           .catch(err => {
-            // Clear the batch on error if enabled
-            this.options.clearOnError && this.clearBatch()
+            // Re-enqueue failed entries unless clearOnError is enabled
+            if (snapshot && !this.options.clearOnError) {
+              this._requeue(snapshot)
+            }
 
             this.options.onConnectionError !== undefined && this.options.onConnectionError(err)
 
@@ -272,6 +298,25 @@ class Batcher {
           })
       }
     })
+  }
+
+  /**
+   * Re-enqueues a snapshot's streams back into the live batch.
+   * Used to preserve entries after a failed send when clearOnError is false.
+   *
+   * @param {*} snapshot
+   */
+  _requeue (snapshot) {
+    for (const stream of snapshot.streams) {
+      const match = this.batch.streams.findIndex(
+        s => JSON.stringify(s.labels) === JSON.stringify(stream.labels)
+      )
+      if (match > -1) {
+        this.batch.streams[match].entries = stream.entries.concat(this.batch.streams[match].entries)
+      } else {
+        this.batch.streams.push(stream)
+      }
+    }
   }
 
   /**
@@ -304,11 +349,20 @@ class Batcher {
    *
    * @param {() => void} [callback]
    */
-  close (callback) {
+  async close (callback) {
     this.runLoop = false
-    this.sendBatchToLoki()
-      .then(() => { if (callback) { callback() } }) // maybe should emit something here
-      .catch(() => { if (callback) { callback() } }) // maybe should emit something here
+    if (this.waitResolve) {
+      this.waitResolve()
+    }
+    if (this.runPromise) {
+      await this.runPromise
+    }
+    try {
+      await this.sendBatchToLoki()
+    } catch (e) {
+      // Ignore errors on final flush
+    }
+    if (callback) callback()
   }
 }
 
