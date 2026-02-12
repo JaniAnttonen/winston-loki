@@ -12,18 +12,12 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-      - name: Check node_modules cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          cache: npm
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: npm ci --legacy-peer-deps
       - name: Version
-        run: yarn version --new-version "${GITHUB_REF:11}" --no-git-tag-version
+        run: npm version "${GITHUB_REF#refs/tags/}" --no-git-tag-version --allow-same-version
       - name: Publish
-        run: yarn publish --access public
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
