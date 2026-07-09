@@ -31,7 +31,18 @@ const post = async (lokiUrl, contentType, headers = {}, data = '', timeout, http
     const req = lib.request(options, res => {
       let resData = ''
       res.on('data', _data => (resData += _data))
-      res.on('end', () => resolve(resData))
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(resData)
+        } else {
+          const error = new Error(
+            `Server returned HTTP ${res.statusCode}${resData ? ': ' + resData.trim() : ''}`
+          )
+          error.statusCode = res.statusCode
+          error.responseBody = resData
+          reject(error)
+        }
+      })
     })
 
     // Error listener

@@ -16,7 +16,9 @@ module.exports = {
   prepareJSONBatch: batch => {
     const streams = batch.streams.map(logStream => ({
       stream: logStream.labels,
-      values: logStream.entries.map(entry => [JSON.stringify(entry.ts * 1000 * 1000), entry.line, entry.rest])
+      // Convert milliseconds to nanoseconds in string space, as the
+      // multiplied value exceeds Number.MAX_SAFE_INTEGER
+      values: logStream.entries.map(entry => [Math.floor(entry.ts) + '000000', entry.line, entry.rest])
     }))
     return { streams }
   },

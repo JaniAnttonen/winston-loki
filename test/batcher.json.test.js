@@ -167,6 +167,24 @@ describe('Batcher tests with JSON transport', function () {
 
     expect(batcher.batch.streams.length).toBe(0)
   })
+  it('Should call onConnectionError when the server rejects the batch', async function () {
+    const options = JSON.parse(JSON.stringify(fixtures.options_json))
+    options.onConnectionError = jest.fn()
+    batcher = new Batcher(options)
+
+    const errorObject = new Error('Server returned HTTP 400: entry too far behind')
+    errorObject.statusCode = 400
+    req.post.mockRejectedValue(errorObject)
+    batcher.pushLogEntry(JSON.parse(fixtures.logs_mapped_before[0]))
+
+    try {
+      await batcher.sendBatchToLoki()
+    } catch (error) {
+      expect(error.statusCode).toBe(400)
+    }
+
+    expect(options.onConnectionError).toHaveBeenCalledWith(errorObject)
+  })
   it('Should fail if the batch is not constructed correctly', async function () {
     const responseObject = {
       statusCode: 200,
