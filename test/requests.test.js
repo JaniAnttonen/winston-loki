@@ -1,5 +1,6 @@
 const req = require('../src/requests')
 const url = require('url')
+const { EventEmitter } = require('events')
 const http = require('http')
 jest.mock('http')
 const https = require('https')
@@ -41,8 +42,11 @@ const mockedRequest = {
   on: () => jest.fn(done => done())
 }
 
-const mockedResponse = (options, callback) => {
-  const incomingMessage = new http.IncomingMessage()
+const mockedResponse = statusCode => (options, callback) => {
+  // http is auto-mocked, so build the response on a real EventEmitter
+  // to get working on/emit
+  const incomingMessage = new EventEmitter()
+  incomingMessage.statusCode = statusCode
   callback(incomingMessage)
   incomingMessage.emit('data', testData)
   incomingMessage.emit('end')
@@ -51,8 +55,8 @@ const mockedResponse = (options, callback) => {
 
 describe('Requests tests', function () {
   it('Should return promise', function () {
-    http.request.mockImplementation(mockedResponse)
-    https.request.mockImplementation(mockedResponse)
+    http.request.mockImplementation(mockedResponse(204))
+    https.request.mockImplementation(mockedResponse(204))
     const promise = req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData)
     expect(typeof promise).toBe('object')
     expect(typeof promise.then).toBe('function')
@@ -71,5 +75,22 @@ describe('Requests tests', function () {
   it('Should be able to run https and http', () => {
     const promise = req.post(httpsUrl, httpsOptions.headers['Content-Type'], {}, testData)
     expect(typeof promise).toBe('object')
+  })
+  it('Should resolve with the response body on a 2xx response', async () => {
+    http.request.mockImplementation(mockedResponse(204))
+    await expect(
+      req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData)
+    ).resolves.toBe(testData)
+  })
+  it('Should reject with status code and response body on a non-2xx response', async () => {
+    http.request.mockImplementation(mockedResponse(400))
+    expect.assertions(3)
+    try {
+      await req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData)
+    } catch (error) {
+      expect(error.message).toBe('Server returned HTTP 400: test')
+      expect(error.statusCode).toBe(400)
+      expect(error.responseBody).toBe(testData)
+    }
   })
 })
