@@ -1,3 +1,12 @@
+// Loki's push API only accepts string values in structured metadata
+const toStringValues = rest =>
+  Object.fromEntries(
+    Object.entries(rest ?? {}).map(([key, value]) => [
+      key,
+      typeof value === 'string' ? value : JSON.stringify(value)
+    ])
+  )
+
 module.exports = {
   createProtoTimestamps: logEntry => {
     if (logEntry && logEntry.entries && logEntry.entries.length > 0) {
@@ -18,7 +27,7 @@ module.exports = {
       stream: logStream.labels,
       // Convert milliseconds to nanoseconds in string space, as the
       // multiplied value exceeds Number.MAX_SAFE_INTEGER
-      values: logStream.entries.map(entry => [Math.floor(entry.ts) + '000000', entry.line, entry.rest])
+      values: logStream.entries.map(entry => [Math.floor(entry.ts) + '000000', entry.line, toStringValues(entry.rest)])
     }))
     return { streams }
   },
