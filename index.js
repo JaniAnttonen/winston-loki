@@ -135,7 +135,9 @@ class LokiTransport extends Transport {
    * Send batch to loki when clean up
    */
   close () {
-    this.batcher.close()
+    // Return the promise so shutdown code can await the final send —
+    // otherwise process.exit() can kill the last batch mid-request
+    return this.batcher.close()
   }
 }
 
