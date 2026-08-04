@@ -50,6 +50,12 @@ const post = async (lokiUrl, contentType, headers = {}, data = '', timeout, http
       reject(error)
     })
 
+    // Node only emits 'timeout' — it never aborts the request by itself, so
+    // without this the promise stays pending forever on an unresponsive server
+    req.on('timeout', () => {
+      req.destroy(new Error(`Loki push timed out after ${timeout}ms`))
+    })
+
     // Write to request
     req.write(dataBuffer)
     req.end()
