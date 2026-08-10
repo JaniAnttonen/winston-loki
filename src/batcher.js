@@ -142,6 +142,12 @@ class Batcher {
    */
   wait (duration) {
     return new Promise(resolve => {
+      // close() can arrive while a send is in flight, before waitResolve is
+      // armed — entering a full interval sleep then would delay the final
+      // flush (and shutdown) by up to `interval`
+      if (this.runLoop === false) {
+        return resolve()
+      }
       const timer = setTimeout(() => {
         this.waitResolve = null
         resolve()
