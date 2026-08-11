@@ -93,4 +93,19 @@ describe('Requests tests', function () {
       expect(error.responseBody).toBe(testData)
     }
   })
+  it('Should destroy the request and reject when the request times out', async () => {
+    const timeoutRequest = new EventEmitter()
+    timeoutRequest.write = () => null
+    timeoutRequest.end = () => null
+    timeoutRequest.destroy = jest.fn(error => {
+      // Mimic Node: destroy(err) surfaces the error through the 'error' event
+      timeoutRequest.emit('error', error)
+      return timeoutRequest
+    })
+    http.request.mockImplementation(() => timeoutRequest)
+    const promise = req.post(httpUrl, httpOptions.headers['Content-Type'], {}, testData, 500)
+    timeoutRequest.emit('timeout')
+    await expect(promise).rejects.toThrow('Loki push timed out')
+    expect(timeoutRequest.destroy).toHaveBeenCalled()
+  })
 })

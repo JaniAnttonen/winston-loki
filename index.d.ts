@@ -25,6 +25,7 @@ declare class LokiTransport extends TransportStream {
 
     constructor(opts: LokiTransportOptions);
     flush(): Promise<null>;
+    close(): Promise<void>;
 }
 
 export = LokiTransport;
