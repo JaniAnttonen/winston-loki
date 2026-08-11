@@ -27,7 +27,7 @@ LokiTransport() takes a Javascript object as an input. These are the options tha
 | `replaceTimestamp` | Replace any log timestamps with Date.now(). Warning: Disabling `replaceTimestamp` may result in logs failing to upload due to recent changes in the upstream Loki project. It is recommended to leave this option enabled unless you have a specific reason to disable it. | true                   | true          |
 | `labels`           | custom labels, key-value pairs                            | { module: 'http' }     | undefined     |
 | `format`           | winston format (https://github.com/winstonjs/winston#formats) | simple()           | undefined     |
-| `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches) | false             | true          |
+| `gracefulShutdown` | Enable/disable graceful shutdown (wait for any unsent batches). Note: https://github.com/JaniAnttonen/winston-loki/pull/198#issuecomment-5235266828 | false             | true          |
 | `timeout`          | timeout for requests to grafana loki in ms                | 30000                  | undefined     | 
 | `basicAuth`        | basic authentication credentials to access Loki over HTTP | username:password      | undefined     | 
 | `onConnectionError`| Loki error connection handler                        | (err) => console.error(err) | undefined     | 
